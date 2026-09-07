@@ -41,10 +41,7 @@ class MainActivity : AppCompatActivity() {
         requestStoragePermissions()
 
         binding.btnLogin.setOnClickListener { performLogin() }
-        binding.btnLogout.setOnClickListener {
-            session.clear()
-            updateLoginUi()
-        }
+        binding.btnLogout.setOnClickListener { performLogout() }
         binding.btnDownloadPosts.setOnClickListener { downloadPosts() }
         binding.btnDownloadStories.setOnClickListener { downloadStories() }
     }
@@ -82,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setLoading(loading: Boolean) {
         binding.progressBar.isVisible = loading
-        val buttons = listOf(binding.btnLogin, binding.btnDownloadPosts, binding.btnDownloadStories)
+        val buttons = listOf(binding.btnLogin, binding.btnLogout, binding.btnDownloadPosts, binding.btnDownloadStories)
         buttons.forEach { it.isEnabled = !loading }
     }
 
@@ -125,6 +122,33 @@ class MainActivity : AppCompatActivity() {
                 toast("Login error: ${e.message}")
             } finally {
                 setLoading(false)
+            }
+        }
+    }
+
+    private fun performLogout() {
+        if (!session.isLoggedIn) {
+            updateLoginUi()
+            return
+        }
+        setLoading(true)
+        setStatus("Logging out…")
+        CoroutineScope(Dispatchers.Main).launch {
+            val serverOk = try {
+                withContext(Dispatchers.IO) { client.logout() }
+            } catch (e: Exception) {
+                false
+            }
+            // Always wipe local storage, even if server call failed/offline.
+            session.clear()
+            updateLoginUi()
+            setLoading(false)
+            if (serverOk) {
+                setStatus("Logged out")
+                toast("Logged out")
+            } else {
+                setStatus("Logged out locally (server logout failed)")
+                toast("Logged out locally")
             }
         }
     }

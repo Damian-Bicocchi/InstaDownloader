@@ -129,6 +129,47 @@ class InstagramClient(private val session: SessionStore) {
 
     fun isSessionValid(): Boolean = session.isLoggedIn
 
+    /**
+     * Best-effort server-side logout.
+     *
+     * POSTs to /accounts/logout/ with the stored cookies + CSRF token so a
+     * stolen cookie cannot be replayed after the user taps Logout.
+     * Callers must still wipe local storage even when this returns false
+     * (offline / HTTP error) — see MainActivity.performLogout().
+     *
+     * @return true if Instagram acknowledged the logout (HTTP 2xx).
+     */
+    @Throws(IOException::class)
+    fun logout(): Boolean {
+        val cookies = session.cookies ?: return false
+        val csrf = extractCsrf(cookies)
+        val form = FormBody.Builder()
+            .add("_csrftoken", csrf)
+            .add("guid", deviceUuid)
+            .add("device_id", "android-$deviceUuid")
+            .build()
+
+        val req = Request.Builder()
+            .url("$BASE_URL/accounts/logout/")
+            .post(form)
+            .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
+            .header("Cookie", cookies)
+            .header("X-CSRFToken", csrf)
+            .header("X-Instagram-AJAX", "1")
+            .header("X-Requested-With", "XMLHttpRequest")
+            .build()
+
+        client.newCall(req).execute().use { response ->
+            // Drain body so the connection can be reused; ignore payload.
+            try {
+                response.body?.string()
+            } catch (e: Exception) {
+                // ignore body read errors; status code is what matters
+            }
+            return response.isSuccessful
+        }
+    }
+
     private fun buildGet(url: String): Request {
         val builder = Request.Builder().url(url).get()
         baseHeaders.forEach { (k, v) -> builder.header(k, v) }
