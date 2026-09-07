@@ -1,0 +1,5 @@
+com.example.instadl.test.app-androidTest-0 /home/damian/Proyectos/inst-download/app/build/generated/res/resValues/androidTest/debug
+com.example.instadl.test.app-updated_navigation_xml-1 /home/damian/Proyectos/inst-download/app/build/generated/updated_navigation_xml/debugAndroidTest
+com.example.instadl.test.app-mergeDebugAndroidTestResources-2 /home/damian/Proyectos/inst-download/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.example.instadl.test.app-mergeDebugAndroidTestResources-3 /home/damian/Proyectos/inst-download/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.example.instadl.test.app-debugAndroidTest-4 /home/damian/Proyectos/inst-download/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources

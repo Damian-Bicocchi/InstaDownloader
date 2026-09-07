@@ -28,4 +28,5 @@ layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
+string paste_reel_post_story_link
 style Theme.InstaDownloader

@@ -190,7 +190,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:hint="Paste reel / post / story link"
+                    android:hint="Paste reel / post / story / highlight link (public posts need no login)"
                     app:boxStrokeColor="@color/ig_purple">
 
                     <com.google.android.material.textfield.TextInputEditText

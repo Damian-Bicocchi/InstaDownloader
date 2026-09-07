@@ -25,6 +25,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
+/**
+ * Single-screen controller: login (encrypted session), username-based
+ * posts/stories downloads, and single-link downloads (public-first embed
+ * fetch, authenticated fallback for private media, login-gated stories /
+ * highlights).
+ *
+ * Hardening kept in place: FLAG_SECURE on the password screen, CharArray
+ * passwords wiped immediately, generic UI errors with redacted Log details,
+ * EncryptedSharedPreferences session, best-effort server logout with
+ * always-wipe-local.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -74,10 +85,9 @@ class MainActivity : AppCompatActivity() {
         val url = Regex("""https?://[^\s'"]*instagram\.com[^\s'"]*""")
             .find(text)?.value ?: return
         binding.etLink.setText(url)
-        // Public posts/reels resolve without login; stories still need it.
-        // Always attempt — downloadFromLink() asks for login only when needed.
+        // Public posts/reels resolve without login; stories/highlights and
+        // private media need it — downloadFromLink() gates per link type.
         downloadFromLink(url)
-    }
     }
 
     private fun requestStoragePermissions() {
@@ -222,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                     return@launch
                 }
                 setStatus("Downloading ${items.size} item(s)…")
-                val saved = downloadAll(items, "$target")
+                val saved = withContext(Dispatchers.IO) { downloadAll(items, "$target") }
                 setStatus("Saved $saved of ${items.size} files to your Photos/Downloads.")
                 toast("Downloaded $saved files")
             } catch (e: Exception) {
@@ -256,7 +266,7 @@ class MainActivity : AppCompatActivity() {
                     return@launch
                 }
                 setStatus("Downloading ${items.size} story item(s)…")
-                val saved = downloadAll(items, "${target}_story")
+                val saved = withContext(Dispatchers.IO) { downloadAll(items, "${target}_story") }
                 setStatus("Saved $saved of ${items.size} story files.")
                 toast("Downloaded $saved stories")
             } catch (e: Exception) {
@@ -272,7 +282,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Link download: public posts/reels work WITHOUT login (unauthenticated
      * embed scrape). Authenticated API is only a fallback for private media,
-     * and a requirement for stories (never public).
+     * and a requirement for stories/highlights (never public).
      */
     private fun downloadFromLink(rawLink: String) {
         val link = rawLink.trim()

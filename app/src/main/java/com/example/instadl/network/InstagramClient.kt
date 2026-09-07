@@ -14,12 +14,24 @@ import java.io.IOException
 import java.util.UUID
 
 /**
- * Thin client for Instagram's private (web/API v1) endpoints.
+ * Thin client for Instagram's private (web/API v1) endpoints, plus a
+ * public no-auth embed fetcher for shared post/reel links.
  *
- * IMPORTANT: Using these endpoints to send automated requests to Instagram
- * violates Instagram's Terms of Service and can lead to account temporary
- * restrictions or permanent bans. Use only on accounts you own and are willing
- * to accept that risk on. This is for personal / educational use.
+ * IMPORTANT: Using the private endpoints to send automated requests to
+ * Instagram violates Instagram's Terms of Service and can lead to account
+ * temporary restrictions or permanent bans. Use only on accounts you own and
+ * are willing to accept that risk on. This is for personal / educational use.
+ *
+ * Design notes:
+ * - Login uses a caller-owned CharArray password (wiped on entry); only a
+ *   transient String copy exists for the OkHttp FormBody and it is never
+ *   logged. Session cookies live in EncryptedSharedPreferences, never as
+ *   cleartext. Logout POSTs server-side best-effort, then local storage is
+ *   always wiped.
+ * - Public post/reel links are tried FIRST via the unauthenticated embed
+ *   page (no cookies sent). The authenticated /media/{id}/info/ path is only
+ *   a fallback for private media, and stories/highlights always require the
+ *   logged-in session.
  */
 /** Direct CDN file resolved without login (public post/reel embed scrape). */
 data class PublicFile(val url: String, val isVideo: Boolean)
@@ -212,16 +224,59 @@ class InstagramClient(private val session: SessionStore) {
         }
     }
 
+    fun isSessionValid(): Boolean = session.isLoggedIn
+
     /**
-     * Public post/reel fetch — NO login required.
+     * Best-effort server-side logout.
+     *
+     * POSTs to /accounts/logout/ with the stored cookies + CSRF token so a
+     * stolen cookie cannot be replayed after the user taps Logout.
+     * Callers must still wipe local storage even when this returns false
+     * (offline / HTTP error) — see MainActivity.performLogout().
+     *
+     * @return true if Instagram acknowledged the logout (HTTP 2xx).
+     */
+    @Throws(IOException::class)
+    fun logout(): Boolean {
+        val cookies = session.cookies ?: return false
+        val csrf = extractCsrf(cookies)
+        val form = FormBody.Builder()
+            .add("_csrftoken", csrf)
+            .add("guid", deviceUuid)
+            .add("device_id", "android-$deviceUuid")
+            .build()
+
+        val req = Request.Builder()
+            .url("$BASE_URL/accounts/logout/")
+            .post(form)
+            .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
+            .header("Cookie", cookies)
+            .header("X-CSRFToken", csrf)
+            .header("X-Instagram-AJAX", "1")
+            .header("X-Requested-With", "XMLHttpRequest")
+            .build()
+
+        client.newCall(req).execute().use { response ->
+            // Drain body so the connection can be reused; ignore payload.
+            try {
+                response.body?.string()
+            } catch (e: Exception) {
+                // ignore body read errors; status code is what matters
+            }
+            return response.isSuccessful
+        }
+    }
+
+    /**
+     * Public post/reel fetch — NO login, NO cookies.
      *
      * GETs the unauthenticated embed page
      * (`https://www.instagram.com/{reel,p}/{shortcode}/embed/`) and extracts
      * direct CDN URLs from the embedded JSON (`video_url` / `display_url`)
      * with `og:video` / `og:image` as fallback. No session cookie is sent.
      *
-     * @throws IOException when the media is private, expired, or the page
-     * layout changed — caller should fall back to the authenticated
+     * @throws IOException when the media is private, expired, removed, or the
+     * page layout changed — caller should fall back to the authenticated
      * /media/{id}/info/ path (or ask the user to log in).
      */
     @Throws(IOException::class)
@@ -342,49 +397,6 @@ class InstagramClient(private val session: SessionStore) {
 
     private fun unescapeHtmlAttr(s: String): String =
         s.replace("&amp;", "&")
-
-    fun isSessionValid(): Boolean = session.isLoggedIn
-
-    /**
-     * Best-effort server-side logout.
-     *
-     * POSTs to /accounts/logout/ with the stored cookies + CSRF token so a
-     * stolen cookie cannot be replayed after the user taps Logout.
-     * Callers must still wipe local storage even when this returns false
-     * (offline / HTTP error) — see MainActivity.performLogout().
-     *
-     * @return true if Instagram acknowledged the logout (HTTP 2xx).
-     */
-    @Throws(IOException::class)
-    fun logout(): Boolean {
-        val cookies = session.cookies ?: return false
-        val csrf = extractCsrf(cookies)
-        val form = FormBody.Builder()
-            .add("_csrftoken", csrf)
-            .add("guid", deviceUuid)
-            .add("device_id", "android-$deviceUuid")
-            .build()
-
-        val req = Request.Builder()
-            .url("$BASE_URL/accounts/logout/")
-            .post(form)
-            .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
-            .header("Cookie", cookies)
-            .header("X-CSRFToken", csrf)
-            .header("X-Instagram-AJAX", "1")
-            .header("X-Requested-With", "XMLHttpRequest")
-            .build()
-
-        client.newCall(req).execute().use { response ->
-            // Drain body so the connection can be reused; ignore payload.
-            try {
-                response.body?.string()
-            } catch (e: Exception) {
-                // ignore body read errors; status code is what matters
-            }
-            return response.isSuccessful
-        }
-    }
 
     private fun buildGet(url: String): Request {
         val builder = Request.Builder().url(url).get()
