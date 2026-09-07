@@ -170,6 +170,49 @@ class InstagramClient(private val session: SessionStore) {
         fetchMediaItem(InstagramLinks.shortcodeToMediaId(shortcode))
 
     /**
+     * Entire highlight (carousel of stories) — login required.
+     *
+     * Highlights are reels addressed as `highlight:<id>`:
+     * GET /feed/reels_media/?reel_ids=highlight:<id> returns
+     * {"reels": {"highlight:<id>": {"items": [...]}}}.
+     * Each story item is returned raw (caller flattens carousel children).
+     */
+    @Throws(IOException::class)
+    fun fetchHighlightItems(highlightId: String): List<com.example.instadl.model.MediaItem> {
+        val id = highlightId.removePrefix("highlight:").trim()
+        require(id.isNotBlank()) { "empty highlight id" }
+        val req = buildGet("${BASE_URL}/feed/reels_media/?reel_ids=highlight:$id")
+        val body = executeAndCheck(req)
+        val obj = JSONObject(body)
+        val reels = obj.getJSONObject("reels")
+        // Exact key first, then any highlight:* key (server may normalize).
+        var key: String? = null
+        if (reels.has("highlight:$id")) {
+            key = "highlight:$id"
+        } else {
+            val keys = reels.keys()
+            while (keys.hasNext()) {
+                val k = keys.next()
+                if (k.startsWith("highlight:")) {
+                    key = k
+                    break
+                }
+            }
+        }
+        val reel = key?.let { reels.getJSONObject(it) }
+            ?: throw IOException("Highlight not found")
+        val arr = reel.optJSONArray("items")
+            ?: throw IOException("Highlight is empty")
+        if (arr.length() == 0) throw IOException("Highlight is empty")
+        return (0 until arr.length()).map { i ->
+            gson.fromJson(
+                arr.getJSONObject(i).toString(),
+                com.example.instadl.model.MediaItem::class.java
+            )
+        }
+    }
+
+    /**
      * Public post/reel fetch — NO login required.
      *
      * GETs the unauthenticated embed page
@@ -186,15 +229,18 @@ class InstagramClient(private val session: SessionStore) {
         val code = shortcode.substringBefore('?').substringBefore('#').trim()
         require(code.isNotEmpty()) { "empty shortcode" }
         var lastError: IOException? = null
-        // Reel shortcodes also resolve under /p/ and vice versa; try both.
+        // Reel shortcodes also resolve under /p/ and vice versa; try both and
+        // keep the LONGEST result — a kind mismatch can return a partial page.
+        var best: List<PublicFile> = emptyList()
         for (kind in listOf("reel", "p")) {
             try {
                 val files = fetchPublicEmbed(kind, code)
-                if (files.isNotEmpty()) return files
+                if (files.size > best.size) best = files
             } catch (e: IOException) {
                 lastError = e
             }
         }
+        if (best.isNotEmpty()) return best
         throw lastError ?: IOException("Public media not found")
     }
 
@@ -231,17 +277,27 @@ class InstagramClient(private val session: SessionStore) {
         val out = mutableListOf<PublicFile>()
         val seen = LinkedHashSet<String>()
 
-        // Carousel / sidecar children: each "node":{"is_video":…,"display_url":"…",…,"video_url":"…"}
-        val nodeStarts = Regex(""""node"\s*:\s*\{\s*"is_video"\s*:\s*(true|false)""")
+        // Carousel / sidecar children. Key order inside "node" is NOT fixed
+        // (real markup: id, shortcode, dimensions, display_url, …, is_video),
+        // so match the node start and read flags/urls from the window.
+        val nodeStarts = Regex(""""node"\s*:\s*\{""")
             .findAll(html).toList()
         if (nodeStarts.isNotEmpty()) {
             for (m in nodeStarts) {
                 val window = html.substring(m.range.first, minOf(m.range.first + 6000, html.length))
-                val isVideo = m.groupValues[1] == "true"
+                // Stop at the next sibling node to avoid cross-child leakage.
+                val nextNode = Regex(""""node"\s*:\s*\{""").find(window, 1)
+                val bounded = if (nextNode != null) window.substring(0, nextNode.range.first) else window
+                val isVideo = Regex(""""is_video"\s*:\s*(true|false)""")
+                    .find(bounded)?.groupValues?.get(1) == "true"
                 val display = Regex(""""display_url"\s*:\s*"([^"]+)"""")
-                    .find(window)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                    .find(bounded)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                    ?.takeIf { it.startsWith("http") }
                 val video = Regex(""""video_url"\s*:\s*"([^"]+)"""")
-                    .find(window)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                    .find(bounded)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                    ?.takeIf { it.startsWith("http") }
+                // Skip non-media nodes (e.g. owner/profile blobs that also use "node").
+                if (display == null && video == null) continue
                 val pick = if (isVideo) video ?: display else display
                 if (!pick.isNullOrBlank() && seen.add(pick)) {
                     // A video child may only expose display_url in some markups;
@@ -252,18 +308,23 @@ class InstagramClient(private val session: SessionStore) {
             if (out.isNotEmpty()) return out
         }
 
-        // Single media: prefer embedded JSON urls, fall back to og: meta tags.
+        // Fallback when node correlation fails (markup change or single media):
+        // combine BOTH videos and images so mixed carousels are never truncated.
+        // Single-video posts carry their poster as display_url — suppress that
+        // one duplicate (first image) so a lone reel still yields exactly 1 file.
         val videos = Regex(""""video_url"\s*:\s*"([^"]+)"""")
             .findAll(html).map { unescapeEmbedUrl(it.groupValues[1]) }
             .filter { it.startsWith("http") }.distinct().toList()
-        if (videos.isNotEmpty()) {
-            return videos.filter { seen.add(it) }.map { PublicFile(it, true) }
-        }
         val images = Regex(""""display_url"\s*:\s*"([^"]+)"""")
             .findAll(html).map { unescapeEmbedUrl(it.groupValues[1]) }
             .filter { it.startsWith("http") }.distinct().toList()
-        if (images.isNotEmpty()) {
-            return images.filter { seen.add(it) }.map { PublicFile(it, false) }
+        if (videos.isNotEmpty() || images.isNotEmpty()) {
+            val combined = mutableListOf<PublicFile>()
+            val localSeen = LinkedHashSet<String>()
+            val imgs = if (videos.size == 1 && images.isNotEmpty()) images.drop(1) else images
+            for (v in videos) if (localSeen.add(v)) combined.add(PublicFile(v, true))
+            for (img in imgs) if (localSeen.add(img)) combined.add(PublicFile(img, false))
+            if (combined.isNotEmpty()) return combined
         }
         Regex("""<meta[^>]+property=["']og:video:secure_url["'][^>]+content=["']([^"']+)""")
             .find(html)?.groupValues?.get(1)?.let { unescapeHtmlAttr(it) }

@@ -1,15 +1,20 @@
 package com.example.instadl.network
 
+import android.util.Base64
+import java.net.URLDecoder
+
 /**
  * Parses Instagram share links into something the private API can fetch.
  *
- * Supported (authenticated session required — caller must be logged in):
- * - Post:  https://www.instagram.com/p/SHORTCODE/...
- * - Reel:  https://www.instagram.com/reel/SHORTCODE/...,
- *           https://www.instagram.com/reels/SHORTCODE/...,
- *           https://www.instagram.com/tv/SHORTCODE/...
- * - Story: https://www.instagram.com/stories/<user>/<STORY_PK>/...
- *           (numeric story media id; highlights `/s/...` are NOT supported)
+ * Supported:
+ * - Post / reel / tv (public → no login via embed; private → logged-in
+ *   fallback): https://www.instagram.com/p/SHORTCODE/…,
+ *   /reel/SHORTCODE/…, /reels/SHORTCODE/…, /tv/SHORTCODE/…
+ * - Story (login required): https://www.instagram.com/stories/<user>/<STORY_PK>/…
+ * - Highlight = carousel of stories (login required):
+ *   https://www.instagram.com/stories/highlights/<HIGHLIGHT_ID>/… or
+ *   https://www.instagram.com/s/<TOKEN>[?...] (app share token, base64 of
+ *   "highlight:<id>" or carrying ?story_media_id=…).
  *
  * Shortcodes are decoded locally (base64-ish) to numeric media ids, so no
  * extra network hop is needed before calling /media/{id}/info/.
@@ -22,6 +27,9 @@ object InstagramLinks {
 
         /** Single story item — fetch /media/{storyId}/info/. */
         data class StoryMedia(val storyId: String, val username: String?) : Resolved
+
+        /** Entire highlight (carousel of stories) — fetch reels_media highlight:. */
+        data class Highlight(val highlightId: String) : Resolved
     }
 
     private val SHORTCODE_PATHS = setOf("p", "reel", "reels", "reelv2", "tv")
@@ -34,6 +42,23 @@ object InstagramLinks {
         val link = rawLink.trim().removeSuffix("/")
         if (!link.contains("instagram.com", ignoreCase = true)) return null
 
+        // Highlights FIRST — /stories/highlights/<id> would otherwise match
+        // the story pattern below with username="highlights".
+        Regex("""/stories/highlights/(\d+)""").find(link)?.let {
+            return Resolved.Highlight(highlightId = it.groupValues[1])
+        }
+        // App share token: /s/<base64 of "highlight:<id>" or story ref>[?...]
+        Regex("""/s/([^/?#]+)""").find(link)?.let { m ->
+            val token = m.groupValues[1]
+            decodeHighlightToken(token)?.let { return Resolved.Highlight(it) }
+            // Fallback: a /s/ story share carries ?story_media_id=<pk>_<user>
+            // — downloads that single story (best we can do without highlight id).
+            Regex("""[?&]story_media_id=(\d+)""").find(link)?.let { sm ->
+                return Resolved.StoryMedia(storyId = sm.groupValues[1], username = null)
+            }
+            return null
+        }
+
         // Stories: /stories/<user>/<numericId>[/...]
         val stories = Regex("""/stories/([^/?#]+)/(\d+)""").find(link)
         if (stories != null) {
@@ -42,9 +67,6 @@ object InstagramLinks {
                 username = stories.groupValues[1].takeIf { it != "_" }
             )
         }
-        // Highlights (/s/<base64> or /stories/highlights/<id>) need a
-        // different endpoint family — explicitly unsupported for now.
-        if (Regex("""/s/[^/?#]+|/stories/highlights/""").containsMatchIn(link)) return null
 
         val m = pathRegex.find(link) ?: return null
         val seg1 = m.groupValues[1].lowercase()
@@ -77,6 +99,35 @@ object InstagramLinks {
         }
         require(id > 0) { "unresolvable shortcode" }
         return id.toString()
+    }
+
+    /**
+     * Decode an /s/ share token to a numeric highlight id.
+     * Payloads look like base64("highlight:179…") or carry the id plainly.
+     * Returns null when the token holds no highlight reference.
+     */
+    fun decodeHighlightToken(rawToken: String): String? {
+        val token = try {
+            URLDecoder.decode(rawToken, "UTF-8")
+        } catch (e: Exception) {
+            rawToken
+        }.trim()
+        if (token.isBlank()) return null
+        if (token.all { it.isDigit() } && token.length >= 8) return token
+        // Try standard + url-safe base64 (padding may be omitted in links).
+        val variants = listOf(token, token.replace('-', '+').replace('_', '/'))
+        for (v in variants) {
+            val padded = v + "=".repeat((4 - v.length % 4) % 4)
+            try {
+                val decoded = String(Base64.decode(padded, Base64.DEFAULT), Charsets.UTF_8)
+                Regex("""highlight:(\d+)""").find(decoded)?.let { return it.groupValues[1] }
+                Regex("""(\d{8,})""").find(decoded)?.let { return it.groupValues[1] }
+            } catch (e: Exception) {
+                // try next variant
+            }
+        }
+        Regex("""highlight:(\d+)""").find(token)?.let { return it.groupValues[1] }
+        return null
     }
 
     private const val alphabet =

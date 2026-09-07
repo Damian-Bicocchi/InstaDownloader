@@ -25,13 +25,14 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
   - `fetchStories(userPk): MediaFeed` — `GET /feed/reels_media/?reel_ids=<pk>`, unwraps `reels.<pk>` → `MediaFeed`.
   - `fetchMediaInfo(mediaId): MediaFeed` — authenticated `GET /media/<id>/info/`; parses `items` **array** (fixed) for single post/reel/story.
   - `fetchMediaItem(mediaId): MediaItem` + `fetchMediaByShortcode(shortcode): MediaItem` — authenticated single-item fetch (private fallback).
-  - `fetchPublicShortcodeMedia(shortcode): List<PublicFile>` — **no login**: GETs `/{reel,p}/<shortcode>/embed/` with browser UA and zero cookies, parses `video_url`/`display_url` per carousel `node` + `og:` fallback. Throws on private/removed/changed markup.
+  - `fetchHighlightItems(highlightId): List<MediaItem>` — authenticated `GET /feed/reels_media/?reel_ids=highlight:<id>`; unwraps `reels["highlight:<id>"]items`, the whole story carousel.
+  - `fetchPublicShortcodeMedia(shortcode): List<PublicFile>` — **no login, downloads ALL media of the post**: GETs `/{reel,p}/<shortcode>/embed/` (both, keeps longest) with browser UA and zero cookies; `parseEmbedHtml()` correlates each carousel child via order-independent `node` blocks (bounded windows, skips owner/profile nodes), fallback combines `video_url` + `display_url` (single-video poster suppressed). Throws on private/removed/changed markup.
   - `PublicFile(url, isVideo)` — direct CDN file from the public path.
   - `isSessionValid(): Boolean` — delegates to `session.isLoggedIn`.
 
 ### `InstagramLinks.kt`
-- **Utility:** Pure parser, no network. `parse(link): Resolved?` → `ShortcodeMedia(shortcode, mediaId)` for `/p|reel|reels|tv/` or `StoryMedia(storyId, username)` for `/stories/<user>/<id>`. Returns `null` for highlights (`/s/…`) and non-Instagram URLs.
-- `shortcodeToMediaId(shortcode)` — base64url decode (`A-Za-z0-9-_`), offline.
+- **Utility:** Pure parser, no network. `parse(link): Resolved?` → `ShortcodeMedia(shortcode, mediaId)` for `/p|reel|reels|tv/`, `StoryMedia(storyId, username)` for `/stories/<user>/<id>`, `Highlight(highlightId)` for `/stories/highlights/<id>/` or `/s/<token>` (base64 `highlight:<id>`, else `?story_media_id=` single-story fallback). Highlights checked before stories to avoid `username="highlights"` misparse.
+- `shortcodeToMediaId(shortcode)` — base64url decode (`A-Za-z0-9-_`), offline. `decodeHighlightToken(token)` — URL/base64 decode → numeric id.
 - **Helpers:**
   - `buildGet(url)` — adds `baseHeaders` + `Cookie` from `SessionStore` + `X-CSRFToken` (extracted or `missing`) + `X-Instagram-AJAX: 1`.
   - `executeAndCheck(request): String` — throws `IOException` with `IgError.message` or `HTTP <code>` on failure.

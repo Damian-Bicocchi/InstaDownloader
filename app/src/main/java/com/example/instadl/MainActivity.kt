@@ -282,13 +282,15 @@ class MainActivity : AppCompatActivity() {
         }
         val resolved = InstagramLinks.parse(link)
         if (resolved == null) {
-            toast("Unsupported link (use post / reel / story link)")
-            setStatus("Unsupported link. Highlights (/s/…) are not supported.")
+            toast("Unsupported link (use post / reel / story / highlight link)")
+            setStatus("Unsupported link.")
             return
         }
-        if (resolved is InstagramLinks.Resolved.StoryMedia && !session.isLoggedIn) {
-            toast("Log in to download stories")
-            setStatus("Stories need login — log in, then retry the link.")
+        if ((resolved is InstagramLinks.Resolved.StoryMedia ||
+                resolved is InstagramLinks.Resolved.Highlight) && !session.isLoggedIn
+        ) {
+            toast("Log in to download stories & highlights")
+            setStatus("Stories & highlights need login — log in, then retry the link.")
             return
         }
         setLoading(true)
@@ -300,6 +302,8 @@ class MainActivity : AppCompatActivity() {
                         downloadShortcode(resolved)
                     is InstagramLinks.Resolved.StoryMedia ->
                         downloadStoryLink(resolved)
+                    is InstagramLinks.Resolved.Highlight ->
+                        downloadHighlight(resolved)
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Download link failed", e)
@@ -376,6 +380,30 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.w(TAG, "Story link fetch failed", e)
             setStatus("Download failed. Expired/private stories need a logged-in viewer that can see them.")
+            toast("Download failed. Try again.")
+        }
+    }
+
+    /** Entire highlight = carousel of stories; every story (flattened) is saved. */
+    private suspend fun downloadHighlight(resolved: InstagramLinks.Resolved.Highlight) {
+        // Caller guarantees logged-in (checked above).
+        try {
+            setStatus("Fetching highlight…")
+            val items = withContext(Dispatchers.IO) {
+                client.fetchHighlightItems(resolved.highlightId)
+            }.flatMap { it.flatten() }
+            if (items.isEmpty()) {
+                setStatus("No stories found in this highlight")
+                return
+            }
+            val prefix = "highlight_${resolved.highlightId}"
+            setStatus("Downloading ${items.size} story file(s)…")
+            val saved = withContext(Dispatchers.IO) { downloadAll(items, prefix) }
+            setStatus("Saved $saved of ${items.size} highlight files to your Photos/Downloads.")
+            toast("Downloaded $saved files")
+        } catch (e: Exception) {
+            Log.w(TAG, "Highlight fetch failed", e)
+            setStatus("Download failed. Private/removed highlights need a logged-in viewer that can see them.")
             toast("Download failed. Try again.")
         }
     }

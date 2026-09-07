@@ -17,10 +17,11 @@ The app uses **Instagram's private API v1** endpoints (`i.instagram.com/api/v1/.
 2. **Resolve user** — `GET /users/web_profile_info/?username=...` turns a username into a numeric user id (`pk`). Login required.
 3. **Posts** — `GET /feed/user/{pk}/?count=33` returns recent media; each item yields best-quality image (`image_versions2.candidates`) or video (`video_versions`) URLs. Carousels expand via `carousel_media` → all children downloaded. Login required.
 4. **Stories** — `GET /feed/reels_media/?reel_ids={pk}` returns the currently-active story items. Login required (stories are never public).
-5. **Direct link** — paste/share a reel, post or story link:
+5. **Direct link** — paste/share a reel, post, story or highlight link:
    - **Public post/reel → NO login needed.** `InstagramClient.fetchPublicShortcodeMedia()` GETs the unauthenticated embed page (`/{reel,p}/{shortcode}/embed/`, browser UA, no cookies) and extracts CDN URLs from embedded JSON (`video_url` / `display_url`, per carousel `node`) with `og:video` / `og:image` fallback.
    - **Private post/reel → login fallback.** If the embed has no media, and you are logged in, the app decodes the shortcode locally to a media id (`InstagramLinks`) and calls authenticated `GET /media/{id}/info/`, saving every carousel child.
    - **Story link (`/stories/<user>/<id>`) → login required**, fetched via `GET /media/{storyId}/info/`.
+   - **Highlight link (`/stories/highlights/<id>/` or app share `/s/<token>[?story_media_id=…]`) → login required.** Token is base64-decoded to `highlight:<id>`; then `GET /feed/reels_media/?reel_ids=highlight:<id>` returns the whole story carousel and **every** story (flattened) is saved as `highlight_<id>_N`.
 6. **Download** — Media is fetched over a separate OkHttp client and written to shared storage:
    - Android 10+ (API 29+): via `MediaStore` into `Downloads/Instagram/`
    - Android 9 and below: legacy `WRITE_EXTERNAL_STORAGE` into `Pictures/Instagram/`
@@ -44,10 +45,10 @@ No. There is no `WebView`, no Custom Tab, no embedded Instagram feed. You never 
 
 Paste (or Share) the link into the **link field**:
 
-- **Public reel/post → no login needed.** The app scrapes the public embed page and downloads **that exact item, all files** (carousel children included).
+- **Public reel/post → no login needed.** The app scrapes the public embed page and downloads **that exact item, ALL files** (every carousel photo/video; mixed albums correlate each child, single reels yield exactly the video).
 - **Private reel/post → login needed.** If the embed is empty, log in and retry — the app falls back to the authenticated `GET /media/{id}/info/` path.
 - **Story link (`/stories/<user>/<id>`) → login always required** (stories are never public).
-- Highlights (`/s/…`, `/stories/highlights/…`) are still unsupported and report `Unsupported link`.
+- **Highlight link → login required, downloads the ENTIRE highlight.** Accepts `/stories/highlights/<id>/` and app shares `/s/<token>` (base64 `highlight:<id>`, else `?story_media_id=` single-story fallback). Every story in the highlight is saved.
 
 **3. If a post has multiple images and/or videos (carousel/album), does it download them all?**
 
