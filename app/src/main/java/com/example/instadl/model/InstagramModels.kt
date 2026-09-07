@@ -28,6 +28,7 @@ data class MediaItem(
     @SerializedName("media_type") val mediaType: Int? = null,
     @SerializedName("image_versions2") val imageVersions2: ImageVersion2? = null,
     @SerializedName("video_versions") val videoVersions: List<VideoVersion>? = null,
+    @SerializedName("carousel_media") val carouselMedia: List<MediaItem>? = null,
     @SerializedName("original_width") val originalWidth: Int? = null,
     @SerializedName("original_height") val originalHeight: Int? = null,
     @SerializedName("video_duration") val videoDuration: Double? = null,
@@ -38,6 +39,16 @@ data class MediaItem(
 
     fun bestVideoUrl(): String? =
         videoVersions?.maxByOrNull { (it.width ?: 0) * (it.height ?: 0) }?.url
+
+    /** True for album posts (media_type 8) with children. */
+    fun isCarousel(): Boolean = mediaType == 8 && !carouselMedia.isNullOrEmpty()
+
+    /**
+     * Flatten for download: carousel children (each has its own
+     * image/video versions), otherwise just this item.
+     */
+    fun flatten(): List<MediaItem> =
+        if (isCarousel()) carouselMedia!! else listOf(this)
 }
 
 data class UserInfo(

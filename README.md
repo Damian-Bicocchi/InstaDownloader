@@ -13,11 +13,15 @@ Built and verified — you can grab a ready-to-install APK from the project root
 
 The app uses **Instagram's private API v1** endpoints (`i.instagram.com/api/v1/...`), authenticated by logging in with an Instagram account. Its flow:
 
-1. **Login** — `POST /accounts/login/` with the account credentials. Session cookies (including `csrftoken`) are stored locally in encrypted `SharedPreferences` (`EncryptedSharedPreferences`, Keystore-backed).
-2. **Resolve user** — `GET /users/web_profile_info/?username=...` turns a username into a numeric user id (`pk`).
-3. **Posts** — `GET /feed/user/{pk}/?count=33` returns recent media; each item yields best-quality image (`image_versions2.candidates`) or video (`video_versions`) URLs.
-4. **Stories** — `GET /feed/reels_media/?reel_ids={pk}` returns the currently-active story items.
-5. **Download** — Media is fetched over a separate OkHttp client and written to shared storage:
+1. **Login** — `POST /accounts/login/` with the account credentials. Session cookies (including `csrftoken`) are stored locally in encrypted `SharedPreferences` (`EncryptedSharedPreferences`, Keystore-backed). Only needed for private media, stories, and username-based browsing.
+2. **Resolve user** — `GET /users/web_profile_info/?username=...` turns a username into a numeric user id (`pk`). Login required.
+3. **Posts** — `GET /feed/user/{pk}/?count=33` returns recent media; each item yields best-quality image (`image_versions2.candidates`) or video (`video_versions`) URLs. Carousels expand via `carousel_media` → all children downloaded. Login required.
+4. **Stories** — `GET /feed/reels_media/?reel_ids={pk}` returns the currently-active story items. Login required (stories are never public).
+5. **Direct link** — paste/share a reel, post or story link:
+   - **Public post/reel → NO login needed.** `InstagramClient.fetchPublicShortcodeMedia()` GETs the unauthenticated embed page (`/{reel,p}/{shortcode}/embed/`, browser UA, no cookies) and extracts CDN URLs from embedded JSON (`video_url` / `display_url`, per carousel `node`) with `og:video` / `og:image` fallback.
+   - **Private post/reel → login fallback.** If the embed has no media, and you are logged in, the app decodes the shortcode locally to a media id (`InstagramLinks`) and calls authenticated `GET /media/{id}/info/`, saving every carousel child.
+   - **Story link (`/stories/<user>/<id>`) → login required**, fetched via `GET /media/{storyId}/info/`.
+6. **Download** — Media is fetched over a separate OkHttp client and written to shared storage:
    - Android 10+ (API 29+): via `MediaStore` into `Downloads/Instagram/`
    - Android 9 and below: legacy `WRITE_EXTERNAL_STORAGE` into `Pictures/Instagram/`
 
@@ -26,9 +30,9 @@ The app uses **Instagram's private API v1** endpoints (`i.instagram.com/api/v1/.
 This is **not** an Instagram UI wrapper / WebView. It is a small native screen with two cards (`app/src/main/res/layout/activity_main.xml`, wired in `MainActivity.kt`):
 
 - **Account card:** `Username` + `Password` fields and `Login` / `Logout` buttons. Login runs `InstagramClient.login()` on a background coroutine; logout best-effort POSTs `accounts/logout/` then always wipes the encrypted session.
-- **Download from user card:** one `Instagram username` field (`etTarget` — plain username, **not** a URL/link) plus two buttons: `Download Posts` → `downloadPosts()` and `Download Stories` → `downloadStories()`. Status text + progress bar report `Resolving @user… / Fetching… / Downloading N item(s)… / Saved X of N`.
+- **Download from user card:** one `Instagram username` field (`etTarget`) plus two buttons: `Download Posts` → `downloadPosts()` and `Download Stories` → `downloadStories()`. Below that, a `Paste reel / post / story link` field (`etLink`) + `Download Link` button → `downloadFromLink()`. You can also **Share** a link from Instagram / browser to this app (ACTION_SEND) — it pre-fills the link field and auto-downloads when logged in. Status text + progress bar report `Resolving… / Downloading N file(s)… / Saved X of N`.
 
-Files are saved as `<username>_<index>.jpg/.mp4` (stories: `<username>_story_<index>...`) via `DownloadManager.download()`.
+Files are saved as `<username>_<index>.jpg/.mp4` (stories: `<username>_story_<index>...`, links: `link_<shortcode>_<index>...` / `story_<id>_...`) via `DownloadManager.download()`.
 
 ### FAQ — common misconceptions
 
@@ -36,25 +40,31 @@ Files are saved as `<username>_<index>.jpg/.mp4` (stories: `<username>_story_<in
 
 No. There is no `WebView`, no Custom Tab, no embedded Instagram feed. You never browse Instagram inside the app. You type a username, the app talks directly to the private JSON API with spoofed app headers (`Instagram 269.0.0.18.85…`, `X-IG-App-ID`, … in `InstagramClient.kt:baseHeaders`), parses the JSON into `model/` DTOs, and downloads the CDN (`bestImageUrl()` / `bestVideoUrl()`) files.
 
-**2. If I paste a highlight / story link, does it download all highlighted stories or just the current/first one?**
+**2. If I send a highlight / story / reel / post link, what gets downloaded?**
 
-Neither — **link input and highlights are not supported at all.** The target field accepts only a username (e.g. `nasa`, not `https://www.instagram.com/s/aGlnaGxpZ2h0Oj…` or `.../stories/highlights/...`). `downloadStories()` calls `fetchStories(pk)` → `GET /feed/reels_media/?reel_ids={pk}`, which returns **only currently-active (unexpired, last-24h) stories**. `downloadAll()` then loops over **all** items in that feed (not just the first) and saves each as its own file. Expired stories, highlights tray, and highlight reels need different endpoints (`highlight_reels` / `reels_tray`) that this codebase does not call — those links will just fail/be treated as a bad username.
+Paste (or Share) the link into the **link field**:
 
-**3. If I download a post with multiple images and/or videos (carousel/album), does it download them all?**
+- **Public reel/post → no login needed.** The app scrapes the public embed page and downloads **that exact item, all files** (carousel children included).
+- **Private reel/post → login needed.** If the embed is empty, log in and retry — the app falls back to the authenticated `GET /media/{id}/info/` path.
+- **Story link (`/stories/<user>/<id>`) → login always required** (stories are never public).
+- Highlights (`/s/…`, `/stories/highlights/…`) are still unsupported and report `Unsupported link`.
 
-No — **at most one file per post, and carousels are mostly skipped.** `MediaItem` (`model/InstagramModels.kt`) only models `image_versions2` + `video_versions` with `media_type == 1` (photo) / `2` (video). It has **no `carousel_media` field** (`media_type == 8`), so for an album `bestImageUrl()` / `bestVideoUrl()` is `null` and `downloadAll()` skips that item. Single-photo/video posts download the highest-resolution rendition. Related limits: only the **first page** (`?count=33`, `maxId` is never paged via `next_max_id`/`more_available`) is fetched, so accounts with >33 posts need repeated/paginated runs (not yet implemented).
+**3. If a post has multiple images and/or videos (carousel/album), does it download them all?**
+
+Yes — **for single-link downloads and for user downloads.** `MediaItem.carousel_media` is now modeled and `flatten()` expands albums, so `downloadAll()` saves every child (`link_<shortcode>_<index>.jpg/.mp4`). Single-photo/video posts download the highest-resolution rendition. Remaining limit for username-based post download: only the **first page** (`?count=33`, no `next_max_id` pagination yet).
 
 ## Project structure
 
 ```
 app/src/main/java/com/example/instadl/
-├── MainActivity.kt            # UI: login + download posts/stories
+├── MainActivity.kt            # UI: login + download posts/stories/link + share intent
 ├── auth/
-│   └── SessionStore.kt        # Cookie/session persistence
+│   └── SessionStore.kt        # Cookie/session persistence (encrypted)
 ├── network/
-│   └── InstagramClient.kt     # Instagram private API client + signing headers
+│   ├── InstagramClient.kt     # Instagram private API client + signing headers
+│   └── InstagramLinks.kt      # Share-link parser + shortcode→mediaId decode
 ├── model/
-│   ├── InstagramModels.kt     # Media/feed/user models
+│   ├── InstagramModels.kt     # Media/feed/user models (incl. carousel_media)
 │   └── AuthModels.kt          # Login/error models
 └── download/
     └── DownloadManager.kt     # MediaStore / legacy storage writers

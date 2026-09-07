@@ -21,12 +21,21 @@ import java.util.UUID
  * restrictions or permanent bans. Use only on accounts you own and are willing
  * to accept that risk on. This is for personal / educational use.
  */
+/** Direct CDN file resolved without login (public post/reel embed scrape). */
+data class PublicFile(val url: String, val isVideo: Boolean)
+
 class InstagramClient(private val session: SessionStore) {
 
     private val gson = Gson()
     private val deviceUuid: String = UUID.randomUUID().toString()
 
     private val client: OkHttpClient = OkHttpClient.Builder()
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .build()
+
+    /** No-auth client for public embed pages (never sends session cookies). */
+    private val publicClient: OkHttpClient = OkHttpClient.Builder()
         .followRedirects(true)
         .followSslRedirects(true)
         .build()
@@ -136,10 +145,142 @@ class InstagramClient(private val session: SessionStore) {
     fun fetchMediaInfo(mediaId: String): MediaFeed {
         val req = buildGet("${BASE_URL}/media/$mediaId/info/")
         val body = executeAndCheck(req)
+        // Real shape: {"items": [ {...} ], "status": "ok", ...}
+        // (items is an ARRAY, not an object — older code used getJSONObject here.)
         val obj = JSONObject(body)
-        val items = obj.getJSONObject("items")
-        return gson.fromJson(items.toString(), MediaFeed::class.java)
+        val arr = obj.getJSONArray("items")
+        val items = (0 until arr.length()).map { i ->
+            gson.fromJson(arr.getJSONObject(i).toString(), com.example.instadl.model.MediaItem::class.java)
+        }
+        return MediaFeed(items = items, numResults = items.size, status = obj.optString("status"))
     }
+
+    /** Single post / reel / story by numeric media id (incl. decoded shortcodes). */
+    @Throws(IOException::class)
+    fun fetchMediaItem(mediaId: String): com.example.instadl.model.MediaItem {
+        val clean = mediaId.substringBefore('_').trim()
+        require(clean.isNotBlank()) { "empty media id" }
+        return fetchMediaInfo(clean).items?.firstOrNull()
+            ?: throw IOException("Media not found")
+    }
+
+    /** Single post / reel by share-link shortcode (the ABC… part of /p/, /reel/). */
+    @Throws(IOException::class)
+    fun fetchMediaByShortcode(shortcode: String): com.example.instadl.model.MediaItem =
+        fetchMediaItem(InstagramLinks.shortcodeToMediaId(shortcode))
+
+    /**
+     * Public post/reel fetch — NO login required.
+     *
+     * GETs the unauthenticated embed page
+     * (`https://www.instagram.com/{reel,p}/{shortcode}/embed/`) and extracts
+     * direct CDN URLs from the embedded JSON (`video_url` / `display_url`)
+     * with `og:video` / `og:image` as fallback. No session cookie is sent.
+     *
+     * @throws IOException when the media is private, expired, or the page
+     * layout changed — caller should fall back to the authenticated
+     * /media/{id}/info/ path (or ask the user to log in).
+     */
+    @Throws(IOException::class)
+    fun fetchPublicShortcodeMedia(shortcode: String): List<PublicFile> {
+        val code = shortcode.substringBefore('?').substringBefore('#').trim()
+        require(code.isNotEmpty()) { "empty shortcode" }
+        var lastError: IOException? = null
+        // Reel shortcodes also resolve under /p/ and vice versa; try both.
+        for (kind in listOf("reel", "p")) {
+            try {
+                val files = fetchPublicEmbed(kind, code)
+                if (files.isNotEmpty()) return files
+            } catch (e: IOException) {
+                lastError = e
+            }
+        }
+        throw lastError ?: IOException("Public media not found")
+    }
+
+    @Throws(IOException::class)
+    private fun fetchPublicEmbed(kind: String, shortcode: String): List<PublicFile> {
+        val req = Request.Builder()
+            .url("https://www.instagram.com/$kind/$shortcode/embed/")
+            .get()
+            .header(
+                "User-Agent",
+                "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 " +
+                    "(KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36"
+            )
+            .header("Accept", "text/html,*/*")
+            .header("Accept-Language", "en-US,en;q=0.9")
+            .build()
+
+        publicClient.newCall(req).execute().use { response ->
+            val html = response.body?.string() ?: ""
+            if (!response.isSuccessful || html.isBlank()) {
+                throw IOException("Embed HTTP ${response.code}")
+            }
+            val files = parseEmbedHtml(html)
+            if (files.isEmpty()) {
+                // Private account / login wall / removed media / markup change.
+                throw IOException("Embed has no public media (private or removed?)")
+            }
+            return files
+        }
+    }
+
+    /** Extract per-item files; correlates each carousel child via its node block. */
+    internal fun parseEmbedHtml(html: String): List<PublicFile> {
+        val out = mutableListOf<PublicFile>()
+        val seen = LinkedHashSet<String>()
+
+        // Carousel / sidecar children: each "node":{"is_video":…,"display_url":"…",…,"video_url":"…"}
+        val nodeStarts = Regex(""""node"\s*:\s*\{\s*"is_video"\s*:\s*(true|false)""")
+            .findAll(html).toList()
+        if (nodeStarts.isNotEmpty()) {
+            for (m in nodeStarts) {
+                val window = html.substring(m.range.first, minOf(m.range.first + 6000, html.length))
+                val isVideo = m.groupValues[1] == "true"
+                val display = Regex(""""display_url"\s*:\s*"([^"]+)"""")
+                    .find(window)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                val video = Regex(""""video_url"\s*:\s*"([^"]+)"""")
+                    .find(window)?.groupValues?.get(1)?.let(::unescapeEmbedUrl)
+                val pick = if (isVideo) video ?: display else display
+                if (!pick.isNullOrBlank() && seen.add(pick)) {
+                    // A video child may only expose display_url in some markups;
+                    // trust is_video flag only when we have a real video url.
+                    out.add(PublicFile(pick, isVideo && video != null))
+                }
+            }
+            if (out.isNotEmpty()) return out
+        }
+
+        // Single media: prefer embedded JSON urls, fall back to og: meta tags.
+        val videos = Regex(""""video_url"\s*:\s*"([^"]+)"""")
+            .findAll(html).map { unescapeEmbedUrl(it.groupValues[1]) }
+            .filter { it.startsWith("http") }.distinct().toList()
+        if (videos.isNotEmpty()) {
+            return videos.filter { seen.add(it) }.map { PublicFile(it, true) }
+        }
+        val images = Regex(""""display_url"\s*:\s*"([^"]+)"""")
+            .findAll(html).map { unescapeEmbedUrl(it.groupValues[1]) }
+            .filter { it.startsWith("http") }.distinct().toList()
+        if (images.isNotEmpty()) {
+            return images.filter { seen.add(it) }.map { PublicFile(it, false) }
+        }
+        Regex("""<meta[^>]+property=["']og:video:secure_url["'][^>]+content=["']([^"']+)""")
+            .find(html)?.groupValues?.get(1)?.let { unescapeHtmlAttr(it) }
+            ?.takeIf { it.startsWith("http") && seen.add(it) }
+            ?.let { return listOf(PublicFile(it, true)) }
+        Regex("""<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)""")
+            .findAll(html).map { unescapeHtmlAttr(it.groupValues[1]) }
+            .firstOrNull { it.startsWith("http") && seen.add(it) }
+            ?.let { return listOf(PublicFile(it, false)) }
+        return emptyList()
+    }
+
+    private fun unescapeEmbedUrl(s: String): String =
+        s.replace("\\/", "/").replace("\\u0026", "&").replace("&amp;", "&")
+
+    private fun unescapeHtmlAttr(s: String): String =
+        s.replace("&amp;", "&")
 
     fun isSessionValid(): Boolean = session.isLoggedIn
 

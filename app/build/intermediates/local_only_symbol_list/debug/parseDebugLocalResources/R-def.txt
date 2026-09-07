@@ -8,13 +8,16 @@ color ig_light
 color ig_purple
 color ig_white
 drawable ic_launcher_foreground
+id btnDownloadLink
 id btnDownloadPosts
 id btnDownloadStories
 id btnLogin
 id btnLogout
+id etLink
 id etPassword
 id etTarget
 id etUsername
+id inputLink
 id inputPassword
 id inputTarget
 id inputUsername

@@ -25,8 +25,9 @@ Gson-annotated DTOs for Instagram private API (`i.instagram.com/api/v1`) respons
   - `MediaCandidate(width, height, url)` — single image rendition.
   - `VideoVersion(type, width, height, url)` — single video rendition.
   - `ImageVersion2(candidates)` (`image_versions2`) and `StoryImageVersions(candidates)` — image rendition lists for posts vs. stories.
-  - `MediaItem(id, mediaType, imageVersions2, videoVersions, originalWidth/Height, videoDuration, takenAt)` — one post/story. `mediaType==2` = video, `==1` = photo.
+  - `MediaItem(id, mediaType, imageVersions2, videoVersions, carouselMedia, …)` — one post/story. `mediaType==2` = video, `==1` = photo, `==8` = carousel/album.
     - `bestImageUrl()` → max `width` candidate URL.
     - `bestVideoUrl()` → max `width*height` version URL.
+    - `isCarousel()` / `flatten()` — album expands to `carouselMedia` children so every image/video is downloaded.
   - `UserInfo(pk, username, fullName, profilePicUrl, isPrivate)` — result of `fetchUserByUsername()`; `pk` is required for subsequent feed calls.
   - `MediaFeed(items, numResults, moreAvailable, nextMaxId, status)` — paginated container for `fetchUserMediaPk()` / `fetchStories()`; pagination fields parsed but single-page fetch only.

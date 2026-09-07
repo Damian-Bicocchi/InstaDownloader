@@ -184,6 +184,32 @@
                         app:backgroundTint="@color/ig_gradient_end" />
                 </LinearLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputLink"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="Paste reel / post / story link"
+                    app:boxStrokeColor="@color/ig_purple">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDownloadLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Download Link"
+                    android:textAllCaps="false"
+                    app:backgroundTint="@color/ig_purple" />
+
                 <TextView
                     android:id="@+id/tvStatus"
                     android:layout_width="match_parent"

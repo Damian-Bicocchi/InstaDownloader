@@ -3198,6 +3198,7 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnDownloadLink
 id btnDownloadPosts
 id btnDownloadStories
 id btnLogin
@@ -3284,6 +3285,7 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id etLink
 id etPassword
 id etTarget
 id etUsername
@@ -3332,6 +3334,7 @@ id immediateStop
 id included
 id indeterminate
 id info
+id inputLink
 id inputPassword
 id inputTarget
 id inputUsername

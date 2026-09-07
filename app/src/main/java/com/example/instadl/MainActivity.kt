@@ -1,6 +1,7 @@
 package com.example.instadl
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,8 @@ import com.example.instadl.databinding.ActivityMainBinding
 import com.example.instadl.download.DownloadManager
 import com.example.instadl.model.MediaItem
 import com.example.instadl.network.InstagramClient
+import com.example.instadl.network.InstagramLinks
+import com.example.instadl.network.PublicFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,6 +55,29 @@ class MainActivity : AppCompatActivity() {
         binding.btnLogout.setOnClickListener { performLogout() }
         binding.btnDownloadPosts.setOnClickListener { downloadPosts() }
         binding.btnDownloadStories.setOnClickListener { downloadStories() }
+        binding.btnDownloadLink.setOnClickListener {
+            downloadFromLink(binding.etLink.text.toString())
+        }
+        handleShareIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleShareIntent(intent)
+    }
+
+    /** Accept Instagram URLs shared from Instagram / browser via ACTION_SEND. */
+    private fun handleShareIntent(intent: Intent?) {
+        if (intent?.action != Intent.ACTION_SEND) return
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return
+        val url = Regex("""https?://[^\s'"]*instagram\.com[^\s'"]*""")
+            .find(text)?.value ?: return
+        binding.etLink.setText(url)
+        // Public posts/reels resolve without login; stories still need it.
+        // Always attempt — downloadFromLink() asks for login only when needed.
+        downloadFromLink(url)
+    }
     }
 
     private fun requestStoragePermissions() {
@@ -87,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setLoading(loading: Boolean) {
         binding.progressBar.isVisible = loading
-        val buttons = listOf(binding.btnLogin, binding.btnLogout, binding.btnDownloadPosts, binding.btnDownloadStories)
+        val buttons = listOf(binding.btnLogin, binding.btnLogout, binding.btnDownloadPosts, binding.btnDownloadStories, binding.btnDownloadLink)
         buttons.forEach { it.isEnabled = !loading }
     }
 
@@ -190,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                 val pk = user.pk ?: throw Exception("Could not resolve user id")
                 setStatus("Fetching posts of @$target…")
                 val feed = withContext(Dispatchers.IO) { client.fetchUserMediaPk(pk) }
-                val items = feed.items ?: emptyList()
+                val items = (feed.items ?: emptyList()).flatMap { it.flatten() }
                 if (items.isEmpty()) {
                     setStatus("No posts found for @$target")
                     return@launch
@@ -224,7 +250,7 @@ class MainActivity : AppCompatActivity() {
                 val pk = user.pk ?: throw Exception("Could not resolve user id")
                 setStatus("Fetching current stories of @$target…")
                 val feed = withContext(Dispatchers.IO) { client.fetchStories(pk) }
-                val items = feed.items ?: emptyList()
+                val items = (feed.items ?: emptyList()).flatMap { it.flatten() }
                 if (items.isEmpty()) {
                     setStatus("No active stories found for @$target")
                     return@launch
@@ -241,6 +267,132 @@ class MainActivity : AppCompatActivity() {
                 setLoading(false)
             }
         }
+    }
+
+    /**
+     * Link download: public posts/reels work WITHOUT login (unauthenticated
+     * embed scrape). Authenticated API is only a fallback for private media,
+     * and a requirement for stories (never public).
+     */
+    private fun downloadFromLink(rawLink: String) {
+        val link = rawLink.trim()
+        if (link.isBlank()) {
+            toast("Paste an Instagram link first")
+            return
+        }
+        val resolved = InstagramLinks.parse(link)
+        if (resolved == null) {
+            toast("Unsupported link (use post / reel / story link)")
+            setStatus("Unsupported link. Highlights (/s/…) are not supported.")
+            return
+        }
+        if (resolved is InstagramLinks.Resolved.StoryMedia && !session.isLoggedIn) {
+            toast("Log in to download stories")
+            setStatus("Stories need login — log in, then retry the link.")
+            return
+        }
+        setLoading(true)
+        setStatus("Resolving link…")
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                when (resolved) {
+                    is InstagramLinks.Resolved.ShortcodeMedia ->
+                        downloadShortcode(resolved)
+                    is InstagramLinks.Resolved.StoryMedia ->
+                        downloadStoryLink(resolved)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Download link failed", e)
+                setStatus("Download failed. Try again.")
+                toast("Download failed. Try again.")
+            } finally {
+                setLoading(false)
+            }
+        }
+    }
+
+    /** Public-first: embed scrape (no login) → auth fallback (private). */
+    private suspend fun downloadShortcode(resolved: InstagramLinks.Resolved.ShortcodeMedia) {
+        val prefix = "link_${resolved.shortcode}"
+
+        val pub = withContext(Dispatchers.IO) {
+            try {
+                client.fetchPublicShortcodeMedia(resolved.shortcode)
+            } catch (e: Exception) {
+                Log.w(TAG, "Public embed fetch failed, trying auth", e)
+                null
+            }
+        }
+        if (!pub.isNullOrEmpty()) {
+            setStatus("Downloading ${pub.size} file(s)…")
+            val saved = withContext(Dispatchers.IO) { downloadPublicFiles(pub, prefix) }
+            setStatus("Saved $saved of ${pub.size} files to your Photos/Downloads.")
+            toast("Downloaded $saved files")
+            return
+        }
+
+        if (!session.isLoggedIn) {
+            setStatus("This looks private — log in, then retry the link.")
+            toast("Log in to download private posts")
+            return
+        }
+        try {
+            val item = withContext(Dispatchers.IO) {
+                client.fetchMediaByShortcode(resolved.shortcode)
+            }
+            // Carousels expand to all children — every image/video is saved.
+            val units = item.flatten()
+            if (units.isEmpty()) {
+                setStatus("No media found for this link")
+                return
+            }
+            setStatus("Downloading ${units.size} file(s)…")
+            val saved = withContext(Dispatchers.IO) { downloadAll(units, prefix) }
+            setStatus("Saved $saved of ${units.size} files to your Photos/Downloads.")
+            toast("Downloaded $saved files")
+        } catch (e: Exception) {
+            Log.w(TAG, "Auth link fetch failed", e)
+            setStatus("Download failed. Private/expired media needs a logged-in viewer that can see it.")
+            toast("Download failed. Try again.")
+        }
+    }
+
+    private suspend fun downloadStoryLink(resolved: InstagramLinks.Resolved.StoryMedia) {
+        // Caller guarantees logged-in (checked above).
+        try {
+            val item = withContext(Dispatchers.IO) {
+                client.fetchMediaItem(resolved.storyId)
+            }
+            val units = item.flatten()
+            if (units.isEmpty()) {
+                setStatus("No media found for this link")
+                return
+            }
+            val prefix = "story_${resolved.storyId}"
+            setStatus("Downloading ${units.size} file(s)…")
+            val saved = withContext(Dispatchers.IO) { downloadAll(units, prefix) }
+            setStatus("Saved $saved of ${units.size} files to your Photos/Downloads.")
+            toast("Downloaded $saved files")
+        } catch (e: Exception) {
+            Log.w(TAG, "Story link fetch failed", e)
+            setStatus("Download failed. Expired/private stories need a logged-in viewer that can see them.")
+            toast("Download failed. Try again.")
+        }
+    }
+
+    private fun downloadPublicFiles(files: List<PublicFile>, prefix: String): Int {
+        val counter = AtomicInteger(0)
+        files.forEachIndexed { index, file ->
+            if (file.url.isBlank()) return@forEachIndexed
+            try {
+                val name = "${prefix}_${index + 1}.${if (file.isVideo) "mp4" else "jpg"}"
+                DownloadManager.download(this, file.url, name, file.isVideo)
+                counter.incrementAndGet()
+            } catch (e: Exception) {
+                Log.w(TAG, "Public file download failed", e)
+            }
+        }
+        return counter.get()
     }
 
     private fun downloadAll(items: List<MediaItem>, prefix: String): Int {

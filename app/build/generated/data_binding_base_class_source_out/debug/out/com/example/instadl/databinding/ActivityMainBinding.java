@@ -24,6 +24,9 @@ public final class ActivityMainBinding implements ViewBinding {
   private final ScrollView rootView;
 
   @NonNull
+  public final MaterialButton btnDownloadLink;
+
+  @NonNull
   public final MaterialButton btnDownloadPosts;
 
   @NonNull
@@ -36,6 +39,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final MaterialButton btnLogout;
 
   @NonNull
+  public final TextInputEditText etLink;
+
+  @NonNull
   public final TextInputEditText etPassword;
 
   @NonNull
@@ -43,6 +49,9 @@ public final class ActivityMainBinding implements ViewBinding {
 
   @NonNull
   public final TextInputEditText etUsername;
+
+  @NonNull
+  public final TextInputLayout inputLink;
 
   @NonNull
   public final TextInputLayout inputPassword;
@@ -62,22 +71,26 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final TextView tvStatus;
 
-  private ActivityMainBinding(@NonNull ScrollView rootView,
+  private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnDownloadLink,
       @NonNull MaterialButton btnDownloadPosts, @NonNull MaterialButton btnDownloadStories,
       @NonNull MaterialButton btnLogin, @NonNull MaterialButton btnLogout,
-      @NonNull TextInputEditText etPassword, @NonNull TextInputEditText etTarget,
-      @NonNull TextInputEditText etUsername, @NonNull TextInputLayout inputPassword,
+      @NonNull TextInputEditText etLink, @NonNull TextInputEditText etPassword,
+      @NonNull TextInputEditText etTarget, @NonNull TextInputEditText etUsername,
+      @NonNull TextInputLayout inputLink, @NonNull TextInputLayout inputPassword,
       @NonNull TextInputLayout inputTarget, @NonNull TextInputLayout inputUsername,
       @NonNull ProgressBar progressBar, @NonNull TextView tvLoginStatus,
       @NonNull TextView tvStatus) {
     this.rootView = rootView;
+    this.btnDownloadLink = btnDownloadLink;
     this.btnDownloadPosts = btnDownloadPosts;
     this.btnDownloadStories = btnDownloadStories;
     this.btnLogin = btnLogin;
     this.btnLogout = btnLogout;
+    this.etLink = etLink;
     this.etPassword = etPassword;
     this.etTarget = etTarget;
     this.etUsername = etUsername;
+    this.inputLink = inputLink;
     this.inputPassword = inputPassword;
     this.inputTarget = inputTarget;
     this.inputUsername = inputUsername;
@@ -113,6 +126,12 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnDownloadLink;
+      MaterialButton btnDownloadLink = ViewBindings.findChildViewById(rootView, id);
+      if (btnDownloadLink == null) {
+        break missingId;
+      }
+
       id = R.id.btnDownloadPosts;
       MaterialButton btnDownloadPosts = ViewBindings.findChildViewById(rootView, id);
       if (btnDownloadPosts == null) {
@@ -137,6 +156,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.etLink;
+      TextInputEditText etLink = ViewBindings.findChildViewById(rootView, id);
+      if (etLink == null) {
+        break missingId;
+      }
+
       id = R.id.etPassword;
       TextInputEditText etPassword = ViewBindings.findChildViewById(rootView, id);
       if (etPassword == null) {
@@ -152,6 +177,12 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.etUsername;
       TextInputEditText etUsername = ViewBindings.findChildViewById(rootView, id);
       if (etUsername == null) {
+        break missingId;
+      }
+
+      id = R.id.inputLink;
+      TextInputLayout inputLink = ViewBindings.findChildViewById(rootView, id);
+      if (inputLink == null) {
         break missingId;
       }
 
@@ -191,9 +222,10 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((ScrollView) rootView, btnDownloadPosts, btnDownloadStories,
-          btnLogin, btnLogout, etPassword, etTarget, etUsername, inputPassword, inputTarget,
-          inputUsername, progressBar, tvLoginStatus, tvStatus);
+      return new ActivityMainBinding((ScrollView) rootView, btnDownloadLink, btnDownloadPosts,
+          btnDownloadStories, btnLogin, btnLogout, etLink, etPassword, etTarget, etUsername,
+          inputLink, inputPassword, inputTarget, inputUsername, progressBar, tvLoginStatus,
+          tvStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

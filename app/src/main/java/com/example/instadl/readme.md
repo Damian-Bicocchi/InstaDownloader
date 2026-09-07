@@ -15,6 +15,7 @@ Entry point package for the Instagram Downloader app.
 - **Key responsibilities:**
   - `onCreate()`: sets `FLAG_SECURE`, inflates view binding, wires `btnLogin / btnLogout / btnDownloadPosts / btnDownloadStories`, calls `updateLoginUi()` and `requestStoragePermissions()`.
   - `performLogin()`: copies password `Editable` → `CharArray`, clears field immediately, calls `InstagramClient.login(username, CharArray)` on `Dispatchers.IO`, wipes array in `finally`; generic UI errors + `Log.w` details.
+  - `downloadFromLink(link)`: public-first — `fetchPublicShortcodeMedia()` with no login; private fallback `fetchMediaByShortcode()` when logged in; stories always require login. Handles ACTION_SEND via `handleShareIntent()` + `downloadPublicFiles()`.
   - `performLogout()`: calls `InstagramClient.logout()` on `Dispatchers.IO` best-effort, then always `SessionStore.clear()` + `updateLoginUi()`; reports `Logged out` vs `Logged out locally`.
   - `downloadPosts()`: `fetchUserByUsername(target)` → `fetchUserMediaPk(pk)` → `downloadAll(items, target)`.
   - `downloadStories()`: `fetchUserByUsername(target)` → `fetchStories(pk)` → `downloadAll(items, target_story)`.

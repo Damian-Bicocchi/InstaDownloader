@@ -53,7 +53,7 @@
 33-->[androidx.core:core:1.13.1] /home/damian/.gradle/caches/8.13/transforms/55eb1f5d199027658345628e3d329aae/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
 34
 35    <application
-35-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-39:19
+35-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-46:19
 36        android:allowBackup="true"
 36-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:24:9-35
 37        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -68,93 +68,111 @@
 42-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:27:9-54
 43        android:supportsRtl="true"
 43-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:28:9-35
-44        android:theme="@style/Theme.InstaDownloader" >
-44-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:29:9-53
-45        <activity
-45-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:30:9-38:20
-46            android:name="com.example.instadl.MainActivity"
-46-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:31:13-41
-47            android:exported="true"
-47-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:32:13-36
-48            android:windowSoftInputMode="adjustResize" >
-48-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:33:13-55
-49            <intent-filter>
-49-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:34:13-37:29
-50                <action android:name="android.intent.action.MAIN" />
-50-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:17-69
-50-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:25-66
-51
-52                <category android:name="android.intent.category.LAUNCHER" />
-52-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:17-77
-52-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:27-74
-53            </intent-filter>
-54        </activity>
-55
-56        <provider
-56-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
-57            android:name="androidx.startup.InitializationProvider"
-57-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
-58            android:authorities="com.example.instadl.androidx-startup"
-58-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
-59            android:exported="false" >
-59-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
-60            <meta-data
-60-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
-61                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-61-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
-62                android:value="androidx.startup" />
-62-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
-63            <meta-data
-63-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:29:13-31:52
-64                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-64-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:30:17-78
-65                android:value="androidx.startup" />
-65-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:31:17-49
-66            <meta-data
-66-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
-67                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-67-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
-68                android:value="androidx.startup" />
-68-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
-69        </provider>
-70
-71        <receiver
-71-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
-72            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-72-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
-73            android:directBootAware="false"
-73-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
-74            android:enabled="true"
-74-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
-75            android:exported="true"
-75-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
-76            android:permission="android.permission.DUMP" >
-76-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
-77            <intent-filter>
-77-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
-78                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-78-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
-78-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
-79            </intent-filter>
-80            <intent-filter>
-80-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
-81                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-81-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
-81-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
-82            </intent-filter>
-83            <intent-filter>
-83-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
-84                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-84-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
-84-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
-85            </intent-filter>
-86            <intent-filter>
-86-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
-87                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-87-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
-87-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
-88            </intent-filter>
-89        </receiver>
-90    </application>
-91
-92</manifest>
+44        android:testOnly="true"
+45        android:theme="@style/Theme.InstaDownloader" >
+45-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:29:9-53
+46        <activity
+46-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:30:9-45:20
+47            android:name="com.example.instadl.MainActivity"
+47-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:31:13-41
+48            android:exported="true"
+48-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:32:13-36
+49            android:launchMode="singleTop"
+49-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:33:13-43
+50            android:windowSoftInputMode="adjustResize" >
+50-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:34:13-55
+51            <intent-filter>
+51-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:13-38:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:17-69
+52-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:25-66
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:37:17-77
+54-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:37:27-74
+55            </intent-filter>
+56            <!-- Appear in Instagram / browser Share sheets for direct link download. -->
+57            <intent-filter>
+57-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:40:13-44:29
+58                <action android:name="android.intent.action.SEND" />
+58-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:41:17-69
+58-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:41:25-66
+59
+60                <category android:name="android.intent.category.DEFAULT" />
+60-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:42:17-76
+60-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:42:27-73
+61
+62                <data android:mimeType="text/plain" />
+62-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:43:17-55
+62-->/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:43:23-52
+63            </intent-filter>
+64        </activity>
+65
+66        <provider
+66-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+67            android:name="androidx.startup.InitializationProvider"
+67-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+68            android:authorities="com.example.instadl.androidx-startup"
+68-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+69            android:exported="false" >
+69-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+70            <meta-data
+70-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+71                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+71-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+72                android:value="androidx.startup" />
+72-->[androidx.emoji2:emoji2:1.3.0] /home/damian/.gradle/caches/8.13/transforms/1be728266e2c0a75f6c4b282126905f3/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+73            <meta-data
+73-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:29:13-31:52
+74                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+74-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:30:17-78
+75                android:value="androidx.startup" />
+75-->[androidx.lifecycle:lifecycle-process:2.8.4] /home/damian/.gradle/caches/8.13/transforms/9299543bc6999fdedb52667308a54dcb/transformed/lifecycle-process-2.8.4/AndroidManifest.xml:31:17-49
+76            <meta-data
+76-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+77                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+77-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+78                android:value="androidx.startup" />
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+79        </provider>
+80
+81        <receiver
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+82            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+83            android:directBootAware="false"
+83-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+84            android:enabled="true"
+84-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+85            android:exported="true"
+85-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+86            android:permission="android.permission.DUMP" >
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+87            <intent-filter>
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+88                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+89            </intent-filter>
+90            <intent-filter>
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+91                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+92            </intent-filter>
+93            <intent-filter>
+93-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+94                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+95            </intent-filter>
+96            <intent-filter>
+96-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+97                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] /home/damian/.gradle/caches/8.13/transforms/69b73afc54a6e1ea7fdf60d26b457a55/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+98            </intent-filter>
+99        </receiver>
+100    </application>
+101
+102</manifest>
