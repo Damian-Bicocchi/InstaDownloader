@@ -17,7 +17,7 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
   - `baseHeaders` mimics official Android app: `User-Agent: Instagram 269.0.0.18.85 ...`, `X-IG-App-ID`, `X-IG-Capabilities`, `X-FB-HTTP-Engine: Liger`, etc.
   - `deviceUuid` random per process; `OkHttpClient` with `followRedirects/SslRedirects`.
 - **Key API:**
-  - `login(username, password): LoginResponse` — `POST /accounts/login/` with `FormBody` (`phone_id, adid, guid, device_id, password, _csrftoken=missing, login_attempt_count`). On body containing `"status":"ok"` / `"logged_in_user"`, calls `saveCookies(Set-Cookie)` then Gson-parses to `LoginResponse`.
+  - `login(username, password: CharArray): LoginResponse` — `POST /accounts/login/`; transient `String` copy scoped to call, caller array wiped on entry; status-code-only `IOException`, never logs secret.
   - `logout(): Boolean` — best-effort `POST /accounts/logout/` with `FormBody(_csrftoken, guid, device_id)` + `Cookie`/`X-CSRFToken`; returns `isSuccessful`. Caller (`MainActivity.performLogout()`) must still wipe `SessionStore` on `false`.
   - `fetchUserByUsername(username): UserInfo` — `GET /users/web_profile_info/?username=...&is_sandbox=true`, unwraps `data.user` via `JSONObject` then Gson.
   - `fetchUserMediaPk(pk, maxId?): MediaFeed` — `GET /feed/user/<pk>/?count=33[&max_id=]` → `MediaFeed`.

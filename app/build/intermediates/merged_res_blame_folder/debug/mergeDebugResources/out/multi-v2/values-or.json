@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.instadl.app-mergeDebugResources-32:/values-or/values-or.xml",
+            "outputFile": "com.example.instadl.app-mergeDebugResources-33:/values-or/values-or.xml",
             "map": [
                 {
                     "source": "/home/damian/.gradle/caches/8.13/transforms/55eb1f5d199027658345628e3d329aae/transformed/core-1.13.1/res/values-or/values-or.xml",

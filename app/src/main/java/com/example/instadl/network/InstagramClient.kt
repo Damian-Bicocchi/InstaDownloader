@@ -43,51 +43,65 @@ class InstagramClient(private val session: SessionStore) {
         "Connection" to "close"
     )
 
+    /**
+     * @param password caller-owned secret; wiped (zeroed) before returning,
+     * so the cleartext lives only for the duration of this call. A transient
+     * String copy is unavoidable for OkHttp FormBody — it is kept in the
+     * smallest possible scope and never logged.
+     */
     @Throws(IOException::class)
-    fun login(username: String, password: String): LoginResponse {
+    fun login(username: String, password: CharArray): LoginResponse {
         val time = "${System.currentTimeMillis() / 1000}"
         val csrf = "missing"
-        val body = mapOf(
-            "phone_id" to UUID.randomUUID().toString(),
-            "username" to username,
-            "adid" to UUID.randomUUID().toString(),
-            "guid" to deviceUuid,
-            "device_id" to "android-${deviceUuid}",
-            "password" to password,
-            "_csrftoken" to csrf,
-            "login_attempt_count" to "0"
-        )
+        val passwordStr = String(password)
+        password.fill('\u0000')
+        try {
+            val body = mapOf(
+                "phone_id" to UUID.randomUUID().toString(),
+                "username" to username,
+                "adid" to UUID.randomUUID().toString(),
+                "guid" to deviceUuid,
+                "device_id" to "android-${deviceUuid}",
+                "password" to passwordStr,
+                "_csrftoken" to csrf,
+                "login_attempt_count" to "0"
+            )
 
-        val form = FormBody.Builder()
-        body.forEach { (k, v) -> form.add(k, v) }
+            val form = FormBody.Builder()
+            body.forEach { (k, v) -> form.add(k, v) }
 
-        val req = Request.Builder()
-            .url("$BASE_URL/accounts/login/")
-            .post(form.build())
-            .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
-            .header("X-CSRFToken", csrf)
-            .header("X-IG-WWW-Claim", "0")
-            .header("X-Instagram-AJAX", "1")
-            .header("X-Timestamp", time)
-            .header("X-Requested-With", "XMLHttpRequest")
-            .build()
+            val req = Request.Builder()
+                .url("$BASE_URL/accounts/login/")
+                .post(form.build())
+                .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
+                .header("X-CSRFToken", csrf)
+                .header("X-IG-WWW-Claim", "0")
+                .header("X-Instagram-AJAX", "1")
+                .header("X-Timestamp", time)
+                .header("X-Requested-With", "XMLHttpRequest")
+                .build()
 
-        val response = client.newCall(req).execute()
-        val responseBody = response.body?.string() ?: ""
+            client.newCall(req).execute().use { response ->
+                val responseBody = response.body?.string() ?: ""
 
-        if (!response.isSuccessful || responseBody.isBlank()) {
-            throw IOException("Login failed HTTP ${response.code}")
+                if (!response.isSuccessful || responseBody.isBlank()) {
+                    // Status code only — never include body (may echo credentials).
+                    throw IOException("Login failed HTTP ${response.code}")
+                }
+
+                // Keep session cookies on success (ignore login-specific errors).
+                if (responseBody.contains("\"status\":\"ok\"") ||
+                    responseBody.contains("\"logged_in_user\"")
+                ) {
+                    val cookieHeader = response.header("Set-Cookie") ?: ""
+                    saveCookies(cookieHeader)
+                }
+
+                return gson.fromJson(responseBody, LoginResponse::class.java)
+            }
+        } finally {
+            // password CharArray already wiped on entry; nothing retained here.
         }
-
-        // Keep session cookies on success (ignore login-specific errors).
-        if (responseBody.contains("\"status\":\"ok\"") ||
-            responseBody.contains("\"logged_in_user\"")
-        ) {
-            val cookieHeader = response.header("Set-Cookie") ?: ""
-            saveCookies(cookieHeader)
-        }
-
-        return gson.fromJson(responseBody, LoginResponse::class.java)
     }
 
     @Throws(IOException::class)

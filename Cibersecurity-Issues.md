@@ -12,7 +12,7 @@
 | # | Severity | Issue                                                                                                                                                                                                     | Location                                                                                                    |
 |---|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | 1 | Critical | ~~Session tokens (cookies) stored in cleartext `SharedPreferences`~~ — **FIXED 2026-09-07: `EncryptedSharedPreferences` (`ig_session_enc`) + Keystore `MasterKey`, legacy `ig_session` migrated + wiped** | `app/src/main/java/com/example/instadl/auth/SessionStore.kt`                                                |
-| 2 | High     | Password lives as immutable `String` in heap, no `FLAG_SECURE`, errors echoed to UI                                                                                                                       | `app/src/main/java/com/example/instadl/MainActivity.kt:93-99,124,157`                                       |
+| 2 | High     | ~~Password lives as immutable `String` in heap, no `FLAG_SECURE`, errors echoed to UI~~ — **FIXED 2026-09-07: `FLAG_SECURE`, `CharArray` + immediate wipe, generic UI errors + `Log`** | `app/src/main/java/com/example/instadl/MainActivity.kt:performLogin()`, `network/InstagramClient.kt:login()` |
 | 3 | High     | ~~Logout is local-only, server session stays valid~~ — **FIXED 2026-09-07: `InstagramClient.logout()` POSTs `/accounts/logout/` best-effort, `MainActivity.performLogout()` always wipes local** | `app/src/main/java/com/example/instadl/network/InstagramClient.kt`, `MainActivity.kt:performLogout()` |
 | 4 | High     | Release signed with debug keystore + minify disabled                                                                                                                                                      | `app/build.gradle.kts:18-28`                                                                                |
 | 5 | High     | No TLS hardening (no pinning, no `networkSecurityConfig`), redirects enabled, unused logging-interceptor                                                                                                  | `app/src/main/java/com/example/instadl/network/InstagramClient.kt:29-32,132-143`, `app/build.gradle.kts:58` |
@@ -37,19 +37,19 @@ putString("cookies", cookies) // sessionid, csrftoken, ds_user_id, rur
 
 **Residual:** still exclude from backup (see #6) and validate expiry (`saved_at`) / re-auth on 401. No build run here (no Gradle toolchain in this env) — run `./gradlew :app:assembleDebug` / `lint` before release and confirm no `ig_session.xml` cleartext remains on device.
 
-## 2. [High] In-memory password handling + UI exposure
+## 2. [High] In-memory password handling + UI exposure — FIXED (2026-09-07)
 
-**Files:** `app/src/main/java/com/example/instadl/MainActivity.kt:93-99,124,157`, `app/src/main/res/layout/activity_main.xml:91-96`
+**Files:** `app/src/main/java/com/example/instadl/MainActivity.kt`, `network/InstagramClient.kt`
 
-- `val password = etPassword.text.toString()` is an immutable `String`, retained until GC, never wiped.
-- No `FLAG_SECURE` → password visible in recents thumbnail / screenshots / screen-record.
-- `setStatus("Login error: ${e.message}")` + `toast(...)` echo internal errors to screen.
-- Positive: `inputType="textPassword"`, `password_toggle`, and `etUsername/etPassword.text?.clear()` on login in `updateLoginUi():77-80`.
+**Was:**
+- `val password = etPassword.text.toString()` immutable `String`, retained until GC.
+- No `FLAG_SECURE` → recents/screenshot leak.
+- `setStatus("Login error: ${e.message}")` echoed internals.
 
-**Fix:**
-- Null reference ASAP after `login()`, avoid `String` retention; never log password.
-- `window.setFlags(FLAG_SECURE, FLAG_SECURE)` on login screen.
-- Show generic user messages, log details only to logcat (redacted).
+**Now:**
+- `onCreate()` sets `FLAG_SECURE` (no recents thumbnail / screenshot / recording).
+- `performLogin()` copies `Editable` → `CharArray`, clears `etPassword` immediately, passes `CharArray` to `login()`, wipes with `fill('\u0000')` in `finally` (both sides). Transient `String` for OkHttp `FormBody` lives only inside `InstagramClient.login()` scope, never logged.
+- UI shows generic `Login failed. Check credentials / connection`; details go to `Log.w(TAG, ...)` redacted (`status/errorType` only). Same sanitizing applied to post/story download errors. `Response.use {}` closes login response.
 
 ## 3. [High] Logout does not invalidate server session — FIXED (2026-09-07)
 

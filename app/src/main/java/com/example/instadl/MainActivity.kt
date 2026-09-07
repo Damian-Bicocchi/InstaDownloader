@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Never let the login screen (password field) appear in
+        // recents thumbnails, screenshots or screen recordings.
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -89,8 +97,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun performLogin() {
         val username = binding.etUsername.text.toString().trim()
-        val password = binding.etPassword.text.toString()
-        if (username.isBlank() || password.isBlank()) {
+        // Copy password out of the Editable and wipe the field immediately
+        // so the secret lives in memory for the shortest possible time.
+        val passwordEditable = binding.etPassword.text
+        val password: CharArray = if (passwordEditable == null) {
+            CharArray(0)
+        } else {
+            val len = passwordEditable.length
+            val arr = CharArray(len)
+            for (i in 0 until len) arr[i] = passwordEditable[i]
+            arr
+        }
+        binding.etPassword.text?.clear()
+        if (username.isBlank() || password.isEmpty()) {
+            wipe(password)
             toast("Enter username and password")
             return
         }
@@ -110,17 +130,19 @@ class MainActivity : AppCompatActivity() {
                     updateLoginUi()
                     toast("Logged in as @${result.loggedInUser.username}")
                 } else {
-                    setStatus("Login failed: ${result.message ?: result.status ?: "unknown error"}")
-                    toast("Login failed. Check credentials."
-                        .let { it + (result.twoFactorRequired == true).let { two ->
-                            if (two) " (2FA is not supported)" else ""
-                        } }
+                    Log.w(TAG, "Login failed: status=${result.status} error=${result.errorType}")
+                    setStatus("Login failed. Check credentials.")
+                    toast("Login failed. Check credentials." +
+                        if (result.twoFactorRequired == true) " (2FA is not supported)" else ""
                     )
                 }
             } catch (e: Exception) {
-                setStatus("Login error: ${e.message}")
-                toast("Login error: ${e.message}")
+                // Never echo raw exception (may contain username / server internals).
+                Log.w(TAG, "Login error", e)
+                setStatus("Login failed. Check connection and try again.")
+                toast("Login failed. Check connection and try again.")
             } finally {
+                wipe(password)
                 setLoading(false)
             }
         }
@@ -178,8 +200,9 @@ class MainActivity : AppCompatActivity() {
                 setStatus("Saved $saved of ${items.size} files to your Photos/Downloads.")
                 toast("Downloaded $saved files")
             } catch (e: Exception) {
-                setStatus("Error: ${e.message}")
-                toast("Error: ${e.message}")
+                Log.w(TAG, "Download posts failed", e)
+                setStatus("Download failed. Try again.")
+                toast("Download failed. Try again.")
             } finally {
                 setLoading(false)
             }
@@ -211,8 +234,9 @@ class MainActivity : AppCompatActivity() {
                 setStatus("Saved $saved of ${items.size} story files.")
                 toast("Downloaded $saved stories")
             } catch (e: Exception) {
-                setStatus("Error: ${e.message}")
-                toast("Error: ${e.message}")
+                Log.w(TAG, "Download stories failed", e)
+                setStatus("Download failed. Try again.")
+                toast("Download failed. Try again.")
             } finally {
                 setLoading(false)
             }
@@ -247,5 +271,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
+    private fun wipe(secret: CharArray) {
+        secret.fill('\u0000')
     }
 }
