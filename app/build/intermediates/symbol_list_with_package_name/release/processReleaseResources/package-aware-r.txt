@@ -1424,11 +1424,17 @@ color foreground_material_dark
 color foreground_material_light
 color highlighted_text_material_dark
 color highlighted_text_material_light
+color ig_background
+color ig_border
 color ig_dark
 color ig_gradient_end
 color ig_gray
 color ig_light
 color ig_purple
+color ig_surface
+color ig_surface_variant
+color ig_text_primary
+color ig_text_secondary
 color ig_white
 color m3_appbar_overlay_color
 color m3_assist_chip_icon_tint_color

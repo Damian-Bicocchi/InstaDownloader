@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ig_purple">#C13584</color>
+    <color name="ig_purple">#E1306C</color>
     <color name="ig_gradient_end">#F77737</color>
-    <color name="ig_dark">#1A1A1A</color>
+    <color name="ig_dark">#0E0E0E</color>
     <color name="ig_white">#FFFFFF</color>
-    <color name="ig_gray">#8E8E8E</color>
-    <color name="ig_light">#FAFAFA</color>
+    <color name="ig_gray">#A8A8A8</color>
+    <color name="ig_light">#0E0E0E</color>
     <color name="black">#000000</color>
+
+    <color name="ig_background">#0E0E0E</color>
+    <color name="ig_surface">#1C1C1E</color>
+    <color name="ig_text_primary">#F5F5F7</color>
+    <color name="ig_text_secondary">#A1A1A6</color>
+    <color name="ig_border">#3A3A3C</color>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ig_light"
+    android:background="@color/ig_background"
     android:fillViewport="true">
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:text="Download photos, videos &amp; stories"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:textColor="@color/ig_gray"
+            android:textColor="@color/ig_text_secondary"
             android:textSize="14sp" />
 
         <!-- ================= ACCOUNT / LOGIN ================= -->
@@ -35,8 +35,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/ig_surface"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:strokeColor="@color/ig_border"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account"
-                    android:textColor="@color/black"
+                    android:textColor="@color/ig_text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -58,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Not logged in"
-                    android:textColor="@color/ig_gray"
+                    android:textColor="@color/ig_text_secondary"
                     android:textSize="14sp" />
 
                 <LinearLayout
@@ -94,7 +97,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Clear username"
                         android:src="@drawable/ic_clear"
-                        app:tint="@color/ig_gray" />
+                        app:tint="@color/ig_text_secondary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +134,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Clear password"
                         android:src="@drawable/ic_clear"
-                        app:tint="@color/ig_gray" />
+                        app:tint="@color/ig_text_secondary" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -162,8 +165,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/ig_surface"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            app:strokeColor="@color/ig_border"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -175,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Download from user"
-                    android:textColor="@color/black"
+                    android:textColor="@color/ig_text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -212,7 +218,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Clear Instagram username"
                         android:src="@drawable/ic_clear"
-                        app:tint="@color/ig_gray" />
+                        app:tint="@color/ig_text_secondary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -274,7 +280,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Clear link"
                         android:src="@drawable/ic_clear"
-                        app:tint="@color/ig_gray" />
+                        app:tint="@color/ig_text_secondary" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -292,7 +298,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text=""
-                    android:textColor="@color/black"
+                    android:textColor="@color/ig_text_primary"
                     android:textSize="14sp" />
 
                 <ProgressBar
@@ -312,7 +318,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
-            android:textColor="@color/ig_gray"
+            android:textColor="@color/ig_text_secondary"
             android:textSize="11sp"
             android:text="WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account." />
 

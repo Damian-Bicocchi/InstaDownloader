@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="ig_background">#0E0E0E</color>
+    <color name="ig_border">#3A3A3C</color>
+    <color name="ig_dark">#0E0E0E</color>
+    <color name="ig_gradient_end">#F77737</color>
+    <color name="ig_gray">#A8A8A8</color>
+    <color name="ig_light">#0E0E0E</color>
+    <color name="ig_purple">#E1306C</color>
+    <color name="ig_surface">#1C1C1E</color>
+    <color name="ig_text_primary">#F5F5F7</color>
+    <color name="ig_text_secondary">#A1A1A6</color>
+    <color name="ig_white">#FFFFFF</color>
+    <string name="app_name">Insta Downloader</string>
+    <string name="paste_reel_post_story_link">Paste reel / post / story link</string>
+    <style name="Theme.InstaDownloader" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/ig_purple</item>
+        <item name="colorPrimaryVariant">@color/ig_purple</item>
+        <item name="colorSecondary">@color/ig_gradient_end</item>
+        <item name="colorSecondaryVariant">@color/ig_gradient_end</item>
+        <item name="colorOnPrimary">@color/ig_white</item>
+        <item name="colorOnSecondary">@color/ig_white</item>
+        <item name="colorSurface">@color/ig_surface</item>
+        <item name="colorOnSurface">@color/ig_text_primary</item>
+        <item name="colorOnBackground">@color/ig_text_primary</item>
+        <item name="android:colorBackground">@color/ig_background</item>
+        <item name="android:windowBackground">@color/ig_background</item>
+        <item name="android:statusBarColor">@color/ig_background</item>
+        <item name="android:navigationBarColor">@color/ig_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

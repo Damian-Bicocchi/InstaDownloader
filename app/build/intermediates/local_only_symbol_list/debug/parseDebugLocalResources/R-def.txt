@@ -1,11 +1,16 @@
 R_DEF: Internal format may change without notice
 local
 color black
+color ig_background
+color ig_border
 color ig_dark
 color ig_gradient_end
 color ig_gray
 color ig_light
 color ig_purple
+color ig_surface
+color ig_text_primary
+color ig_text_secondary
 color ig_white
 drawable ic_clear
 drawable ic_launcher_foreground

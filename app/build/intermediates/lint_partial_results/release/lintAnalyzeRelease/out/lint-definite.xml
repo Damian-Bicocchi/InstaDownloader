@@ -301,15 +301,15 @@
     <incident
         id="Overdraw"
         severity="warning"
-        message="Possible overdraw: Root element paints background `@color/ig_light` with a theme that also paints a background (inferred theme is `@style/Theme.InstaDownloader`)">
+        message="Possible overdraw: Root element paints background `@color/ig_background` with a theme that also paints a background (inferred theme is `@style/Theme.InstaDownloader`)">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
             line="6"
             column="5"
             startOffset="251"
             endLine="6"
-            endColumn="41"
-            endOffset="287"/>
+            endColumn="46"
+            endOffset="292"/>
     </incident>
 
     <incident
@@ -842,10 +842,10 @@
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
             line="27"
             column="13"
-            startOffset="968"
+            startOffset="973"
             endLine="27"
             endColumn="65"
-            endOffset="1020"/>
+            endOffset="1025"/>
     </incident>
 
     <incident
@@ -854,12 +854,12 @@
         message="Hardcoded string &quot;Account&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="50"
+            line="53"
             column="21"
-            startOffset="1931"
-            endLine="50"
+            startOffset="2083"
+            endLine="53"
             endColumn="43"
-            endOffset="1953"/>
+            endOffset="2105"/>
     </incident>
 
     <incident
@@ -868,12 +868,12 @@
         message="Hardcoded string &quot;Not logged in&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="60"
+            line="63"
             column="21"
-            startOffset="2362"
-            endLine="60"
+            startOffset="2524"
+            endLine="63"
             endColumn="49"
-            endOffset="2390"/>
+            endOffset="2552"/>
     </incident>
 
     <incident
@@ -882,12 +882,12 @@
         message="Hardcoded string &quot;Username&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="78"
+            line="81"
             column="25"
-            startOffset="3258"
-            endLine="78"
+            startOffset="3430"
+            endLine="81"
             endColumn="48"
-            endOffset="3281"/>
+            endOffset="3453"/>
     </incident>
 
     <incident
@@ -896,12 +896,12 @@
         message="Hardcoded string &quot;Clear username&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="95"
+            line="98"
             column="25"
-            startOffset="4165"
-            endLine="95"
+            startOffset="4337"
+            endLine="98"
             endColumn="68"
-            endOffset="4208"/>
+            endOffset="4380"/>
     </incident>
 
     <incident
@@ -910,12 +910,12 @@
         message="Hardcoded string &quot;Password&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="114"
+            line="117"
             column="25"
-            startOffset="5115"
-            endLine="114"
+            startOffset="5297"
+            endLine="117"
             endColumn="48"
-            endOffset="5138"/>
+            endOffset="5320"/>
     </incident>
 
     <incident
@@ -924,12 +924,12 @@
         message="Hardcoded string &quot;Clear password&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="132"
+            line="135"
             column="25"
-            startOffset="6088"
-            endLine="132"
+            startOffset="6270"
+            endLine="135"
             endColumn="68"
-            endOffset="6131"/>
+            endOffset="6313"/>
     </incident>
 
     <incident
@@ -938,12 +938,12 @@
         message="Hardcoded string &quot;Login&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="142"
+            line="145"
             column="21"
-            startOffset="6574"
-            endLine="142"
+            startOffset="6766"
+            endLine="145"
             endColumn="41"
-            endOffset="6594"/>
+            endOffset="6786"/>
     </incident>
 
     <incident
@@ -952,12 +952,12 @@
         message="Hardcoded string &quot;Logout&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="152"
+            line="155"
             column="21"
-            startOffset="7087"
-            endLine="152"
+            startOffset="7279"
+            endLine="155"
             endColumn="42"
-            endOffset="7108"/>
+            endOffset="7300"/>
     </incident>
 
     <incident
@@ -966,12 +966,12 @@
         message="Hardcoded string &quot;Download from user&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="177"
+            line="183"
             column="21"
-            startOffset="8068"
-            endLine="177"
+            startOffset="8397"
+            endLine="183"
             endColumn="54"
-            endOffset="8101"/>
+            endOffset="8430"/>
     </incident>
 
     <incident
@@ -980,12 +980,12 @@
         message="Hardcoded string &quot;Instagram username&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="196"
+            line="202"
             column="25"
-            startOffset="9008"
-            endLine="196"
+            startOffset="9347"
+            endLine="202"
             endColumn="58"
-            endOffset="9041"/>
+            endOffset="9380"/>
     </incident>
 
     <incident
@@ -994,12 +994,12 @@
         message="Hardcoded string &quot;Clear Instagram username&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="213"
+            line="219"
             column="25"
-            startOffset="9921"
-            endLine="213"
+            startOffset="10260"
+            endLine="219"
             endColumn="78"
-            endOffset="9974"/>
+            endOffset="10313"/>
     </incident>
 
     <incident
@@ -1008,12 +1008,12 @@
         message="Hardcoded string &quot;Download Posts&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="229"
+            line="235"
             column="25"
-            startOffset="10684"
-            endLine="229"
+            startOffset="11033"
+            endLine="235"
             endColumn="54"
-            endOffset="10713"/>
+            endOffset="11062"/>
     </incident>
 
     <incident
@@ -1022,12 +1022,12 @@
         message="Hardcoded string &quot;Download Stories&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="239"
+            line="245"
             column="25"
-            startOffset="11207"
-            endLine="239"
+            startOffset="11556"
+            endLine="245"
             endColumn="56"
-            endOffset="11238"/>
+            endOffset="11587"/>
     </incident>
 
     <incident
@@ -1036,12 +1036,12 @@
         message="Hardcoded string &quot;Paste reel / post / story / highlight link (public posts need no login)&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="258"
+            line="264"
             column="25"
-            startOffset="12151"
-            endLine="258"
+            startOffset="12500"
+            endLine="264"
             endColumn="111"
-            endOffset="12237"/>
+            endOffset="12586"/>
     </incident>
 
     <incident
@@ -1050,12 +1050,12 @@
         message="Hardcoded string &quot;Clear link&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="275"
+            line="281"
             column="25"
-            startOffset="13116"
-            endLine="275"
+            startOffset="13465"
+            endLine="281"
             endColumn="64"
-            endOffset="13155"/>
+            endOffset="13504"/>
     </incident>
 
     <incident
@@ -1064,12 +1064,12 @@
         message="Hardcoded string &quot;Download Link&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="285"
+            line="291"
             column="21"
-            startOffset="13604"
-            endLine="285"
+            startOffset="13963"
+            endLine="291"
             endColumn="49"
-            endOffset="13632"/>
+            endOffset="13991"/>
     </incident>
 
     <incident
@@ -1078,12 +1078,12 @@
         message="Hardcoded string &quot;WARNING: Logging into your Instagram account through this app relies on Instagram&apos;s private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account.&quot;, should use `@string` resource">
         <location
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/layout/activity_main.xml"
-            line="317"
+            line="323"
             column="13"
-            startOffset="14904"
-            endLine="317"
+            startOffset="15283"
+            endLine="323"
             endColumn="284"
-            endOffset="15175"/>
+            endOffset="15554"/>
     </incident>
 
 </incidents>

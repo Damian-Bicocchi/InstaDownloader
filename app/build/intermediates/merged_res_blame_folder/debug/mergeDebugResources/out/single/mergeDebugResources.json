@@ -1,15 +1,15 @@
 [
     {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/drawable_ic_clear.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/drawable/ic_clear.xml"
+    },
+    {
         "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/xml_data_extraction_rules.xml.flat",
         "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/xml/data_extraction_rules.xml"
     },
     {
         "merged": "com.example.instadl.app-debug-35:/layout_activity_main.xml.flat",
         "source": "com.example.instadl.app-main-37:/layout/activity_main.xml"
-    },
-    {
-        "merged": "com.example.instadl.app-debug-35:/drawable_ic_clear.xml.flat",
-        "source": "com.example.instadl.app-main-37:/drawable/ic_clear.xml"
     },
     {
         "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_activity_main.xml.flat",
