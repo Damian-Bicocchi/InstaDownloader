@@ -2,12 +2,14 @@
 
 A native Android (Kotlin) app that logs into Instagram and downloads **photos**, **videos** and **stories** from any user.
 
-Built and verified — you can grab a ready-to-install APK from the project root:
+Built and verified — prebuilt test APKs are available in the project root:
 
 | File | Description |
 |------|-------------|
 | `InstagramDownloader-debug.apk` | Debug build (signed with debug keystore) |
-| `InstagramDownloader-release.apk` | Release build (signed with debug keystore) |
+| `InstagramDownloader-release.apk` | Legacy prebuilt release (signed with debug keystore — do not distribute) |
+
+New release builds are signed only with your own release keystore (see below) and are minified with R8.
 
 ## How it works
 
@@ -23,7 +25,7 @@ The app uses **Instagram's private API v1** endpoints (`i.instagram.com/api/v1/.
    - **Story link (`/stories/<user>/<id>`) → login required**, fetched via `GET /media/{storyId}/info/`.
    - **Highlight link (`/stories/highlights/<id>/` or app share `/s/<token>[?story_media_id=…]`) → login required.** Token is base64-decoded to `highlight:<id>`; then `GET /feed/reels_media/?reel_ids=highlight:<id>` returns the whole story carousel and **every** story (flattened) is saved as `highlight_<id>_N`.
 6. **Download** — Media is fetched over a separate OkHttp client and written to shared storage:
-   - Android 10+ (API 29+): via `MediaStore` into `Downloads/Instagram/`
+   - Android 10+ (API 29+): via `MediaStore` into `Pictures/Instagram/` (images) or `Movies/Instagram/` (videos)
    - Android 9 and below: legacy `WRITE_EXTERNAL_STORAGE` into `Pictures/Instagram/`
 
 ### App UI — what you actually see
@@ -102,7 +104,35 @@ gradle assembleRelease
 
 ## Building a production-signed APK
 
-`app/build.gradle.kts` currently signs `release` with the **debug keystore** so the APK is installable out of the box. For Play Store distribution, replace that with your own `signingConfig`.
+Release builds enable R8 (`isMinifyEnabled = true`) and resource shrinking, and use the rules in `app/proguard-rules.pro`.
+
+The release keystore is **never** hardcoded and the debug keystore is no longer used for release builds. Provide these values through `local.properties` (git-ignored), Gradle properties, or environment variables:
+
+| Key | Meaning |
+|-----|---------|
+| `RELEASE_STORE_FILE` | Path to the `.jks`/`.keystore` (relative paths resolve from the project root) |
+| `RELEASE_STORE_PASSWORD` | Keystore password |
+| `RELEASE_KEY_ALIAS` | Key alias |
+| `RELEASE_KEY_PASSWORD` | Key password |
+
+Example `local.properties`:
+
+```properties
+sdk.dir=/path/to/android-sdk
+RELEASE_STORE_FILE=release.jks
+RELEASE_STORE_PASSWORD=change-me
+RELEASE_KEY_ALIAS=instadl
+RELEASE_KEY_PASSWORD=change-me
+```
+
+Then build:
+
+```bash
+gradle assembleRelease
+# signed output: app/build/outputs/apk/release/app-release.apk
+```
+
+If any of the four values is missing, the release APK is built **unsigned** (`app-release-unsigned.apk`) instead of falling back to the debug key. CI should inject the values as secrets/environment variables.
 
 ## ⚠️ Important legal & safety warnings
 

@@ -17,9 +17,10 @@ Handles local storage of the Instagram login session using **encrypted** `Shared
 - **Construction:** `SessionStore(context)` — builds `MasterKey` + encrypted prefs via `applicationContext`.
 - **Key API:**
   - `saveSession(cookies, userId, username, fullName)`: writes all keys + `saved_at` timestamp (`System.currentTimeMillis()`), `apply()` async.
+  - `saveCookies(cookies)`: updates only the cookie string + `saved_at`, preserving identity fields — used by `InstagramCookieJar`.
   - `clear()`: wipes encrypted prefs + legacy cleartext copy — used on logout (`MainActivity.btnLogout`).
   - `cookies: String?` — raw `Cookie` header value; source of truth for auth.
   - `userId / username / fullName: String?` — display + API convenience.
   - `isLoggedIn: Boolean` — `!cookies.isNullOrBlank()`. Used by `updateLoginUi()` and `requireLoggedIn()`.
 - **Keys (`companion object`):** `cookies`, `user_id`, `username`, `full_name`, `saved_at`.
-- **Data flow:** `InstagramClient.login()` → `saveCookies()` → `saveSession()` → `MainActivity` enriches with `loggedInUser.pk/username/fullName`.
+- **Data flow:** `InstagramClient.login()` → OkHttp → `InstagramCookieJar.saveFromResponse()` → `SessionStore.saveCookies()` → `MainActivity` enriches with `loggedInUser.pk/username/fullName` via `saveSession()`.

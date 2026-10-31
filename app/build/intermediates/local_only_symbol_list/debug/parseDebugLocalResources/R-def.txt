@@ -7,7 +7,12 @@ color ig_gray
 color ig_light
 color ig_purple
 color ig_white
+drawable ic_clear
 drawable ic_launcher_foreground
+id btnClearLink
+id btnClearPassword
+id btnClearTarget
+id btnClearUsername
 id btnDownloadLink
 id btnDownloadPosts
 id btnDownloadStories
@@ -22,6 +27,10 @@ id inputPassword
 id inputTarget
 id inputUsername
 id progressBar
+id rowLink
+id rowPassword
+id rowTarget
+id rowUsername
 id tvLoginStatus
 id tvStatus
 layout activity_main
@@ -30,3 +39,5 @@ mipmap ic_launcher_round
 string app_name
 string paste_reel_post_story_link
 style Theme.InstaDownloader
+xml data_extraction_rules
+xml network_security_config

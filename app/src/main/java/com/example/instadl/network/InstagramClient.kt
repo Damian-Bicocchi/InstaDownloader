@@ -40,10 +40,12 @@ class InstagramClient(private val session: SessionStore) {
 
     private val gson = Gson()
     private val deviceUuid: String = UUID.randomUUID().toString()
+    private val cookieJar = InstagramCookieJar(session)
 
     private val client: OkHttpClient = OkHttpClient.Builder()
-        .followRedirects(true)
-        .followSslRedirects(true)
+        .cookieJar(cookieJar)
+        .followRedirects(false)
+        .followSslRedirects(false)
         .build()
 
     /** No-auth client for public embed pages (never sends session cookies). */
@@ -108,14 +110,6 @@ class InstagramClient(private val session: SessionStore) {
                 if (!response.isSuccessful || responseBody.isBlank()) {
                     // Status code only — never include body (may echo credentials).
                     throw IOException("Login failed HTTP ${response.code}")
-                }
-
-                // Keep session cookies on success (ignore login-specific errors).
-                if (responseBody.contains("\"status\":\"ok\"") ||
-                    responseBody.contains("\"logged_in_user\"")
-                ) {
-                    val cookieHeader = response.header("Set-Cookie") ?: ""
-                    saveCookies(cookieHeader)
                 }
 
                 return gson.fromJson(responseBody, LoginResponse::class.java)
@@ -250,7 +244,6 @@ class InstagramClient(private val session: SessionStore) {
             .url("$BASE_URL/accounts/logout/")
             .post(form)
             .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
-            .header("Cookie", cookies)
             .header("X-CSRFToken", csrf)
             .header("X-Instagram-AJAX", "1")
             .header("X-Requested-With", "XMLHttpRequest")
@@ -311,6 +304,9 @@ class InstagramClient(private val session: SessionStore) {
             )
             .header("Accept", "text/html,*/*")
             .header("Accept-Language", "en-US,en;q=0.9")
+            .header("Sec-Fetch-Dest", "iframe")
+            .header("Sec-Fetch-Mode", "navigate")
+            .header("Sec-Fetch-Site", "cross-site")
             .build()
 
         publicClient.newCall(req).execute().use { response ->
@@ -329,6 +325,9 @@ class InstagramClient(private val session: SessionStore) {
 
     /** Extract per-item files; correlates each carousel child via its node block. */
     internal fun parseEmbedHtml(html: String): List<PublicFile> {
+        val contextFiles = parseContextJson(html)
+        if (contextFiles.isNotEmpty()) return contextFiles
+
         val out = mutableListOf<PublicFile>()
         val seen = LinkedHashSet<String>()
 
@@ -392,6 +391,87 @@ class InstagramClient(private val session: SessionStore) {
         return emptyList()
     }
 
+    private fun parseContextJson(html: String): List<PublicFile> {
+        val out = mutableListOf<PublicFile>()
+        val seen = LinkedHashSet<String>()
+
+        for (rawContext in extractContextJsonStrings(html)) {
+            val decoded = try {
+                gson.fromJson("\"$rawContext\"", String::class.java)
+            } catch (e: Exception) {
+                null
+            } ?: continue
+            val root = try {
+                JSONObject(decoded)
+            } catch (e: Exception) {
+                continue
+            }
+            val media = root.optJSONObject("gql_data")?.optJSONObject("shortcode_media")
+                ?: root.optJSONObject("shortcode_media")
+                ?: continue
+            val edges = media.optJSONObject("edge_sidecar_to_children")
+                ?.optJSONArray("edges")
+            val nodes = if (edges != null && edges.length() > 0) {
+                (0 until edges.length()).mapNotNull { i ->
+                    edges.optJSONObject(i)?.optJSONObject("node")
+                }
+            } else {
+                listOf(media)
+            }
+            for (node in nodes) appendEmbedFile(node, out, seen)
+        }
+        return out
+    }
+
+    private fun extractContextJsonStrings(html: String): List<String> {
+        val marker = "\"contextJSON\":\""
+        val values = mutableListOf<String>()
+        var searchFrom = 0
+
+        while (true) {
+            val start = html.indexOf(marker, searchFrom)
+            if (start < 0) break
+
+            val builder = StringBuilder()
+            var escaped = false
+            var index = start + marker.length
+            while (index < html.length) {
+                val c = html[index]
+                if (escaped) {
+                    builder.append(c)
+                    escaped = false
+                } else if (c == '\\') {
+                    builder.append(c)
+                    escaped = true
+                } else if (c == '"') {
+                    break
+                } else {
+                    builder.append(c)
+                }
+                index++
+            }
+
+            if (index >= html.length) break
+            values.add(builder.toString())
+            searchFrom = index + 1
+        }
+        return values
+    }
+
+    private fun appendEmbedFile(
+        node: JSONObject,
+        out: MutableList<PublicFile>,
+        seen: MutableSet<String>
+    ) {
+        val video = node.optString("video_url").takeIf { it.startsWith("http") }
+        val display = node.optString("display_url").takeIf { it.startsWith("http") }
+        val isVideo = node.optBoolean("is_video", false)
+        val pick = if (isVideo) video ?: display else display ?: video
+        if (!pick.isNullOrBlank() && seen.add(pick)) {
+            out.add(PublicFile(pick, isVideo && video != null))
+        }
+    }
+
     private fun unescapeEmbedUrl(s: String): String =
         s.replace("\\/", "/").replace("\\u0026", "&").replace("&amp;", "&")
 
@@ -401,10 +481,6 @@ class InstagramClient(private val session: SessionStore) {
     private fun buildGet(url: String): Request {
         val builder = Request.Builder().url(url).get()
         baseHeaders.forEach { (k, v) -> builder.header(k, v) }
-        val cookies = session.cookies
-        if (!cookies.isNullOrBlank()) {
-            builder.header("Cookie", cookies)
-        }
         builder.header("X-Instagram-AJAX", "1")
         builder.header(
             "X-CSRFToken", session.cookies?.let(::extractCsrf) ?: "missing")
@@ -423,21 +499,6 @@ class InstagramClient(private val session: SessionStore) {
             throw IOException(message)
         }
         return body
-    }
-
-    private fun saveCookies(setCookieHeader: String) {
-        val pairs = setCookieHeader.split(';')
-        val cookieMap = mutableMapOf<String, String>()
-        for (p in pairs) {
-            val kv = p.trim().split('=')
-            if (kv.size == 2 && kv[0].isNotBlank()) {
-                cookieMap[kv[0]] = kv[1]
-            }
-        }
-        val userId = session.userId ?: ""
-        val username = session.username ?: ""
-        val cookieStr = cookieMap.entries.joinToString("; ") { "${it.key}=${it.value}" }
-        session.saveSession(cookieStr, userId, username, username)
     }
 
     private fun extractCsrf(cookieHeader: String): String {

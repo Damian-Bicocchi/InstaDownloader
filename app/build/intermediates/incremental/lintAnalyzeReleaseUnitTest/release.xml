@@ -1,0 +1,27 @@
+<variant
+    name="release"
+    package="com.example.instadl"
+    minSdkVersion="24"
+    targetSdkVersion="34"
+    shrinking="true"
+    mergedManifest="build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
+    partialResultsDir="build/intermediates/unit_test_lint_partial_results/release/lintAnalyzeReleaseUnitTest/out"
+    desugaredMethodsFiles="/home/damian/.gradle/caches/8.13/transforms/2748036c5363b701ce636f3af54febcd/transformed/D8BackportedDesugaredMethods.txt">
+  <buildFeatures
+      viewBinding="true"
+      namespacing="REQUIRED"/>
+  <sourceProviders>
+  </sourceProviders>
+  <testSourceProviders>
+    <sourceProvider
+        manifests="src/test/AndroidManifest.xml"
+        javaDirectories="src/test/java:src/testRelease/java:src/test/kotlin:src/testRelease/kotlin"
+        assetsDirectories="src/test/assets:src/testRelease/assets"
+        unitTest="true"/>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <artifact
+      type="UNIT_TEST">
+  </artifact>
+</variant>

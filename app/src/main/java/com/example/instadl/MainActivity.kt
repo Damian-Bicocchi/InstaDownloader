@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnDownloadLink.setOnClickListener {
             downloadFromLink(binding.etLink.text.toString())
         }
+        binding.btnClearUsername.setOnClickListener { binding.etUsername.text?.clear() }
+        binding.btnClearPassword.setOnClickListener { binding.etPassword.text?.clear() }
+        binding.btnClearTarget.setOnClickListener { binding.etTarget.text?.clear() }
+        binding.btnClearLink.setOnClickListener { binding.etLink.text?.clear() }
         handleShareIntent(intent)
     }
 
@@ -111,8 +115,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             "Not logged in"
         }
-        binding.inputUsername.isVisible = !logged
-        binding.inputPassword.isVisible = !logged
+        binding.rowUsername.isVisible = !logged
+        binding.rowPassword.isVisible = !logged
         binding.btnLogin.isVisible = !logged
         binding.btnLogout.isVisible = logged
         if (logged) {

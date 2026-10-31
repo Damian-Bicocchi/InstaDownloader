@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.2" type="partial_results">
+    <map id="UnsafeIntentLaunch">
+            <map id="unprotected">
+                <entry
+                    name="com.example.instadl.MainActivity"
+                    boolean="true"/>
+            </map>
+    </map>
+    <map id="UnusedResources">
+        <location id="R.color.ig_white"
+            file="${:app*release*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
+            line="6"
+            column="12"
+            startOffset="198"
+            endLine="6"
+            endColumn="27"
+            endOffset="213"/>
+        <location id="R.string.paste_reel_post_story_link"
+            file="${:app*release*MAIN*sourceProvider*0*resDir*0}/values/strings.xml"
+            line="3"
+            column="13"
+            startOffset="78"
+            endLine="3"
+            endColumn="46"
+            endOffset="111"/>
+        <entry
+            name="model"
+            string="attr[selectableItemBackgroundBorderless(R)],color[ig_light(U),ig_purple(U),ig_gray(U),black(U),ig_gradient_end(U),ig_dark(U),ig_white(D)],drawable[ic_clear(U),ic_launcher_foreground(U)],id[tvLoginStatus(U),rowUsername(U),inputUsername(D),etUsername(U),btnClearUsername(U),rowPassword(U),inputPassword(D),etPassword(U),btnClearPassword(U),btnLogin(U),btnLogout(U),rowTarget(D),inputTarget(D),etTarget(U),btnClearTarget(U),btnDownloadPosts(U),btnDownloadStories(U),rowLink(D),inputLink(D),etLink(U),btnClearLink(U),btnDownloadLink(U),tvStatus(U),progressBar(U)],layout[activity_main(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(U),paste_reel_post_story_link(D)],style[Theme_InstaDownloader(U),Widget_MaterialComponents_TextInputLayout_OutlinedBox(R),Widget_MaterialComponents_Button_OutlinedButton(R),Theme_MaterialComponents_DayNight_NoActionBar(R)],xml[data_extraction_rules(U),network_security_config(U)];22^1^25^2^3^4^28^0^8^29^5,23^6^9,24^6^9,27^2a^2^5^6;;;"/>
+    </map>
+
+</incidents>

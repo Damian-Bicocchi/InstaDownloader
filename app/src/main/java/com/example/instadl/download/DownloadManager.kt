@@ -81,7 +81,11 @@ object DownloadManager {
             put(MediaStore.MediaColumns.MIME_TYPE, mime)
             put(
                 MediaStore.MediaColumns.RELATIVE_PATH,
-                Environment.DIRECTORY_DOWNLOADS + "/Instagram/"
+                if (isVideo) {
+                    Environment.DIRECTORY_MOVIES + "/Instagram/"
+                } else {
+                    Environment.DIRECTORY_PICTURES + "/Instagram/"
+                }
             )
             put(MediaStore.MediaColumns.IS_PENDING, 1)
         }

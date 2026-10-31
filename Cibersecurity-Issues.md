@@ -14,11 +14,11 @@
 | 1 | Critical | ~~Session tokens (cookies) stored in cleartext `SharedPreferences`~~ — **FIXED 2026-09-07: `EncryptedSharedPreferences` (`ig_session_enc`) + Keystore `MasterKey`, legacy `ig_session` migrated + wiped** | `app/src/main/java/com/example/instadl/auth/SessionStore.kt`                                                |
 | 2 | High     | ~~Password lives as immutable `String` in heap, no `FLAG_SECURE`, errors echoed to UI~~ — **FIXED 2026-09-07: `FLAG_SECURE`, `CharArray` + immediate wipe, generic UI errors + `Log`**                    | `app/src/main/java/com/example/instadl/MainActivity.kt:performLogin()`, `network/InstagramClient.kt:login()` |
 | 3 | High     | ~~Logout is local-only, server session stays valid~~ — **FIXED 2026-09-07: `InstagramClient.logout()` POSTs `/accounts/logout/` best-effort, `MainActivity.performLogout()` always wipes local**          | `app/src/main/java/com/example/instadl/network/InstagramClient.kt`, `MainActivity.kt:performLogout()` |
-| 4 | High     | Release signed with debug keystore + minify disabled                                                                                                                                                      | `app/build.gradle.kts:18-28`                                                                                |
-| 5 | High     | No TLS hardening (no pinning, no `networkSecurityConfig`), redirects enabled, unused logging-interceptor                                                                                                  | `app/src/main/java/com/example/instadl/network/InstagramClient.kt:29-32,132-143`, `app/build.gradle.kts:58` |
-| 6 | Medium   | ~~`allowBackup="true"` allows `adb backup` extraction of session~~                                                                                                                                        | `app/src/main/AndroidManifest.xml:24`                                                                       |
+| 4 | High     | ~~Release signed with debug keystore + minify disabled~~ — **FIXED 2026-10-31: dedicated release signing config from `local.properties`/Gradle props/env (unsigned if absent), `isMinifyEnabled` + `isShrinkResources` enabled, R8 rules added** | `app/build.gradle.kts`, `app/proguard-rules.pro`                                                                                |
+| 5 | High     | ~~No TLS hardening (no pinning, no `networkSecurityConfig`), redirects enabled, unused logging-interceptor~~ — **FIXED 2026-10-31: cleartext disabled, pins added, auth redirects disabled, cookies domain-scoped via `CookieJar`, logging interceptor removed** | `app/src/main/res/xml/network_security_config.xml`, `AndroidManifest.xml`, `network/InstagramClient.kt`, `network/InstagramCookieJar.kt`, `app/build.gradle.kts` |
+| 6 | Medium   | ~~`allowBackup="true"` allows `adb backup` extraction of session~~ — **FIXED 2026-10-31: `allowBackup="false"`, legacy `fullBackupContent="false"`, Android 12+ `dataExtractionRules` exclude all cloud/D2D data**                                                                                                                    | `app/src/main/AndroidManifest.xml`, `app/src/main/res/xml/data_extraction_rules.xml` |
 | 7 | Medium   | Unencoded URL interpolation + fragile `getJSONObject` parsing (DoS / param injection)                                                                                                                     | `app/src/main/java/com/example/instadl/network/InstagramClient.kt:94-119`                                   |
-| 8 | Medium   | Broken `Set-Cookie` parser (first header only, attributes as cookies, empty overwrite)                                                                                                                    | `app/src/main/java/com/example/instadl/network/InstagramClient.kt:159-172`                                  |
+| 8 | Medium   | ~~Broken `Set-Cookie` parser (first header only, attributes as cookies, empty overwrite)~~ — **FIXED 2026-10-31: OkHttp `CookieJar` parses all `Set-Cookie` headers, merges by name, keeps identity fields intact**                                                                                                                    | `app/src/main/java/com/example/instadl/network/InstagramCookieJar.kt`, `auth/SessionStore.kt`                                  |
 | 9 | Low      | Unbounded in-RAM download (`body.bytes()`) + world-readable shared storage output                                                                                                                         | `app/src/main/java/com/example/instadl/download/DownloadManager.kt:34-46,65-114`                            |
 
 ---
@@ -59,10 +59,11 @@ putString("cookies", cookies) // sessionid, csrftoken, ds_user_id, rur
 
 **Now:** `InstagramClient.logout()` POSTs `$BASE_URL/accounts/logout/` with `FormBody(_csrftoken, guid, device_id)` + `Cookie` + `X-CSRFToken` + base headers, returns `isSuccessful`. `MainActivity.performLogout()` runs it on `Dispatchers.IO` (best-effort, swallows network errors), then **always** `session.clear()` (encrypted store + legacy wipe), `updateLoginUi()`, disables all buttons including Logout while in flight. UI reports `Logged out` vs `Logged out locally (server logout failed)`.
 
-## 4. [High] Debug signing + no obfuscation
+## 4. [High] Debug signing + no obfuscation — FIXED (2026-10-31)
 
-**File:** `app/build.gradle.kts:18-28`
+**File:** `app/build.gradle.kts`, `app/proguard-rules.pro`
 
+**Was:**
 ```kotlin
 isMinifyEnabled = false
 signingConfig = signingConfigs.getByName("debug")
@@ -70,32 +71,45 @@ signingConfig = signingConfigs.getByName("debug")
 
 Debug keystore password is public (`android`). Anyone can decompile (`isMinifyEnabled=false` keeps `X-IG-App-ID`, `User-Agent`, endpoint strings) and ship a spoofed update with the same signature.
 
-**Fix:** private release keystore (CI secret), `isMinifyEnabled=true` + R8 / `proguard-rules.pro`, separate `debug`/`release` configs.
+**Now:**
+- `release` no longer references the debug keystore. A dedicated `release` signing config is created only when `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS` and `RELEASE_KEY_PASSWORD` are supplied (Gradle properties → `local.properties` → env vars).
+- Without those values the release build is **unsigned** (`app-release-unsigned.apk`), never debug-signed.
+- `isMinifyEnabled = true` and `isShrinkResources = true`; R8 uses `proguard-android-optimize.txt` + project rules.
+- `proguard-rules.pro` keeps the Gson DTO package/`@SerializedName` fields/annotations so JSON parsing survives shrinking, and silences unused OkHttp TLS providers.
+- README documents the four signing keys; `local.properties` stays git-ignored, CI should use secrets.
 
-## 5. [High] No TLS hardening
+**Residual:** creates a real release keystore and keep it outside the repo; the legacy `InstagramDownloader-release.apk` in the project root was built before this change and is still debug-signed (documented as not for distribution).
 
-**Files:** `app/src/main/java/com/example/instadl/network/InstagramClient.kt:29-32,132-143`, `app/build.gradle.kts:58`, `app/src/main/AndroidManifest.xml` (no `networkSecurityConfig`)
+## 5. [High] No TLS hardening — FIXED (2026-10-31)
 
-- Default `OkHttpClient`, `followRedirects/followSslRedirects=true`. System CAs trusted → MITM with user-installed CA succeeds.
-- Manually set `Cookie` header in `buildGet()` may be replayed on cross-host redirect.
-- `logging-interceptor` dependency is present but unused — if enabled at `BODY` level it would dump `password` and `Cookie`.
+**Files:** `app/src/main/res/xml/network_security_config.xml`, `app/src/main/AndroidManifest.xml`, `app/src/main/java/com/example/instadl/network/InstagramClient.kt`, `network/InstagramCookieJar.kt`, `app/build.gradle.kts`
 
-**Fix:**
-- Add `res/xml/network_security_config.xml` with `cleartextTrafficPermitted="false"`, pin `i.instagram.com` (backup pin included), reference from manifest.
-- Disable auto-redirects or strip `Cookie/Authorization` on host change.
-- Remove `logging-interceptor` from release or restrict to `HttpLoggingLevel.NONE` in release builds.
+**Was:**
+- Default `OkHttpClient`, `followRedirects/followSslRedirects=true` with no certificate pinning or `networkSecurityConfig`.
+- Manually set `Cookie` header could be replayed on a cross-host redirect.
+- Unused `logging-interceptor` dependency could leak passwords/cookies if enabled at `BODY` level.
 
-## 6. [Medium] Backup enabled
+**Now:**
+- `network_security_config.xml` disables cleartext globally and pins `i.instagram.com` / `www.instagram.com` to the current DigiCert intermediate + root (SPKI SHA-256, chain checked 2026-10-31).
+- The authenticated `OkHttpClient` has `followRedirects=false` and `followSslRedirects=false`; redirects fail instead of forwarding credentials. The public embed client still follows redirects but sends no cookies.
+- Session cookies are attached by `InstagramCookieJar` only for `i.instagram.com`; removal of the manual `Cookie` header prevents cross-host replay.
+- `logging-interceptor` was removed from `app/build.gradle.kts` (it was unused).
 
-**File:** `app/src/main/AndroidManifest.xml:24`
+**Residual:** pin set expires 2031-03-29; update pins if Meta changes CA. `assembleRelease` and `lintRelease` pass.
 
-`android:allowBackup="true"` with no `backupRules` → `adb backup` extracts `ig_session.xml` and downloaded media metadata.
+## 6. [Medium] Backup enabled — FIXED (2026-10-31)
 
-**Fix:** `allowBackup="false"`, or:
-```xml
-android:allowBackup="true" android:backupRules="@xml/backup_rules"
-```
-with `backup_rules.xml` excluding `shared_prefs/ig_session.xml`.
+**File:** `app/src/main/AndroidManifest.xml`, `app/src/main/res/xml/data_extraction_rules.xml`
+
+**Was:** `allowBackup="true"` (default) with no backup rules → `adb backup` / cloud backup / device-to-device transfer could extract the encrypted session prefs and app data.
+
+**Now:**
+- `android:allowBackup="false"` disables cloud backup and `adb backup`.
+- `android:fullBackupContent="false"` keeps legacy (API ≤ 30) behavior closed.
+- `android:dataExtractionRules="@xml/data_extraction_rules"` explicitly excludes `root`, `file`, `database`, `sharedpref`, `external`, and device-protected domains from both `<cloud-backup>` and `<device-transfer>`, covering OEMs where `allowBackup="false"` alone may not block D2D migration.
+- Session data was already AES-encrypted with a Keystore key; this adds defense-in-depth so it cannot be copied off-device in the first place.
+
+**Residual:** none for backup extraction. `assembleRelease` and `lintRelease` pass.
 
 ## 7. [Medium] Unencoded URLs + fragile JSON parsing
 
@@ -111,22 +125,28 @@ No `URLEncoder` / `HttpUrl.Builder` — `&`, `#`, `/` in target corrupts query. 
 
 **Fix:** build URLs with `HttpUrl.Builder.addQueryParameter()`, validate with `has()`/`optJSONObject()`, map to typed errors.
 
-## 8. [Medium] Broken cookie handling
+## 8. [Medium] Broken cookie handling — FIXED (2026-10-31)
 
-**File:** `app/src/main/java/com/example/instadl/network/InstagramClient.kt:82-88,159-172`
+**Files:** `app/src/main/java/com/example/instadl/network/InstagramCookieJar.kt`, `auth/SessionStore.kt`
 
-- `response.header("Set-Cookie")` returns only the first header — multi-cookie login (`sessionid`, `csrftoken`, `ds_user`) is truncated.
-- `split(';')` / `split('=')` treats `Expires`, `Path`, `Domain` as cookies; `kv.size==2` drops values containing `=`.
-- Overwrites store with `session.userId ?: ""` — empty on first login, clobbering identity.
+**Was:**
+- `response.header("Set-Cookie")` read only the first header — multi-cookie login (`sessionid`, `csrftoken`, `ds_user`) was truncated.
+- `split(';')` / `split('=')` treated `Expires`, `Path`, `Domain` as cookies; `kv.size==2` dropped values containing `=`.
+- Overwrote the store with `session.userId ?: ""` — empty on first login, clobbering identity.
 
-**Fix:** iterate `response.headers("Set-Cookie")`, use `Cookie.parse()` + persistent `CookieJar` backed by encrypted store.
+**Now:**
+- `InstagramCookieJar` implements OkHttp `CookieJar`; OkHttp parses every `Set-Cookie` header with `Cookie.parseAll`.
+- Cookies are merged by name instead of replacing the whole jar, expired cookies are removed, and `SessionStore.saveCookies()` updates only the cookie key + timestamp, leaving `userId`/`username`/`fullName` intact.
+- `InstagramClient` no longer hand-parses or manually sets `Cookie`; the jar supplies cookies only for `i.instagram.com`.
+
+**Residual:** cookie attributes (domain/path/expiry) are reduced to name/value pairs for the single Instagram host; sufficient for this app, acceptable given encrypted local storage.
 
 ## 9. [Low] Resource exhaustion + shared-storage exposure
 
 **File:** `app/src/main/java/com/example/instadl/download/DownloadManager.kt:34-46,65-114`
 
 - `body.bytes()` buffers entire video in RAM → OOM on large reels; no `Content-Length` cap, no MIME check, no checksum.
-- Output to `Downloads/Instagram/` (MediaStore, API ≥ 29) or `Pictures/Instagram/` (legacy) is world-readable by any app with media/storage permission.
+- Output to `Pictures/Instagram/` (images) or `Movies/Instagram/` (videos) on API ≥ 29, or `Pictures/Instagram/` (legacy), is world-readable by any app with media/storage permission.
 - `sanitize()` (`[^A-Za-z0-9._-] → _`) is good against path traversal — keep it.
 
 **Fix:** stream `byteStream().copyTo(outputStream)`, enforce size cap (e.g. 250 MB), verify `Content-Type` (`image/jpeg`, `video/mp4`), keep MediaStore `IS_PENDING` protocol (already correct).
@@ -135,13 +155,13 @@ No `URLEncoder` / `HttpUrl.Builder` — `&`, `#`, `/` in target corrupts query. 
 
 ## General hardening checklist
 
-- [ ] `EncryptedSharedPreferences` for `ig_session`, `allowBackup=false` / `backupRules`.
+- [x] `EncryptedSharedPreferences` for `ig_session`, `allowBackup=false` / `backupRules`.
 - [ ] Server-side logout, session expiry check.
-- [ ] `networkSecurityConfig` + cert pinning, no cleartext, no auto-redirect with cookies.
-- [ ] Remove `logging-interceptor` from release, enable R8/minify, private signing key.
+- [x] `networkSecurityConfig` + cert pinning, no cleartext, no auto-redirect with cookies.
+- [x] Remove `logging-interceptor` from release (R8/minify and private signing key are now done).
 - [ ] `FLAG_SECURE` on login, generic UI errors, no sensitive data in `Toast`/`TextView`.
 - [ ] URL-encode all params via `HttpUrl.Builder`, robust JSON parsing.
-- [ ] `CookieJar` instead of hand-rolled parser; handle multi-`Set-Cookie`.
+- [x] `CookieJar` instead of hand-rolled parser; handle multi-`Set-Cookie`.
 - [ ] Stream downloads to disk with size/MIME limits.
 - [ ] Update deps (`okhttp:4.12.0`, `gson:2.11.0`, `compileSdk/targetSdk 34`) on a cadence; run `gradle dependencyCheck` / Play Data Safety review.
 - [ ] Consider official Instagram Graph API + OAuth instead of private `i.instagram.com/api/v1` (ToS violation → ban risk, already disclosed in `activity_main.xml:215` and `InstagramClient.kt:16-23`).

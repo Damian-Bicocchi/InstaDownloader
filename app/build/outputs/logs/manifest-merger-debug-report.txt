@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-47:12
-INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-47:12
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-51:12
+INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-51:12
+INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-51:12
+INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:2:1-51:12
 MERGED from [androidx.databinding:viewbinding:8.13.2] /home/damian/.gradle/caches/8.13/transforms/1315a6306d0272defac00ed358eba6fc/transformed/viewbinding-8.13.2/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.12.0] /home/damian/.gradle/caches/8.13/transforms/2297793aeb573d3dc870df8eb4fc8d2c/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/damian/.gradle/caches/8.13/transforms/f40243e2e7270103a1321616401318ae/transformed/constraintlayout-2.1.4/AndroidManifest.xml:2:1-11:12
@@ -90,8 +90,8 @@ ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml
 	android:name
 		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:20:9-59
 application
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-45:19
-INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-45:19
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-49:19
+INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:23:5-49:19
 MERGED from [com.google.android.material:material:1.12.0] /home/damian/.gradle/caches/8.13/transforms/2297793aeb573d3dc870df8eb4fc8d2c/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /home/damian/.gradle/caches/8.13/transforms/2297793aeb573d3dc870df8eb4fc8d2c/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/damian/.gradle/caches/8.13/transforms/f40243e2e7270103a1321616401318ae/transformed/constraintlayout-2.1.4/AndroidManifest.xml:9:5-20
@@ -113,49 +113,57 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/damian/.gradle/caches
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.1] /home/damian/.gradle/caches/8.13/transforms/55eb1f5d199027658345628e3d329aae/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:27:9-35
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:31:9-35
 	android:label
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:25:9-41
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:28:9-41
+	android:fullBackupContent
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:26:9-42
 	android:roundIcon
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:26:9-54
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:30:9-54
 	android:icon
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:24:9-43
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:27:9-43
+	android:allowBackup
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:24:9-36
 	android:theme
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:28:9-53
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:32:9-53
+	android:networkSecurityConfig
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:29:9-69
+	android:dataExtractionRules
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:25:9-65
 activity#com.example.instadl.MainActivity
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:29:9-44:20
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:33:9-48:20
 	android:launchMode
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:32:13-43
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:13-43
 	android:windowSoftInputMode
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:33:13-55
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:37:13-55
 	android:exported
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:31:13-36
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:13-36
 	android:name
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:30:13-41
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:34:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:34:13-37:29
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:38:13-41:29
 action#android.intent.action.MAIN
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:17-69
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:39:17-69
 	android:name
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:35:25-66
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:39:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:17-77
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:40:17-77
 	android:name
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:36:27-74
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:40:27-74
 intent-filter#action:name:android.intent.action.SEND+category:name:android.intent.category.DEFAULT+data:mimeType:text/plain
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:39:13-43:29
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:43:13-47:29
 action#android.intent.action.SEND
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:40:17-69
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:44:17-69
 	android:name
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:40:25-66
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:44:25-66
 category#android.intent.category.DEFAULT
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:41:17-76
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:45:17-76
 	android:name
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:41:27-73
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:45:27-73
 data
-ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:42:17-55
+ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:46:17-55
 	android:mimeType
-		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:42:23-52
+		ADDED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:46:23-52
 uses-sdk
 INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml

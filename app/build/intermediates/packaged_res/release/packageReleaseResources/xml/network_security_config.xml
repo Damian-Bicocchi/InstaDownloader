@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- No cleartext HTTP anywhere (API + CDN downloads). -->
+    <base-config cleartextTrafficPermitted="false" />
+
+    <!--
+        Pin Meta's Instagram API and public embed hosts.
+
+        The leaf certificates rotate frequently (the current *.i.instagram.com
+        leaf expires 2026-11-07), so we pin the issuing intermediate and the
+        DigiCert root as backup. Both are present in the chain served today;
+        Android accepts a connection when any cert in the chain matches any pin.
+
+        Pins are SPKI SHA-256 hashes. Chain checked 2026-10-31:
+          intermediate: DigiCert Global G2 TLS RSA SHA256 2020 CA1
+                        (valid until 2031-03-29)
+          root:         DigiCert Global Root G2
+                        (valid until 2038-01-15)
+        If Meta changes CA, update these pins in the same release.
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">i.instagram.com</domain>
+        <domain includeSubdomains="false">www.instagram.com</domain>
+        <pin-set expiration="2031-03-29">
+            <pin digest="SHA-256">Wec45nQiFwKvHtuHxSAMGkt19k+uPSw9JlEkxhvYPHk=</pin>
+            <pin digest="SHA-256">i7WTqTvh0OioIruIfFR4kMPnBqrS2rdiVPl/s2uC/CY=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>

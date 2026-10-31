@@ -3,9 +3,10 @@
     package="com.example.instadl"
     minSdkVersion="24"
     targetSdkVersion="34"
+    shrinking="true"
     mergedManifest="build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
     manifestMergeReport="build/outputs/logs/manifest-merger-release-report.txt"
-    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.5.2:proguard-rules.pro"
+    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.13.2:proguard-rules.pro"
     partialResultsDir="build/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out">
   <buildFeatures
       viewBinding="true"
@@ -27,6 +28,6 @@
       applicationId="com.example.instadl"
       generatedSourceFolders="build/generated/ap_generated_sources/release/out:build/generated/data_binding_base_class_source_out/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/root/.gradle/caches/transforms-4/464b18d790de16efd1bac404100a4564/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/home/damian/.gradle/caches/8.13/transforms/2748036c5363b701ce636f3af54febcd/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

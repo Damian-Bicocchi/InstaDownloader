@@ -38,6 +38,13 @@ class SessionStore(context: Context) {
             .apply()
     }
 
+    fun saveCookies(cookies: String) {
+        prefs.edit()
+            .putString(KEY_COOKIES, cookies)
+            .putLong(KEY_SAVED_AT, System.currentTimeMillis())
+            .apply()
+    }
+
     fun clear() {
         prefs.edit().clear().apply()
         // Defense in depth: make sure no legacy cleartext copy survives.

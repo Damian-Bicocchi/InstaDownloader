@@ -3012,6 +3012,7 @@ drawable ic_call_answer_video
 drawable ic_call_answer_video_low
 drawable ic_call_decline
 drawable ic_call_decline_low
+drawable ic_clear
 drawable ic_clear_black_24
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
@@ -3198,6 +3199,11 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnClearLink
+id btnClearPassword
+id btnClearTarget
+id btnClearUsername
+id btnDownloadLink
 id btnDownloadPosts
 id btnDownloadStories
 id btnLogin
@@ -3284,6 +3290,7 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id etLink
 id etPassword
 id etTarget
 id etUsername
@@ -3332,6 +3339,7 @@ id immediateStop
 id included
 id indeterminate
 id info
+id inputLink
 id inputPassword
 id inputTarget
 id inputUsername
@@ -3477,6 +3485,10 @@ id rightToLeft
 id right_icon
 id right_side
 id rounded
+id rowLink
+id rowPassword
+id rowTarget
+id rowUsername
 id row_index_key
 id save_non_transition_alpha
 id save_overlay_view
@@ -3966,6 +3978,7 @@ string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
 string password_toggle_content_description
+string paste_reel_post_story_link
 string path_password_eye
 string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
@@ -5257,3 +5270,5 @@ styleable ViewPager2 android_orientation
 styleable ViewStubCompat android_id android_layout android_inflatedId
 styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration ifTagNotSet ifTagSet motionInterpolator motionTarget onStateTransition pathMotionArc setsTag transitionDisable upDuration viewTransitionMode
 styleable include constraintSet
+xml data_extraction_rules
+xml network_security_config

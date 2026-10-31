@@ -8,6 +8,7 @@
     <color name="ig_purple">#C13584</color>
     <color name="ig_white">#FFFFFF</color>
     <string name="app_name">Insta Downloader</string>
+    <string name="paste_reel_post_story_link">Paste reel / post / story link</string>
     <style name="Theme.InstaDownloader" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/ig_purple</item>
         <item name="colorPrimaryVariant">@color/ig_purple</item>

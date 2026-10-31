@@ -4,6 +4,8 @@ package com.example.instadl.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -22,6 +24,18 @@ import java.lang.String;
 public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   private final ScrollView rootView;
+
+  @NonNull
+  public final ImageButton btnClearLink;
+
+  @NonNull
+  public final ImageButton btnClearPassword;
+
+  @NonNull
+  public final ImageButton btnClearTarget;
+
+  @NonNull
+  public final ImageButton btnClearUsername;
 
   @NonNull
   public final MaterialButton btnDownloadLink;
@@ -66,21 +80,41 @@ public final class ActivityMainBinding implements ViewBinding {
   public final ProgressBar progressBar;
 
   @NonNull
+  public final LinearLayout rowLink;
+
+  @NonNull
+  public final LinearLayout rowPassword;
+
+  @NonNull
+  public final LinearLayout rowTarget;
+
+  @NonNull
+  public final LinearLayout rowUsername;
+
+  @NonNull
   public final TextView tvLoginStatus;
 
   @NonNull
   public final TextView tvStatus;
 
-  private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull MaterialButton btnDownloadLink,
+  private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull ImageButton btnClearLink,
+      @NonNull ImageButton btnClearPassword, @NonNull ImageButton btnClearTarget,
+      @NonNull ImageButton btnClearUsername, @NonNull MaterialButton btnDownloadLink,
       @NonNull MaterialButton btnDownloadPosts, @NonNull MaterialButton btnDownloadStories,
       @NonNull MaterialButton btnLogin, @NonNull MaterialButton btnLogout,
       @NonNull TextInputEditText etLink, @NonNull TextInputEditText etPassword,
       @NonNull TextInputEditText etTarget, @NonNull TextInputEditText etUsername,
       @NonNull TextInputLayout inputLink, @NonNull TextInputLayout inputPassword,
       @NonNull TextInputLayout inputTarget, @NonNull TextInputLayout inputUsername,
-      @NonNull ProgressBar progressBar, @NonNull TextView tvLoginStatus,
+      @NonNull ProgressBar progressBar, @NonNull LinearLayout rowLink,
+      @NonNull LinearLayout rowPassword, @NonNull LinearLayout rowTarget,
+      @NonNull LinearLayout rowUsername, @NonNull TextView tvLoginStatus,
       @NonNull TextView tvStatus) {
     this.rootView = rootView;
+    this.btnClearLink = btnClearLink;
+    this.btnClearPassword = btnClearPassword;
+    this.btnClearTarget = btnClearTarget;
+    this.btnClearUsername = btnClearUsername;
     this.btnDownloadLink = btnDownloadLink;
     this.btnDownloadPosts = btnDownloadPosts;
     this.btnDownloadStories = btnDownloadStories;
@@ -95,6 +129,10 @@ public final class ActivityMainBinding implements ViewBinding {
     this.inputTarget = inputTarget;
     this.inputUsername = inputUsername;
     this.progressBar = progressBar;
+    this.rowLink = rowLink;
+    this.rowPassword = rowPassword;
+    this.rowTarget = rowTarget;
+    this.rowUsername = rowUsername;
     this.tvLoginStatus = tvLoginStatus;
     this.tvStatus = tvStatus;
   }
@@ -126,6 +164,30 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnClearLink;
+      ImageButton btnClearLink = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearLink == null) {
+        break missingId;
+      }
+
+      id = R.id.btnClearPassword;
+      ImageButton btnClearPassword = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearPassword == null) {
+        break missingId;
+      }
+
+      id = R.id.btnClearTarget;
+      ImageButton btnClearTarget = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearTarget == null) {
+        break missingId;
+      }
+
+      id = R.id.btnClearUsername;
+      ImageButton btnClearUsername = ViewBindings.findChildViewById(rootView, id);
+      if (btnClearUsername == null) {
+        break missingId;
+      }
+
       id = R.id.btnDownloadLink;
       MaterialButton btnDownloadLink = ViewBindings.findChildViewById(rootView, id);
       if (btnDownloadLink == null) {
@@ -210,6 +272,30 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.rowLink;
+      LinearLayout rowLink = ViewBindings.findChildViewById(rootView, id);
+      if (rowLink == null) {
+        break missingId;
+      }
+
+      id = R.id.rowPassword;
+      LinearLayout rowPassword = ViewBindings.findChildViewById(rootView, id);
+      if (rowPassword == null) {
+        break missingId;
+      }
+
+      id = R.id.rowTarget;
+      LinearLayout rowTarget = ViewBindings.findChildViewById(rootView, id);
+      if (rowTarget == null) {
+        break missingId;
+      }
+
+      id = R.id.rowUsername;
+      LinearLayout rowUsername = ViewBindings.findChildViewById(rootView, id);
+      if (rowUsername == null) {
+        break missingId;
+      }
+
       id = R.id.tvLoginStatus;
       TextView tvLoginStatus = ViewBindings.findChildViewById(rootView, id);
       if (tvLoginStatus == null) {
@@ -222,10 +308,11 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((ScrollView) rootView, btnDownloadLink, btnDownloadPosts,
-          btnDownloadStories, btnLogin, btnLogout, etLink, etPassword, etTarget, etUsername,
-          inputLink, inputPassword, inputTarget, inputUsername, progressBar, tvLoginStatus,
-          tvStatus);
+      return new ActivityMainBinding((ScrollView) rootView, btnClearLink, btnClearPassword,
+          btnClearTarget, btnClearUsername, btnDownloadLink, btnDownloadPosts, btnDownloadStories,
+          btnLogin, btnLogout, etLink, etPassword, etTarget, etUsername, inputLink, inputPassword,
+          inputTarget, inputUsername, progressBar, rowLink, rowPassword, rowTarget, rowUsername,
+          tvLoginStatus, tvStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

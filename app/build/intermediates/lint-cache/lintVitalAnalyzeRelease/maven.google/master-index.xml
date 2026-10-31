@@ -7,12 +7,17 @@
   <android.arch.persistence/>
   <android.arch.persistence.room/>
   <android.arch.work/>
+  <androidx.a2ui/>
+  <androidx.a2ui.compose/>
   <androidx.activity/>
   <androidx.ads/>
   <androidx.annotation/>
+  <androidx.annotation.keep/>
   <androidx.appcompat/>
   <androidx.appfunctions/>
   <androidx.appsearch/>
+  <androidx.appstate.statestore/>
+  <androidx.appstate.transform/>
   <androidx.arch.core/>
   <androidx.asynclayoutinflater/>
   <androidx.autofill/>
@@ -130,6 +135,7 @@
   <androidx.startup/>
   <androidx.swiperefreshlayout/>
   <androidx.test/>
+  <androidx.test.backup/>
   <androidx.test.espresso/>
   <androidx.test.espresso.idling/>
   <androidx.test.ext/>
@@ -187,6 +193,7 @@
   <com.android.installreferrer/>
   <com.android.internal.settings/>
   <com.android.java.tools.build/>
+  <com.android.keyattestation/>
   <com.android.kotlin.multiplatform.library/>
   <com.android.legacy-kapt/>
   <com.android.library/>
@@ -236,6 +243,7 @@
   <com.android.tools.screenshot/>
   <com.android.tools.smali/>
   <com.android.tools.studio.leakcanary/>
+  <com.android.tools.test/>
   <com.android.tools.utp/>
   <com.android.volley/>
   <com.crashlytics.sdk.android/>

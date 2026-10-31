@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/home/damian/Proyectos/inst-download/app"
+    name=":app"
+    type="APP"
+    maven="InstaDownloader:app:unspecified"
+    agpVersion="8.13.2"
+    buildFolder="build"
+    bootClassPath="/home/damian/Android/Sdk/platforms/android-34/android.jar:/home/damian/Android/Sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-34">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

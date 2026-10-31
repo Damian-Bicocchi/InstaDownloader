@@ -1,0 +1,362 @@
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/download/DownloadManager.kt:74: Warning: Field requires API level 29 (current min is 24): android.provider.MediaStore#VOLUME_EXTERNAL_PRIMARY [InlinedApi]
+            MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/download/DownloadManager.kt:76: Warning: Field requires API level 29 (current min is 24): android.provider.MediaStore#VOLUME_EXTERNAL_PRIMARY [InlinedApi]
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "InlinedApi":
+   This check scans through all the Android API field references in the
+   application and flags certain constants, such as static final integers and
+   Strings, which were introduced in later versions. These will actually be
+   copied into the class files rather than being referenced, which means that
+   the value is available even when running on older devices. In some cases
+   that's fine, and in other cases it can result in a runtime crash or
+   incorrect behavior. It depends on the context, so consider the code
+   carefully and decide whether it's safe and can be suppressed or whether the
+   code needs to be guarded.
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:38: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk = 34
+        ~~~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application or sdk runs on a version of Android that is more
+   recent than your targetSdkVersion specifies that it has been tested with,
+   various compatibility modes kick in. This ensures that your application
+   continues to work, but it may look out of place. For example, if the
+   targetSdkVersion is less than 14, your app may get an option button in the
+   UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:17: Warning: Your app is currently not handling Selected Photos Access introduced in Android 14+ [SelectedPhotoAccess]
+        android:name="android.permission.READ_MEDIA_IMAGES"
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/AndroidManifest.xml:20: Warning: Your app is currently not handling Selected Photos Access introduced in Android 14+ [SelectedPhotoAccess]
+        android:name="android.permission.READ_MEDIA_VIDEO"
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SelectedPhotoAccess":
+   Selected Photo Access is a new ability for users to share partial access to
+   their photo library when apps request access to their device storage on
+   Android 14+.
+
+   Instead of letting the system manage the selection lifecycle, we recommend
+   you adapt your app to handle partial access to the photo library.
+
+   https://developer.android.com/about/versions/14/changes/partial-photo-video-access
+
+/home/damian/Proyectos/inst-download/gradle/wrapper/gradle-wrapper.properties:3: Warning: A newer version of Gradle than 8.13 is available: 8.14.6 [AndroidGradlePluginVersion]
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:33: Warning: A newer version of compileSdkVersion than 34 is available: 36 [GradleDependency]
+    compileSdk = 34
+    ~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:89: Warning: A newer version of androidx.core:core-ktx than 1.13.1 is available: 1.19.1 [GradleDependency]
+    implementation("androidx.core:core-ktx:1.13.1")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:90: Warning: A newer version of androidx.appcompat:appcompat than 1.7.0 is available: 1.8.0 [GradleDependency]
+    implementation("androidx.appcompat:appcompat:1.7.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:91: Warning: A newer version of com.google.android.material:material than 1.12.0 is available: 1.14.0 [GradleDependency]
+    implementation("com.google.android.material:material:1.12.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:92: Warning: A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.2 [GradleDependency]
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:93: Warning: A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.8.4 is available: 2.11.0 [GradleDependency]
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:94: Warning: A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.8.4 is available: 2.11.0 [GradleDependency]
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:104: Warning: A newer version of androidx.security:security-crypto than 1.1.0-alpha06 is available: 1.1.0 [GradleDependency]
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:96: Warning: A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.8.1 is available: 1.11.0 [NewerVersionAvailable]
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:98: Warning: A newer version of com.squareup.retrofit2:retrofit than 2.11.0 is available: 3.0.0 [NewerVersionAvailable]
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:99: Warning: A newer version of com.squareup.retrofit2:converter-gson than 2.11.0 is available: 3.0.0 [NewerVersionAvailable]
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:100: Warning: A newer version of com.squareup.okhttp3:okhttp than 4.12.0 is available: 5.5.1 [NewerVersionAvailable]
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/build.gradle.kts:102: Warning: A newer version of com.google.code.gson:gson than 2.11.0 is available: 2.15.0 [NewerVersionAvailable]
+    implementation("com.google.code.gson:gson:2.11.0")
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewerVersionAvailable":
+   This detector checks with a central repository to see if there are newer
+   versions available for the dependencies used by this project. This is
+   similar to the GradleDependency check, which checks for newer versions
+   available in the Android SDK tools and libraries, but this works with any
+   MavenCentral dependency, and connects to the library every time, which
+   makes it more flexible but also much slower.
+
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:6: Warning: Possible overdraw: Root element paints background @color/ig_light with a theme that also paints a background (inferred theme is @style/Theme.InstaDownloader) [Overdraw]
+    android:background="@color/ig_light"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "Overdraw":
+   If you set a background drawable on a root view, then you should use a
+   custom theme where the theme background is null. Otherwise, the theme
+   background will be painted first, only to have your custom background
+   completely cover it; this is called "overdraw".
+
+   NOTE: This detector relies on figuring out which layouts are associated
+   with which activities based on scanning the Java code, and it's currently
+   doing that using an inexact pattern matching algorithm. Therefore, it can
+   incorrectly conclude which activity the layout is associated with and then
+   wrongly complain that a background-theme is hidden.
+
+   If you want your custom background on multiple pages, then you should
+   consider making a custom theme with your custom background and just using
+   that theme instead of a root element background.
+
+   Of course it's possible that your custom drawable is translucent and you
+   want it to be mixed with the background. However, you will get better
+   performance if you pre-mix the background with your drawable and use that
+   resulting image or color as a custom theme background instead.
+
+/home/damian/Proyectos/inst-download/app/src/main/res/values/colors.xml:6: Warning: The resource R.color.ig_white appears to be unused [UnusedResources]
+    <color name="ig_white">#FFFFFF</color>
+           ~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/values/strings.xml:3: Warning: The resource R.string.paste_reel_post_story_link appears to be unused [UnusedResources]
+    <string name="paste_reel_post_story_link">Paste reel / post / story link</string>
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+   Available options:
+
+   **skip-libraries** (default is true):
+   Whether the unused resource check should skip reporting unused resources in libraries.
+
+   Many libraries will declare resources that are part of the library surface; other modules depending on the library will also reference the resources. To avoid reporting all these resources as unused (in the context of a library), the unused resource check normally skips reporting unused resources in libraries. Instead, run the unused resource check on the consuming app module (along with `checkDependencies=true`).
+
+   However, there are cases where you want to check that all the resources declared in a library are used; in that case, you can disable the skip option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UnusedResources">
+           <option name="skip-libraries" value="true" />
+       </issue>
+   </lint>
+   ```
+
+/home/damian/Proyectos/inst-download/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml:2: Warning: The application adaptive icon is missing a monochrome tag [MonochromeLauncherIcon]
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+^
+/home/damian/Proyectos/inst-download/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml:2: Warning: The application adaptive roundIcon is missing a monochrome tag [MonochromeLauncherIcon]
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+^
+
+   Explanation for issues of type "MonochromeLauncherIcon":
+   If android:roundIcon and android:icon are both in your manifest, you must
+   either remove the reference to android:roundIcon if it is not needed; or,
+   supply the monochrome icon in the drawable defined by the android:roundIcon
+   and android:icon attribute.
+
+   For example, if android:roundIcon and android:icon are both in the
+   manifest, a launcher might choose to use android:roundIcon over
+   android:icon to display the adaptive app icon. Therefore, your themed
+   application iconwill not show if your monochrome attribute is not also
+   specified in android:roundIcon.
+
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:32: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+        prefs.edit()
+        ~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:42: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+        prefs.edit()
+        ~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:52: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+            appContext.getSharedPreferences(LEGACY_PREFS, Context.MODE_PRIVATE)
+            ^
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:108: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+                enc.edit()
+                ~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:124: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+                context.getSharedPreferences(LEGACY_PREFS, Context.MODE_PRIVATE)
+                ^
+
+   Explanation for issues of type "UseKtx":
+   The Android KTX libraries decorates the Android platform SDK as well as
+   various libraries with more convenient extension functions available from
+   Kotlin, allowing you to use default parameters, named parameters, and
+   more.
+
+   Available options:
+
+   **remove-defaults** (default is true):
+   Whether to skip arguments that match the defaults provided by the extension.
+
+   Extensions often provide default values for some of the parameters. For example:
+   ```kotlin
+   fun Path.readLines(charset: Charset = Charsets.UTF_8): List<String> { return Files.readAllLines(this, charset) }
+   ```
+   This lint check will by default automatically omit parameters that match the default, so if your code was calling
+
+   ```kotlin
+   Files.readAllLines(file, Charset.UTF_8)
+   ```
+   lint would replace this with
+   ```kotlin
+   file.readLines()
+   ```
+   rather than
+
+   ```kotlin
+   file.readLines(Charset.UTF_8
+   ```
+   You can turn this behavior off using this option.
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="remove-defaults" value="true" />
+       </issue>
+   </lint>
+   ```
+
+   **require-present** (default is true):
+   Whether to only offer extensions already available.
+
+   This option lets you only have lint suggest extension replacements if those extensions are already available on the class path (in other words, you're already depending on the library containing the extension method.)
+
+   To configure this option, use a `lint.xml` file with an <option> like this:
+
+   ```xml
+   <lint>
+       <issue id="UseKtx">
+           <option name="require-present" value="true" />
+       </issue>
+   </lint>
+   ```
+
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:27: Warning: Hardcoded string "Download photos, videos & stories", should use @string resource [HardcodedText]
+            android:text="Download photos, videos &amp; stories"
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:50: Warning: Hardcoded string "Account", should use @string resource [HardcodedText]
+                    android:text="Account"
+                    ~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:60: Warning: Hardcoded string "Not logged in", should use @string resource [HardcodedText]
+                    android:text="Not logged in"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:78: Warning: Hardcoded string "Username", should use @string resource [HardcodedText]
+                        android:hint="Username"
+                        ~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:95: Warning: Hardcoded string "Clear username", should use @string resource [HardcodedText]
+                        android:contentDescription="Clear username"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:114: Warning: Hardcoded string "Password", should use @string resource [HardcodedText]
+                        android:hint="Password"
+                        ~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:132: Warning: Hardcoded string "Clear password", should use @string resource [HardcodedText]
+                        android:contentDescription="Clear password"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:142: Warning: Hardcoded string "Login", should use @string resource [HardcodedText]
+                    android:text="Login"
+                    ~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:152: Warning: Hardcoded string "Logout", should use @string resource [HardcodedText]
+                    android:text="Logout"
+                    ~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:177: Warning: Hardcoded string "Download from user", should use @string resource [HardcodedText]
+                    android:text="Download from user"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:196: Warning: Hardcoded string "Instagram username", should use @string resource [HardcodedText]
+                        android:hint="Instagram username"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:213: Warning: Hardcoded string "Clear Instagram username", should use @string resource [HardcodedText]
+                        android:contentDescription="Clear Instagram username"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:229: Warning: Hardcoded string "Download Posts", should use @string resource [HardcodedText]
+                        android:text="Download Posts"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:239: Warning: Hardcoded string "Download Stories", should use @string resource [HardcodedText]
+                        android:text="Download Stories"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:258: Warning: Hardcoded string "Paste reel / post / story / highlight link (public posts need no login)", should use @string resource [HardcodedText]
+                        android:hint="Paste reel / post / story / highlight link (public posts need no login)"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:275: Warning: Hardcoded string "Clear link", should use @string resource [HardcodedText]
+                        android:contentDescription="Clear link"
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:285: Warning: Hardcoded string "Download Link", should use @string resource [HardcodedText]
+                    android:text="Download Link"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:317: Warning: Hardcoded string "WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account.", should use @string resource [HardcodedText]
+            android:text="WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account." />
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "HardcodedText":
+   Hardcoding text attributes directly in layout files is bad for several
+   reasons:
+
+   * When creating configuration variations (for example for landscape or
+   portrait) you have to repeat the actual text (and keep it up to date when
+   making changes)
+
+   * The application cannot be translated to other languages by just adding
+   new translations for existing string resources.
+
+   There are quickfixes to automatically extract this hardcoded string into a
+   resource lookup.
+
+0 errors, 47 warnings

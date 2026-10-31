@@ -5,10 +5,10 @@ library {
   maven_library {
     groupId: "androidx.databinding"
     artifactId: "viewbinding"
-    version: "8.5.2"
+    version: "8.13.2"
   }
   digests {
-    sha256: "+\243\312\347\345\237\207\024\272\273\025\301\201F\247\257\217\356Kx,\026%Nz\002\f\345\026\204g\n"
+    sha256: "\271\243\2562\2268\253b=\301\332\377*\300t\211\340\344\333\317\220\327|\342\330u\237v|\327\2415"
   }
   repo_index {
   }
@@ -894,12 +894,24 @@ library {
 }
 library {
   maven_library {
-    groupId: "com.squareup.okhttp3"
-    artifactId: "logging-interceptor"
-    version: "4.12.0"
+    groupId: "androidx.security"
+    artifactId: "security-crypto"
+    version: "1.1.0-alpha06"
   }
   digests {
-    sha256: "\363\350\325\360\220<%\f+U\322\364\177\317\340\b\350\00648]\2508Qa\307\246:\256\320\307L"
+    sha256: "\227a\021\027\v?\023\322\360\371E}\237\237W\223G\024<\266\\\005Be\220m3\307a\212L*"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.crypto.tink"
+    artifactId: "tink-android"
+    version: "1.8.0"
+  }
+  digests {
+    sha256: "^\376\217\034\266\347X\024\256\006y=_\370\331\260\036o\210\357\227\354\300b\321N\274\'\002}\277x"
   }
   repo_index {
     value: 1
@@ -1454,8 +1466,14 @@ library_dependencies {
 }
 library_dependencies {
   library_index: 75
-  library_dep_index: 70
-  library_dep_index: 5
+  library_dep_index: 1
+  library_dep_index: 1
+  library_dep_index: 11
+  library_dep_index: 76
+}
+library_dependencies {
+  library_index: 76
+  library_dep_index: 74
 }
 module_dependencies {
   module_name: "base"
@@ -1471,8 +1489,8 @@ module_dependencies {
   dependency_index: 69
   dependency_index: 73
   dependency_index: 70
-  dependency_index: 75
   dependency_index: 74
+  dependency_index: 75
 }
 repositories {
   maven_repo {

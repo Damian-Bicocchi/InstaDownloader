@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.13.2" type="conditional_incidents">
+
+    <incident
+        id="ScopedStorage"
+        severity="warning"
+        message="">
+        <location
+            file="${:app*release*MAIN*sourceProvider*0*manifest*0}"
+            line="13"
+            column="23"
+            startOffset="632"
+            endLine="13"
+            endColumn="64"
+            endOffset="673"/>
+        <map>
+            <entry
+                name="maxSdkVersion"
+                int="28"/>
+            <entry
+                name="read"
+                boolean="false"/>
+        </map>
+    </incident>
+
+    <incident
+        id="InlinedApi"
+        severity="warning"
+        message="">
+        <fix-data minSdk="24-∞" requiresApi="29-∞"/>
+        <location
+            file="${:app*release*MAIN*sourceProvider*0*javaDir*0}/com/example/instadl/download/DownloadManager.kt"
+            line="74"
+            column="50"
+            startOffset="2401"
+            endLine="74"
+            endColumn="84"
+            endOffset="2435"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 29 (current min is %1$s): `android.provider.MediaStore#VOLUME_EXTERNAL_PRIMARY`"/>
+            <api-levels id="minSdk"
+                value="24-∞"/>
+            <entry
+                name="name"
+                string="VOLUME_EXTERNAL_PRIMARY"/>
+            <entry
+                name="owner"
+                string="android.provider.MediaStore"/>
+            <api-levels id="requiresApi"
+                value="29-∞"/>
+        </map>
+    </incident>
+
+    <incident
+        id="InlinedApi"
+        severity="warning"
+        message="">
+        <fix-data minSdk="24-∞" requiresApi="29-∞"/>
+        <location
+            file="${:app*release*MAIN*sourceProvider*0*javaDir*0}/com/example/instadl/download/DownloadManager.kt"
+            line="76"
+            column="51"
+            startOffset="2504"
+            endLine="76"
+            endColumn="85"
+            endOffset="2538"/>
+        <map>
+            <entry
+                name="message"
+                string="Field requires API level 29 (current min is %1$s): `android.provider.MediaStore#VOLUME_EXTERNAL_PRIMARY`"/>
+            <api-levels id="minSdk"
+                value="24-∞"/>
+            <entry
+                name="name"
+                string="VOLUME_EXTERNAL_PRIMARY"/>
+            <entry
+                name="owner"
+                string="android.provider.MediaStore"/>
+            <api-levels id="requiresApi"
+                value="29-∞"/>
+        </map>
+    </incident>
+
+</incidents>
