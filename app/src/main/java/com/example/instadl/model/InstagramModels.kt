@@ -51,14 +51,6 @@ data class MediaItem(
         if (isCarousel()) carouselMedia!! else listOf(this)
 }
 
-data class UserInfo(
-    @SerializedName("pk") val pk: String? = null,
-    @SerializedName("username") val username: String? = null,
-    @SerializedName("full_name") val fullName: String? = null,
-    @SerializedName("profile_pic_url") val profilePicUrl: String? = null,
-    @SerializedName("is_private") val isPrivate: Boolean? = null
-)
-
 data class MediaFeed(
     @SerializedName("items") val items: List<MediaItem>? = null,
     @SerializedName("num_results") val numResults: Int? = null,

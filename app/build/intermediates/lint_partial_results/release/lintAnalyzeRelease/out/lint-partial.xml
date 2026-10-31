@@ -24,14 +24,6 @@
             endLine="8"
             endColumn="27"
             endOffset="298"/>
-        <location id="R.color.ig_surface_variant"
-            file="${:app*release*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
-            line="13"
-            column="12"
-            startOffset="460"
-            endLine="13"
-            endColumn="37"
-            endOffset="485"/>
         <location id="R.string.paste_reel_post_story_link"
             file="${:app*release*MAIN*sourceProvider*0*resDir*0}/values/strings.xml"
             line="3"
@@ -42,7 +34,7 @@
             endOffset="111"/>
         <entry
             name="model"
-            string="attr[selectableItemBackgroundBorderless(R)],color[ig_background(U),ig_purple(U),ig_text_secondary(U),ig_surface(U),ig_border(U),ig_text_primary(U),ig_gray(U),ig_gradient_end(U),ig_dark(U),ig_white(U),ig_light(D),black(D),ig_surface_variant(D)],drawable[ic_clear(U),ic_launcher_foreground(U)],id[tvLoginStatus(U),rowUsername(U),inputUsername(D),etUsername(U),btnClearUsername(U),rowPassword(U),inputPassword(D),etPassword(U),btnClearPassword(U),btnLogin(U),btnLogout(U),rowTarget(D),inputTarget(D),etTarget(U),btnClearTarget(U),btnDownloadPosts(U),btnDownloadStories(U),rowLink(D),inputLink(D),etLink(U),btnClearLink(U),btnDownloadLink(U),tvStatus(U),progressBar(U)],layout[activity_main(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(U),paste_reel_post_story_link(D)],style[Theme_InstaDownloader(U),Widget_MaterialComponents_TextInputLayout_OutlinedBox(R),Widget_MaterialComponents_Button_OutlinedButton(R),Theme_MaterialComponents_NoActionBar(R)],xml[data_extraction_rules(U),network_security_config(U)];28^1^2b^2^3^4^5^6^2e^0^e^7^2f^8,29^9^f,2a^9^f,2d^30^2^8^a^4^6^1;;;"/>
+            string="attr[selectableItemBackgroundBorderless(R)],color[ig_background(U),ig_text_primary(U),ig_purple(U),ig_text_secondary(U),ig_surface(U),ig_border(U),ig_gray(U),ig_dark(U),ig_gradient_end(U),ig_white(U),ig_light(D),black(D)],drawable[ic_clear(U),ic_launcher_foreground(U)],id[aboutText(U),btnCloseAbout(U),tvLoginStatus(U),btnLogin(U),btnLogout(U),btnClearSession(U),rowLink(D),inputLink(D),etLink(U),btnClearLink(U),btnDownloadLink(U),tvStatus(U),progressBar(U),btnAbout(U),webView(U),progress(U)],layout[activity_about(U),activity_main(U),activity_web_login(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(U),paste_reel_post_story_link(D)],style[Theme_InstaDownloader(U),Widget_MaterialComponents_Button_OutlinedButton(R),Widget_MaterialComponents_TextInputLayout_OutlinedBox(R),Theme_MaterialComponents_NoActionBar(R)],xml[data_extraction_rules(U),network_security_config(U)];1f^1^2^3,20^1^24^3^4^5^6^2^7^27^28^0^d,21^1,22^8^e,23^8^e,26^29^3^9^a^5^2^1;;;"/>
     </map>
 
 </incidents>

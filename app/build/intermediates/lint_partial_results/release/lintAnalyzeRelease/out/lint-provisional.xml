@@ -24,6 +24,23 @@
     </incident>
 
     <incident
+        id="GestureBackNavigation"
+        severity="warning"
+        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX&apos;s backward compatible `OnBackPressedDispatcher`">
+        <show-url
+            description="Show https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture"
+            url="https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture"/>
+        <location
+            file="${:app*release*MAIN*sourceProvider*0*javaDir*0}/com/example/instadl/WebLoginActivity.kt"
+            line="125"
+            column="18"
+            startOffset="4278"
+            endLine="125"
+            endColumn="31"
+            endOffset="4291"/>
+    </incident>
+
+    <incident
         id="InlinedApi"
         severity="warning"
         message="">

@@ -10717,6 +10717,8 @@ com.example.instadl.R$string
 com.example.instadl.R$style
 com.example.instadl.R$xml
 com.example.instadl.R
+com.example.instadl.WebLoginActivity:
+    private static final java.lang.String LOGIN_URL
 com.example.instadl.auth.SessionStore:
     private static final java.lang.String ENC_PREFS
     private static final java.lang.String KEY_COOKIES
@@ -10725,9 +10727,14 @@ com.example.instadl.auth.SessionStore:
     private static final java.lang.String KEY_USERNAME
     private static final java.lang.String KEY_USER_ID
     private static final java.lang.String LEGACY_PREFS
+    private static final long SESSION_MAX_AGE_MS
     private static final java.lang.String TAG
     public final java.lang.String getUserId()
+com.example.instadl.databinding.ActivityAboutBinding:
+    public synthetic bridge android.view.View getRoot()
 com.example.instadl.databinding.ActivityMainBinding:
+    public synthetic bridge android.view.View getRoot()
+com.example.instadl.databinding.ActivityWebLoginBinding:
     public synthetic bridge android.view.View getRoot()
 com.example.instadl.network.InstagramClient:
     public static final java.lang.String BASE_URL
@@ -24503,6 +24510,7 @@ kotlin.collections.ArraysKt___ArraysJvmKt:
     private static final short elementAt(short[],int)
     private static final boolean elementAt(boolean[],int)
     public static final void fill(byte[],byte,int,int)
+    public static final void fill(char[],char,int,int)
     public static final void fill(double[],double,int,int)
     public static final void fill(float[],float,int,int)
     public static final void fill(int[],int,int,int)
@@ -24510,6 +24518,7 @@ kotlin.collections.ArraysKt___ArraysJvmKt:
     public static final void fill(short[],short,int,int)
     public static final void fill(boolean[],boolean,int,int)
     public static synthetic void fill$default(byte[],byte,int,int,int,java.lang.Object)
+    public static synthetic void fill$default(char[],char,int,int,int,java.lang.Object)
     public static synthetic void fill$default(double[],double,int,int,int,java.lang.Object)
     public static synthetic void fill$default(float[],float,int,int,int,java.lang.Object)
     public static synthetic void fill$default(int[],int,int,int,int,java.lang.Object)
@@ -32106,15 +32115,14 @@ androidx.activity.ComponentActivity:
     public abstract void invalidateMenu()
     public abstract java.lang.Object onRetainCustomNonConfigurationInstance()
     public abstract androidx.activity.result.ActivityResultLauncher registerForActivityResult()
-    public abstract androidx.activity.result.ActivityResultLauncher registerForActivityResult$1()
     public abstract void setContentView(int)
 androidx.activity.ComponentDialog:
     public final androidx.lifecycle.LifecycleRegistry getLifecycleRegistry()
     public final androidx.activity.OnBackPressedDispatcher getOnBackPressedDispatcher()
-androidx.activity.FullyDrawnReporter$$InternalSyntheticLambda$3$a343797b216b654af6e45b210590a59b008b0897ac1072415ad77f5c0c5544cc$0
+androidx.activity.FullyDrawnReporter$$InternalSyntheticLambda$2$a343797b216b654af6e45b210590a59b008b0897ac1072415ad77f5c0c5544cc$0
 androidx.activity.FullyDrawnReporter:
     public final java.util.concurrent.Executor executor
-    public final androidx.activity.ComponentActivity$$InternalSyntheticLambda$2$5dadcb51e38206f711ac33b43be9f1d0a0b44942d6cdeb5df7bcc27f4845fc40$1 reportFullyDrawn
+    public final androidx.activity.ComponentActivity$$InternalSyntheticLambda$1$5dadcb51e38206f711ac33b43be9f1d0a0b44942d6cdeb5df7bcc27f4845fc40$1 reportFullyDrawn
     public boolean reportPosted
     public final java.lang.Runnable reportRunnable
     public int reporterCount
@@ -32172,7 +32180,6 @@ androidx.activity.result.ActivityResultLauncher:
     public abstract void launch(java.lang.Object)
     public abstract void unregister()
 androidx.activity.result.ActivityResultRegistry$2:
-    public final void launch(java.lang.Object)
     public final void unregister()
 androidx.activity.result.ActivityResultRegistry$3:
     public final synthetic androidx.activity.result.contract.ActivityResultContract val$contract
@@ -34998,7 +35005,7 @@ androidx.core.os.LocaleListCompat:
     public final int size()
     public final java.lang.String toLanguageTags()
     public static androidx.core.os.LocaleListCompat wrap(android.os.LocaleList)
-androidx.core.os.LocaleListCompatWrapper$$InternalSyntheticThrowCCEIfNotNull$268$eabde584e09f5dbef5e5c77b987ffae1119ec566c4556bde1e78e256d6ae9d7b$0
+androidx.core.os.LocaleListCompatWrapper$$InternalSyntheticThrowCCEIfNotNull$281$eabde584e09f5dbef5e5c77b987ffae1119ec566c4556bde1e78e256d6ae9d7b$0
 androidx.core.os.LocaleListCompatWrapper
 androidx.core.os.LocaleListInterface:
     public abstract java.util.Locale get()
@@ -37409,6 +37416,11 @@ androidx.versionedparcelable.VersionedParcelParcel:
     public final void writeInt(int)
     public final void writeParcelable()
     public final void writeString(java.lang.String)
+com.example.instadl.AboutActivity$Companion
+com.example.instadl.AboutActivity:
+    public static final java.lang.String ABOUT_TEXT
+    public static final com.example.instadl.AboutActivity$Companion Companion
+    static void <clinit>()
 com.example.instadl.MainActivity$Companion
 com.example.instadl.MainActivity$downloadFromLink$1:
     public final java.lang.Object invoke$1()
@@ -37417,17 +37429,6 @@ com.example.instadl.MainActivity$downloadHighlight$items$1:
     public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$downloadHighlight$saved$1:
     public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadPosts$1$feed$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadPosts$1$saved$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadPosts$1$user$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadPosts$1:
     public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$downloadShortcode$item$1:
     public int label
@@ -37441,27 +37442,16 @@ com.example.instadl.MainActivity$downloadShortcode$saved$1:
 com.example.instadl.MainActivity$downloadShortcode$saved$2:
     public int label
     public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadStories$1$feed$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadStories$1$saved$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadStories$1$user$1:
-    public int label
-    public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$downloadStories$1:
-    public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$downloadStoryLink$item$1:
     public int label
     public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$downloadStoryLink$saved$1:
     public int label
     public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$performLogin$1$result$1:
+com.example.instadl.MainActivity$finishWebLogin$1$user$1:
     public int label
     public final java.lang.Object invoke$1()
-com.example.instadl.MainActivity$performLogin$1:
+com.example.instadl.MainActivity$finishWebLogin$1:
     public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$performLogout$1$serverOk$1:
     public int label
@@ -37471,26 +37461,30 @@ com.example.instadl.MainActivity$performLogout$1:
 com.example.instadl.MainActivity:
     public static final com.example.instadl.MainActivity$Companion Companion
     static void <clinit>()
-    public final boolean requireLoggedIn()
-    public static void wipe(char[])
 com.example.instadl.R$id
 com.example.instadl.R$layout
+com.example.instadl.WebLoginActivity$Companion
+com.example.instadl.WebLoginActivity$readSessionCookies$2:
+    public final java.lang.CharSequence invoke()
+com.example.instadl.WebLoginActivity:
+    public static final com.example.instadl.WebLoginActivity$Companion Companion
+    static void <clinit>()
 com.example.instadl.auth.SessionStore:
     public static final com.example.instadl.auth.SessionStore$Companion Companion
     static void <clinit>()
-    public static void clear()
+    public static boolean clearIfExpired()
     public static java.lang.String getFullName()
     public static java.lang.String getUsername()
     public static void saveCookies()
+com.example.instadl.databinding.ActivityAboutBinding
 com.example.instadl.databinding.ActivityMainBinding:
     public final com.google.android.material.textfield.TextInputLayout inputLink
-    public final com.google.android.material.textfield.TextInputLayout inputPassword
-    public final com.google.android.material.textfield.TextInputLayout inputTarget
-    public final com.google.android.material.textfield.TextInputLayout inputUsername
     public final android.widget.ScrollView rootView
     public final android.widget.LinearLayout rowLink
-    public final android.widget.LinearLayout rowTarget
     public static android.widget.ScrollView getRoot()
+com.example.instadl.databinding.ActivityWebLoginBinding:
+    public final android.widget.FrameLayout rootView
+    public static android.widget.FrameLayout getRoot()
 com.example.instadl.download.DownloadManager:
     public static final com.example.instadl.download.DownloadManager INSTANCE
 com.example.instadl.network.InstagramClient$Companion
@@ -37511,17 +37505,15 @@ com.example.instadl.network.InstagramClient:
     public static final com.example.instadl.network.InstagramClient$Companion Companion
     public final com.example.instadl.network.InstagramCookieJar cookieJar
     static void <clinit>()
+    public static com.example.instadl.model.LoggedInUser fetchCurrentUser()
     public static java.util.List fetchHighlightItems()
     public static com.example.instadl.model.MediaItem fetchMediaByShortcode()
     public static com.example.instadl.model.MediaFeed fetchMediaInfo()
-    public static com.example.instadl.model.MediaFeed fetchStories()
-    public static com.example.instadl.model.MediaFeed fetchUserMediaPk()
-    public static com.example.instadl.model.LoginResponse login()
     public static boolean logout()
     public static java.lang.String unescapeHtmlAttr(java.lang.String)
 com.example.instadl.network.InstagramCookieJar$Companion
 com.example.instadl.network.InstagramCookieJar$saveFromResponse$1:
-    public static java.lang.CharSequence invoke()
+    public final java.lang.CharSequence invoke()
 com.example.instadl.network.InstagramCookieJar:
     public static final com.example.instadl.network.InstagramCookieJar$Companion Companion
     static void <clinit>()
@@ -38163,7 +38155,7 @@ com.google.android.material.bottomsheet.InsetsAnimationCallback:
     public final void onEnd()
     public final void onPrepare()
     public final void onStart(androidx.core.view.WindowInsetsAnimationCompat$BoundsCompat)
-com.google.android.material.button.MaterialButton$$InternalSyntheticThrowCCEIfNotNull$72$6669efef3cdb4fadbbfe03e9570c054a7f84ff1fdbc612ba59f6bda9750bcb8e$0
+com.google.android.material.button.MaterialButton$$InternalSyntheticThrowCCEIfNotNull$62$6669efef3cdb4fadbbfe03e9570c054a7f84ff1fdbc612ba59f6bda9750bcb8e$0
 com.google.android.material.button.MaterialButton$OnCheckedChangeListener
 com.google.android.material.button.MaterialButton$OnPressedChangeListener:
     public abstract void onPressedChanged()
@@ -38403,8 +38395,8 @@ com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticApiModel
 com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticApiModelOutline$1$aa0500c7b5fb81cb553ac89573852bdeadab87567d8c6dd741e4dc2fb74c3bfa$1
 com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticApiModelOutline$1$aa0500c7b5fb81cb553ac89573852bdeadab87567d8c6dd741e4dc2fb74c3bfa$2
 com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticLambda$1$a66ca6c6de65b4f256ca2f0a8ce6032afe507a77d8c42ef3015c9db612807b7a$0
-com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticThrowCCEIfNotNull$70$64230ef508535390da37e035104af999ccafcbc3346ffbad5268c7d7cc5ad2a9$0
-com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticThrowCCEIfNotNull$70$aa0500c7b5fb81cb553ac89573852bdeadab87567d8c6dd741e4dc2fb74c3bfa$0
+com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticThrowCCEIfNotNull$60$64230ef508535390da37e035104af999ccafcbc3346ffbad5268c7d7cc5ad2a9$0
+com.google.android.material.checkbox.MaterialCheckBox$$InternalSyntheticThrowCCEIfNotNull$60$aa0500c7b5fb81cb553ac89573852bdeadab87567d8c6dd741e4dc2fb74c3bfa$0
 com.google.android.material.checkbox.MaterialCheckBox$1:
     public final android.graphics.drawable.Animatable2$AnimationCallback getPlatformCallback()
     public final void onAnimationEnd(android.graphics.drawable.Drawable)
@@ -40404,8 +40396,8 @@ com.google.crypto.tink.shaded.protobuf.AbstractProtobufList:
     public abstract void makeImmutable()
 com.google.crypto.tink.shaded.protobuf.Android:
     public static boolean ASSUME_ANDROID
-com.google.crypto.tink.shaded.protobuf.ArrayDecoders$$InternalSyntheticThrowCCEIfNotNull$65$0a6f867765761fb64e8e8dc77be285240de03242d55122dd1ca43cd4f0fe3d17$0
-com.google.crypto.tink.shaded.protobuf.ArrayDecoders$$InternalSyntheticThrowCCEIfNotNull$65$0a6f867765761fb64e8e8dc77be285240de03242d55122dd1ca43cd4f0fe3d17$1
+com.google.crypto.tink.shaded.protobuf.ArrayDecoders$$InternalSyntheticThrowCCEIfNotNull$67$0a6f867765761fb64e8e8dc77be285240de03242d55122dd1ca43cd4f0fe3d17$0
+com.google.crypto.tink.shaded.protobuf.ArrayDecoders$$InternalSyntheticThrowCCEIfNotNull$67$0a6f867765761fb64e8e8dc77be285240de03242d55122dd1ca43cd4f0fe3d17$1
 com.google.crypto.tink.shaded.protobuf.ArrayDecoders$1
 com.google.crypto.tink.shaded.protobuf.ArrayDecoders$Registers:
     public final com.google.crypto.tink.shaded.protobuf.ExtensionRegistryLite extensionRegistry
@@ -40681,7 +40673,7 @@ com.google.crypto.tink.shaded.protobuf.ExtensionRegistryLite:
     public final java.util.Map extensionsByNumber
     public final void findLiteExtensionByNumber(com.google.crypto.tink.shaded.protobuf.AbstractMessageLite,int)
 com.google.crypto.tink.shaded.protobuf.ExtensionSchema
-com.google.crypto.tink.shaded.protobuf.ExtensionSchemaLite$$InternalSyntheticThrowCCEIfNotNull$65$4462820cff5b803b0adf9f86637c2e1c2bb1199b92b60e5cd16e777cd53e3e14$0
+com.google.crypto.tink.shaded.protobuf.ExtensionSchemaLite$$InternalSyntheticThrowCCEIfNotNull$67$4462820cff5b803b0adf9f86637c2e1c2bb1199b92b60e5cd16e777cd53e3e14$0
 com.google.crypto.tink.shaded.protobuf.ExtensionSchemaLite$$InternalSyntheticThrowCCEIfNotNull$79$3647f2699aec409d688b229af9cd5a4ad844c86aff6ed1ce625011d6c7a200fe$0
 com.google.crypto.tink.shaded.protobuf.ExtensionSchemaLite$$InternalSyntheticThrowCCEIfNotNull$8$c2590efccc56ca45a8499004bf84f6f4bc34a9e4234b7db85787f80b8ea79894$0
 com.google.crypto.tink.shaded.protobuf.ExtensionSchemaLite$$InternalSyntheticThrowCCEIfNotNull$8$c5c155b2580c8bd45c9272fe49996665f87b5475a59cce43949e945b8e91d141$0
@@ -40713,9 +40705,9 @@ com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotN
 com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$38$449d58dd572bca58c31d4ad8cc4f44d0f667fe83a4ed45c7cbd64dba69fb973a$3
 com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$42$447ab177819bb8553a3afeab172d0bbb45c3218a3c2e0ce539c2f87888133d17$0
 com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$42$447ab177819bb8553a3afeab172d0bbb45c3218a3c2e0ce539c2f87888133d17$1
-com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$63$c97aa89486a6cdd1b9fd890608b653b8337535104b69e52963f8cf2d44a85410$0
-com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$63$d1848d8a4e64113b7a7251768886f2f4edb21f64e13f59158187217dc4e8a85b$0
-com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$63$d1848d8a4e64113b7a7251768886f2f4edb21f64e13f59158187217dc4e8a85b$1
+com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$65$c97aa89486a6cdd1b9fd890608b653b8337535104b69e52963f8cf2d44a85410$0
+com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$65$d1848d8a4e64113b7a7251768886f2f4edb21f64e13f59158187217dc4e8a85b$0
+com.google.crypto.tink.shaded.protobuf.FieldSet$$InternalSyntheticThrowCCEIfNotNull$65$d1848d8a4e64113b7a7251768886f2f4edb21f64e13f59158187217dc4e8a85b$1
 com.google.crypto.tink.shaded.protobuf.FieldSet$1
 com.google.crypto.tink.shaded.protobuf.FieldSet$FieldDescriptorLite
 com.google.crypto.tink.shaded.protobuf.FieldSet
@@ -41758,7 +41750,6 @@ kotlin.collections.ArraysKt:
 kotlin.collections.ArraysKt___ArraysJvmKt:
     public static java.util.List asList(java.lang.Object[])
     public static synthetic void copyInto$default(byte[],byte[],int,int)
-    public static void fill$default(char[])
     public static synthetic void fill$default(java.lang.Object[])
 kotlin.collections.ArraysKt___ArraysKt
 kotlin.collections.ArraysUtilJVM
@@ -42085,7 +42076,7 @@ kotlinx.coroutines.CoroutineExceptionHandler:
     public abstract void handleException(java.lang.Throwable)
 kotlinx.coroutines.CoroutineExceptionHandlerKt:
     public static final java.lang.Throwable handlerException(java.lang.Throwable,java.lang.Throwable)
-kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$268$a7d8b984f14ef6811fc36f0d030a1c8a7f27075d192601697212118d266ca07a$0
+kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$281$a7d8b984f14ef6811fc36f0d030a1c8a7f27075d192601697212118d266ca07a$0
 kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$49$db4fcf294f73e0414b61d779f72a560fad56831e560e6b71def36fecaf64a8d1$0
 kotlinx.coroutines.CoroutineId$Key
 kotlinx.coroutines.CoroutineId
@@ -42351,10 +42342,10 @@ kotlinx.coroutines.internal.SystemPropsKt:
 kotlinx.coroutines.internal.SystemPropsKt__SystemProps_commonKt
 kotlinx.coroutines.internal.ThreadContextKt$countAll$1:
     public static java.lang.Object invoke$2()
-kotlinx.coroutines.internal.ThreadContextKt$findOne$1$$InternalSyntheticThrowCCEIfNotNull$268$3c0a4e008dae932423b4e733fe279866ddf2366c1895e5117482b23369fcf54f$1
+kotlinx.coroutines.internal.ThreadContextKt$findOne$1$$InternalSyntheticThrowCCEIfNotNull$281$3c0a4e008dae932423b4e733fe279866ddf2366c1895e5117482b23369fcf54f$1
 kotlinx.coroutines.internal.ThreadContextKt$findOne$1:
     public static void invoke$4()
-kotlinx.coroutines.internal.ThreadContextKt$updateState$1$$InternalSyntheticThrowCCEIfNotNull$268$3ff7ef4e574584d34e294bf8ac548819e9de353a79a9bbbdd8ea1b7dd939fd97$0
+kotlinx.coroutines.internal.ThreadContextKt$updateState$1$$InternalSyntheticThrowCCEIfNotNull$281$3ff7ef4e574584d34e294bf8ac548819e9de353a79a9bbbdd8ea1b7dd939fd97$0
 kotlinx.coroutines.internal.ThreadContextKt$updateState$1:
     public static kotlinx.coroutines.internal.ThreadState invoke()
 kotlinx.coroutines.internal.ThreadContextKt:
@@ -42637,7 +42628,7 @@ okhttp3.EventListener$Factory
 okhttp3.EventListener
 okhttp3.FormBody$Builder:
     public final java.nio.charset.Charset charset
-    public final okhttp3.FormBody build()
+    public static okhttp3.FormBody build()
 okhttp3.FormBody$Companion
 okhttp3.FormBody:
     public static final okhttp3.FormBody$Companion Companion
@@ -42800,7 +42791,7 @@ okhttp3.Protocol:
 okhttp3.Request$Builder:
     public final void get()
     public static okhttp3.Request$Builder headers()
-    public final void post(okhttp3.FormBody)
+    public static okhttp3.Request$Builder post()
     public final void removeHeader(java.lang.String)
     public final void url(okhttp3.HttpUrl)
 okhttp3.Request:

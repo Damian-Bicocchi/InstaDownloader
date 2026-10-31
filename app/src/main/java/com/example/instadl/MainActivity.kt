@@ -26,15 +26,14 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Single-screen controller: login (encrypted session), username-based
- * posts/stories downloads, and single-link downloads (public-first embed
- * fetch, authenticated fallback for private media, login-gated stories /
- * highlights).
+ * Single-screen controller: web-session login and single-link downloads
+ * (public-first embed fetch, authenticated fallback for private media,
+ * login-gated stories / highlights).
  *
- * Hardening kept in place: FLAG_SECURE on the password screen, CharArray
- * passwords wiped immediately, generic UI errors with redacted Log details,
- * EncryptedSharedPreferences session, best-effort server logout with
- * always-wipe-local.
+ * Hardening kept in place: FLAG_SECURE on the login screen, credentials are
+ * entered only in Instagram's own WebView page, session cookies live in
+ * EncryptedSharedPreferences, and logout clears both the server session and
+ * WebView cookies.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +43,11 @@ class MainActivity : AppCompatActivity() {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
+
+    private val webLoginLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) finishWebLogin()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Never let the login screen (password field) appear in
@@ -57,21 +61,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionStore(this)
+        val sessionExpired = session.clearIfExpired()
+        if (sessionExpired) WebLoginActivity.clearCookies()
         client = InstagramClient(session)
 
         updateLoginUi()
+        if (sessionExpired) setStatus("Session expired. Log in again.")
         requestStoragePermissions()
 
         binding.btnLogin.setOnClickListener { performLogin() }
         binding.btnLogout.setOnClickListener { performLogout() }
-        binding.btnDownloadPosts.setOnClickListener { downloadPosts() }
-        binding.btnDownloadStories.setOnClickListener { downloadStories() }
+        binding.btnClearSession.setOnClickListener { clearSession() }
+        binding.btnAbout.setOnClickListener { showAbout() }
         binding.btnDownloadLink.setOnClickListener {
             downloadFromLink(binding.etLink.text.toString())
         }
-        binding.btnClearUsername.setOnClickListener { binding.etUsername.text?.clear() }
-        binding.btnClearPassword.setOnClickListener { binding.etPassword.text?.clear() }
-        binding.btnClearTarget.setOnClickListener { binding.etTarget.text?.clear() }
         binding.btnClearLink.setOnClickListener { binding.etLink.text?.clear() }
         handleShareIntent(intent)
     }
@@ -110,24 +114,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateLoginUi() {
         val logged = session.isLoggedIn
-        binding.tvLoginStatus.text = if (logged) {
-            "Logged in as @${session.username ?: session.fullName ?: "user"}"
-        } else {
-            "Not logged in"
+        val name = session.username ?: session.fullName
+        binding.tvLoginStatus.text = when {
+            !logged -> "Not logged in"
+            name.isNullOrBlank() -> "Logged in"
+            else -> "Logged in as @$name"
         }
-        binding.rowUsername.isVisible = !logged
-        binding.rowPassword.isVisible = !logged
         binding.btnLogin.isVisible = !logged
         binding.btnLogout.isVisible = logged
-        if (logged) {
-            binding.etUsername.text?.clear()
-            binding.etPassword.text?.clear()
-        }
     }
 
     private fun setLoading(loading: Boolean) {
         binding.progressBar.isVisible = loading
-        val buttons = listOf(binding.btnLogin, binding.btnLogout, binding.btnDownloadPosts, binding.btnDownloadStories, binding.btnDownloadLink)
+        val buttons = listOf(
+            binding.btnLogin,
+            binding.btnLogout,
+            binding.btnClearSession,
+            binding.btnDownloadLink
+        )
         buttons.forEach { it.isEnabled = !loading }
     }
 
@@ -136,56 +140,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun performLogin() {
-        val username = binding.etUsername.text.toString().trim()
-        // Copy password out of the Editable and wipe the field immediately
-        // so the secret lives in memory for the shortest possible time.
-        val passwordEditable = binding.etPassword.text
-        val password: CharArray = if (passwordEditable == null) {
-            CharArray(0)
-        } else {
-            val len = passwordEditable.length
-            val arr = CharArray(len)
-            for (i in 0 until len) arr[i] = passwordEditable[i]
-            arr
-        }
-        binding.etPassword.text?.clear()
-        if (username.isBlank() || password.isEmpty()) {
-            wipe(password)
-            toast("Enter username and password")
-            return
-        }
+        setStatus("Log in through Instagram…")
+        webLoginLauncher.launch(Intent(this, WebLoginActivity::class.java))
+    }
+
+    private fun finishWebLogin() {
         setLoading(true)
-        setStatus("Logging in…")
+        setStatus("Verifying Instagram session…")
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                val result = withContext(Dispatchers.IO) { client.login(username, password) }
-                if (result.status == "ok" && result.loggedInUser != null) {
-                    session.saveSession(
-                        cookies = session.cookies ?: "",
-                        userId = result.loggedInUser.pk ?: "",
-                        username = result.loggedInUser.username ?: username,
-                        fullName = result.loggedInUser.fullName ?: ""
-                    )
-                    setStatus("Login successful")
-                    updateLoginUi()
-                    toast("Logged in as @${result.loggedInUser.username}")
-                } else {
-                    Log.w(TAG, "Login failed: status=${result.status} error=${result.errorType}")
-                    setStatus("Login failed. Check credentials.")
-                    toast("Login failed. Check credentials." +
-                        if (result.twoFactorRequired == true) " (2FA is not supported)" else ""
-                    )
-                }
+                val user = withContext(Dispatchers.IO) { client.fetchCurrentUser() }
+                session.saveSession(
+                    cookies = session.cookies ?: "",
+                    userId = user.pk ?: "",
+                    username = user.username ?: "",
+                    fullName = user.fullName ?: ""
+                )
+                setStatus("Login successful")
+                updateLoginUi()
+                toast(user.username?.let { "Logged in as @$it" } ?: "Logged in")
             } catch (e: Exception) {
-                // Never echo raw exception (may contain username / server internals).
-                Log.w(TAG, "Login error", e)
-                setStatus("Login failed. Check connection and try again.")
-                toast("Login failed. Check connection and try again.")
+                Log.w(TAG, "Could not verify web login session", e)
+                updateLoginUi()
+                if (session.isLoggedIn) {
+                    setStatus("Logged in")
+                    toast("Logged in")
+                } else {
+                    setStatus("Login did not complete. Try again.")
+                    toast("Login did not complete. Try again.")
+                }
             } finally {
-                wipe(password)
                 setLoading(false)
             }
         }
+    }
+
+    private fun showAbout() {
+        startActivity(Intent(this, AboutActivity::class.java))
+    }
+
+    private fun clearSession() {
+        session.clear()
+        WebLoginActivity.clearCookies()
+        updateLoginUi()
+        setStatus("Session and cookies cleared")
+        toast("Session and cookies cleared")
     }
 
     private fun performLogout() {
@@ -203,6 +202,7 @@ class MainActivity : AppCompatActivity() {
             }
             // Always wipe local storage, even if server call failed/offline.
             session.clear()
+            WebLoginActivity.clearCookies()
             updateLoginUi()
             setLoading(false)
             if (serverOk) {
@@ -211,74 +211,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 setStatus("Logged out locally (server logout failed)")
                 toast("Logged out locally")
-            }
-        }
-    }
-
-    private fun downloadPosts() {
-        if (!requireLoggedIn()) return
-        val target = binding.etTarget.text.toString().trim()
-        if (target.isBlank()) {
-            toast("Enter a username to download from")
-            return
-        }
-        setLoading(true)
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                setStatus("Resolving @$target…")
-                val user = withContext(Dispatchers.IO) { client.fetchUserByUsername(target) }
-                val pk = user.pk ?: throw Exception("Could not resolve user id")
-                setStatus("Fetching posts of @$target…")
-                val feed = withContext(Dispatchers.IO) { client.fetchUserMediaPk(pk) }
-                val items = (feed.items ?: emptyList()).flatMap { it.flatten() }
-                if (items.isEmpty()) {
-                    setStatus("No posts found for @$target")
-                    return@launch
-                }
-                setStatus("Downloading ${items.size} item(s)…")
-                val saved = withContext(Dispatchers.IO) { downloadAll(items, "$target") }
-                setStatus("Saved $saved of ${items.size} files to your Photos/Downloads.")
-                toast("Downloaded $saved files")
-            } catch (e: Exception) {
-                Log.w(TAG, "Download posts failed", e)
-                setStatus("Download failed. Try again.")
-                toast("Download failed. Try again.")
-            } finally {
-                setLoading(false)
-            }
-        }
-    }
-
-    private fun downloadStories() {
-        if (!requireLoggedIn()) return
-        val target = binding.etTarget.text.toString().trim()
-        if (target.isBlank()) {
-            toast("Enter a username to download stories from")
-            return
-        }
-        setLoading(true)
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                setStatus("Resolving @$target…")
-                val user = withContext(Dispatchers.IO) { client.fetchUserByUsername(target) }
-                val pk = user.pk ?: throw Exception("Could not resolve user id")
-                setStatus("Fetching current stories of @$target…")
-                val feed = withContext(Dispatchers.IO) { client.fetchStories(pk) }
-                val items = (feed.items ?: emptyList()).flatMap { it.flatten() }
-                if (items.isEmpty()) {
-                    setStatus("No active stories found for @$target")
-                    return@launch
-                }
-                setStatus("Downloading ${items.size} story item(s)…")
-                val saved = withContext(Dispatchers.IO) { downloadAll(items, "${target}_story") }
-                setStatus("Saved $saved of ${items.size} story files.")
-                toast("Downloaded $saved stories")
-            } catch (e: Exception) {
-                Log.w(TAG, "Download stories failed", e)
-                setStatus("Download failed. Try again.")
-                toast("Download failed. Try again.")
-            } finally {
-                setLoading(false)
             }
         }
     }
@@ -455,23 +387,11 @@ class MainActivity : AppCompatActivity() {
         return counter.get()
     }
 
-    private fun requireLoggedIn(): Boolean {
-        if (!session.isLoggedIn) {
-            toast("Please log in first")
-            return false
-        }
-        return true
-    }
-
     private fun toast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
         private const val TAG = "MainActivity"
-    }
-
-    private fun wipe(secret: CharArray) {
-        secret.fill('\u0000')
     }
 }

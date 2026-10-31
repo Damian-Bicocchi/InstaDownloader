@@ -134,8 +134,14 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
    MavenCentral dependency, and connects to the library every time, which
    makes it more flexible but also much slower.
 
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_about.xml:6: Warning: Possible overdraw: Root element paints background @color/ig_background with a theme that also paints a background (inferred theme is @style/Theme.InstaDownloader) [Overdraw]
+    android:background="@color/ig_background"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 /home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:6: Warning: Possible overdraw: Root element paints background @color/ig_background with a theme that also paints a background (inferred theme is @style/Theme.InstaDownloader) [Overdraw]
     android:background="@color/ig_background"
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_web_login.xml:5: Warning: Possible overdraw: Root element paints background @color/ig_background with a theme that also paints a background (inferred theme is @style/Theme.InstaDownloader) [Overdraw]
+    android:background="@color/ig_background">
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "Overdraw":
@@ -165,9 +171,6 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
 /home/damian/Proyectos/inst-download/app/src/main/res/values/colors.xml:9: Warning: The resource R.color.black appears to be unused [UnusedResources]
     <color name="black">#000000</color>
            ~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/values/colors.xml:13: Warning: The resource R.color.ig_surface_variant appears to be unused [UnusedResources]
-    <color name="ig_surface_variant">#2C2C2E</color>
-           ~~~~~~~~~~~~~~~~~~~~~~~~~
 /home/damian/Proyectos/inst-download/app/src/main/res/values/strings.xml:3: Warning: The resource R.string.paste_reel_post_story_link appears to be unused [UnusedResources]
     <string name="paste_reel_post_story_link">Paste reel / post / story link</string>
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,13 +233,13 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
 /home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:42: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
         prefs.edit()
         ~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:52: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:61: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
             appContext.getSharedPreferences(LEGACY_PREFS, Context.MODE_PRIVATE)
             ^
-/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:108: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:118: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
                 enc.edit()
                 ~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:124: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
+/home/damian/Proyectos/inst-download/app/src/main/java/com/example/instadl/auth/SessionStore.kt:134: Warning: Use the KTX extension function SharedPreferences.edit instead? [UseKtx]
                 context.getSharedPreferences(LEGACY_PREFS, Context.MODE_PRIVATE)
                 ^
 
@@ -296,6 +299,12 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
    </lint>
    ```
 
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_about.xml:15: Warning: Hardcoded string "About us", should use @string resource [HardcodedText]
+        android:text="About us"
+        ~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_about.xml:47: Warning: Hardcoded string "Close", should use @string resource [HardcodedText]
+        android:text="Close"
+        ~~~~~~~~~~~~~~~~~~~~
 /home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:27: Warning: Hardcoded string "Download photos, videos & stories", should use @string resource [HardcodedText]
             android:text="Download photos, videos &amp; stories"
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -305,51 +314,36 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
 /home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:63: Warning: Hardcoded string "Not logged in", should use @string resource [HardcodedText]
                     android:text="Not logged in"
                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:81: Warning: Hardcoded string "Username", should use @string resource [HardcodedText]
-                        android:hint="Username"
-                        ~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:98: Warning: Hardcoded string "Clear username", should use @string resource [HardcodedText]
-                        android:contentDescription="Clear username"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:117: Warning: Hardcoded string "Password", should use @string resource [HardcodedText]
-                        android:hint="Password"
-                        ~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:135: Warning: Hardcoded string "Clear password", should use @string resource [HardcodedText]
-                        android:contentDescription="Clear password"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:145: Warning: Hardcoded string "Login", should use @string resource [HardcodedText]
-                    android:text="Login"
-                    ~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:155: Warning: Hardcoded string "Logout", should use @string resource [HardcodedText]
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:71: Warning: Hardcoded string "Log in on Instagram's own page. Your password is never entered in this app.", should use @string resource [HardcodedText]
+                    android:text="Log in on Instagram's own page. Your password is never entered in this app."
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:80: Warning: Hardcoded string "Log in with Instagram", should use @string resource [HardcodedText]
+                    android:text="Log in with Instagram"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:90: Warning: Hardcoded string "Logout", should use @string resource [HardcodedText]
                     android:text="Logout"
                     ~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:183: Warning: Hardcoded string "Download from user", should use @string resource [HardcodedText]
-                    android:text="Download from user"
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:101: Warning: Hardcoded string "Clear session & cookies", should use @string resource [HardcodedText]
+                    android:text="Clear session &amp; cookies"
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:128: Warning: Hardcoded string "Download from link", should use @string resource [HardcodedText]
+                    android:text="Download from link"
                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:202: Warning: Hardcoded string "Instagram username", should use @string resource [HardcodedText]
-                        android:hint="Instagram username"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:219: Warning: Hardcoded string "Clear Instagram username", should use @string resource [HardcodedText]
-                        android:contentDescription="Clear Instagram username"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:235: Warning: Hardcoded string "Download Posts", should use @string resource [HardcodedText]
-                        android:text="Download Posts"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:245: Warning: Hardcoded string "Download Stories", should use @string resource [HardcodedText]
-                        android:text="Download Stories"
-                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:264: Warning: Hardcoded string "Paste reel / post / story / highlight link (public posts need no login)", should use @string resource [HardcodedText]
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:147: Warning: Hardcoded string "Paste reel / post / story / highlight link (public posts need no login)", should use @string resource [HardcodedText]
                         android:hint="Paste reel / post / story / highlight link (public posts need no login)"
                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:281: Warning: Hardcoded string "Clear link", should use @string resource [HardcodedText]
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:164: Warning: Hardcoded string "Clear link", should use @string resource [HardcodedText]
                         android:contentDescription="Clear link"
                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:291: Warning: Hardcoded string "Download Link", should use @string resource [HardcodedText]
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:174: Warning: Hardcoded string "Download Link", should use @string resource [HardcodedText]
                     android:text="Download Link"
                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:323: Warning: Hardcoded string "WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account.", should use @string resource [HardcodedText]
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:206: Warning: Hardcoded string "WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account.", should use @string resource [HardcodedText]
             android:text="WARNING: Logging into your Instagram account through this app relies on Instagram's private API, which violates its Terms of Service. Your account may be temporarily restricted or permanently disabled. Use at your own risk, ideally on a disposable account." />
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/damian/Proyectos/inst-download/app/src/main/res/layout/activity_main.xml:214: Warning: Hardcoded string "About us", should use @string resource [HardcodedText]
+            android:text="About us"
+            ~~~~~~~~~~~~~~~~~~~~~~~
 
    Explanation for issues of type "HardcodedText":
    Hardcoding text attributes directly in layout files is bad for several
@@ -365,4 +359,4 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
    There are quickfixes to automatically extract this hardcoded string into a
    resource lookup.
 
-0 errors, 49 warnings
+0 errors, 47 warnings

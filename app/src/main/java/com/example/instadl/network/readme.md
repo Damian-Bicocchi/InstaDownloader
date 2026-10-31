@@ -6,7 +6,7 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
 
 | File | Type | Purpose |
 |------|------|---------|
-| `InstagramClient.kt` | `class InstagramClient(session)` | Login, logout, user lookup, post feed, stories, single-media info (auth) + public embed scrape (no auth); cookie + CSRF handling. |
+| `InstagramClient.kt` | `class InstagramClient(session)` | Session validation, logout, single-media/story/highlight info (auth) + public embed scrape (no auth); cookie + CSRF handling. |
 | `InstagramCookieJar.kt` | `class InstagramCookieJar(session)` | OkHttp `CookieJar` backed by encrypted `SessionStore`; scopes cookies to `i.instagram.com` and merges `Set-Cookie` updates by name. |
 | `InstagramLinks.kt` | `object InstagramLinks` | Parses share links (`/p/`, `/reel/`, `/tv/`, `/stories/`) + decodes shortcodes to media ids. |
 
@@ -19,11 +19,8 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
   - `baseHeaders` mimics official Android app: `User-Agent: Instagram 269.0.0.18.85 ...`, `X-IG-App-ID`, `X-IG-Capabilities`, `X-FB-HTTP-Engine: Liger`, etc.
   - `deviceUuid` random per process; authenticated `OkHttpClient` uses `InstagramCookieJar` and disables redirects (`followRedirects=false`, `followSslRedirects=false`). The public embed client follows redirects but sends no cookies.
 - **Key API:**
-  - `login(username, password: CharArray): LoginResponse` — `POST /accounts/login/`; transient `String` copy scoped to call, caller array wiped on entry; status-code-only `IOException`, never logs secret.
+  - `fetchCurrentUser(): LoggedInUser` — authenticated `GET /accounts/current_user/?edit=true`; validates the captured WebView session and returns `pk`/`username`/`fullName`.
   - `logout(): Boolean` — best-effort `POST /accounts/logout/` with `FormBody(_csrftoken, guid, device_id)` + `X-CSRFToken`; cookies come from `InstagramCookieJar`. Returns `isSuccessful`. Caller (`MainActivity.performLogout()`) must still wipe `SessionStore` on `false`.
-  - `fetchUserByUsername(username): UserInfo` — `GET /users/web_profile_info/?username=...&is_sandbox=true`, unwraps `data.user` via `JSONObject` then Gson.
-  - `fetchUserMediaPk(pk, maxId?): MediaFeed` — `GET /feed/user/<pk>/?count=33[&max_id=]` → `MediaFeed`.
-  - `fetchStories(userPk): MediaFeed` — `GET /feed/reels_media/?reel_ids=<pk>`, unwraps `reels.<pk>` → `MediaFeed`.
   - `fetchMediaInfo(mediaId): MediaFeed` — authenticated `GET /media/<id>/info/`; parses `items` **array** (fixed) for single post/reel/story.
   - `fetchMediaItem(mediaId): MediaItem` + `fetchMediaByShortcode(shortcode): MediaItem` — authenticated single-item fetch (private fallback).
   - `fetchHighlightItems(highlightId): List<MediaItem>` — authenticated `GET /feed/reels_media/?reel_ids=highlight:<id>`; unwraps `reels["highlight:<id>"]items`, the whole story carousel.

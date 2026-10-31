@@ -18,9 +18,10 @@ Handles local storage of the Instagram login session using **encrypted** `Shared
 - **Key API:**
   - `saveSession(cookies, userId, username, fullName)`: writes all keys + `saved_at` timestamp (`System.currentTimeMillis()`), `apply()` async.
   - `saveCookies(cookies)`: updates only the cookie string + `saved_at`, preserving identity fields — used by `InstagramCookieJar`.
+  - `clearIfExpired()`: clears the session when `saved_at` is missing or older than 30 days; returns `true` when it wiped data.
   - `clear()`: wipes encrypted prefs + legacy cleartext copy — used on logout (`MainActivity.btnLogout`).
   - `cookies: String?` — raw `Cookie` header value; source of truth for auth.
   - `userId / username / fullName: String?` — display + API convenience.
   - `isLoggedIn: Boolean` — `!cookies.isNullOrBlank()`. Used by `updateLoginUi()` and `requireLoggedIn()`.
 - **Keys (`companion object`):** `cookies`, `user_id`, `username`, `full_name`, `saved_at`.
-- **Data flow:** `InstagramClient.login()` → OkHttp → `InstagramCookieJar.saveFromResponse()` → `SessionStore.saveCookies()` → `MainActivity` enriches with `loggedInUser.pk/username/fullName` via `saveSession()`.
+- **Data flow:** `WebLoginActivity` captures cookies from Instagram's WebView login → `SessionStore.saveSession()` → `InstagramCookieJar` loads them for authenticated API calls; `MainActivity.finishWebLogin()` fetches the profile and stores the username/full name. Logout and the always-available Clear session action wipe both the encrypted store and WebView cookies; expired sessions are cleared on startup.

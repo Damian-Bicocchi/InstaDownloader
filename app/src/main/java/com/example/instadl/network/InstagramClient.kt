@@ -2,9 +2,8 @@ package com.example.instadl.network
 
 import com.example.instadl.auth.SessionStore
 import com.example.instadl.model.IgError
-import com.example.instadl.model.LoginResponse
+import com.example.instadl.model.LoggedInUser
 import com.example.instadl.model.MediaFeed
-import com.example.instadl.model.UserInfo
 import com.google.gson.Gson
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -66,85 +65,16 @@ class InstagramClient(private val session: SessionStore) {
         "Connection" to "close"
     )
 
-    /**
-     * @param password caller-owned secret; wiped (zeroed) before returning,
-     * so the cleartext lives only for the duration of this call. A transient
-     * String copy is unavoidable for OkHttp FormBody — it is kept in the
-     * smallest possible scope and never logged.
-     */
     @Throws(IOException::class)
-    fun login(username: String, password: CharArray): LoginResponse {
-        val time = "${System.currentTimeMillis() / 1000}"
-        val csrf = "missing"
-        val passwordStr = String(password)
-        password.fill('\u0000')
-        try {
-            val body = mapOf(
-                "phone_id" to UUID.randomUUID().toString(),
-                "username" to username,
-                "adid" to UUID.randomUUID().toString(),
-                "guid" to deviceUuid,
-                "device_id" to "android-${deviceUuid}",
-                "password" to passwordStr,
-                "_csrftoken" to csrf,
-                "login_attempt_count" to "0"
-            )
-
-            val form = FormBody.Builder()
-            body.forEach { (k, v) -> form.add(k, v) }
-
-            val req = Request.Builder()
-                .url("$BASE_URL/accounts/login/")
-                .post(form.build())
-                .apply { baseHeaders.forEach { (k, v) -> header(k, v) } }
-                .header("X-CSRFToken", csrf)
-                .header("X-IG-WWW-Claim", "0")
-                .header("X-Instagram-AJAX", "1")
-                .header("X-Timestamp", time)
-                .header("X-Requested-With", "XMLHttpRequest")
-                .build()
-
-            client.newCall(req).execute().use { response ->
-                val responseBody = response.body?.string() ?: ""
-
-                if (!response.isSuccessful || responseBody.isBlank()) {
-                    // Status code only — never include body (may echo credentials).
-                    throw IOException("Login failed HTTP ${response.code}")
-                }
-
-                return gson.fromJson(responseBody, LoginResponse::class.java)
-            }
-        } finally {
-            // password CharArray already wiped on entry; nothing retained here.
-        }
-    }
-
-    @Throws(IOException::class)
-    fun fetchUserByUsername(username: String): UserInfo {
-        val req = buildGet(
-            "${BASE_URL}/users/web_profile_info/?username=$username&is_sandbox=true")
+    fun fetchCurrentUser(): LoggedInUser {
+        val req = buildGet("$BASE_URL/accounts/current_user/?edit=true")
         val body = executeAndCheck(req)
-        val obj = JSONObject(body)
-        val data = obj.getJSONObject("data").getJSONObject("user")
-        return gson.fromJson(data.toString(), UserInfo::class.java)
-    }
-
-    @Throws(IOException::class)
-    fun fetchUserMediaPk(pk: String, maxId: String? = null): MediaFeed {
-        val cursor = if (maxId.isNullOrBlank()) "" else "&max_id=$maxId"
-        val req = buildGet("${BASE_URL}/feed/user/$pk/?count=33$cursor")
-        val body = executeAndCheck(req)
-        return gson.fromJson(body, MediaFeed::class.java)
-    }
-
-    @Throws(IOException::class)
-    fun fetchStories(userPk: String): MediaFeed {
-        val req = buildGet("${BASE_URL}/feed/reels_media/?reel_ids=$userPk")
-        val body = executeAndCheck(req)
-        // reels_media wraps results under reels -> {userPk: {items: [...]}}
-        val obj = JSONObject(body)
-        val user = obj.getJSONObject("reels").getJSONObject(userPk)
-        return gson.fromJson(user.toString(), MediaFeed::class.java)
+        val user = try {
+            JSONObject(body).optJSONObject("user")
+        } catch (e: Exception) {
+            null
+        } ?: throw IOException("Session is not logged in")
+        return gson.fromJson(user.toString(), LoggedInUser::class.java)
     }
 
     @Throws(IOException::class)

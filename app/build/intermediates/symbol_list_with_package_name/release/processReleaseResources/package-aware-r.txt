@@ -1432,7 +1432,6 @@ color ig_gray
 color ig_light
 color ig_purple
 color ig_surface
-color ig_surface_variant
 color ig_text_primary
 color ig_text_secondary
 color ig_white
@@ -3121,6 +3120,7 @@ id SHOW_PROGRESS
 id SYM
 id TOP_END
 id TOP_START
+id aboutText
 id accelerate
 id accessibility_action_clickable_span
 id accessibility_custom_action_0
@@ -3205,13 +3205,11 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAbout
 id btnClearLink
-id btnClearPassword
-id btnClearTarget
-id btnClearUsername
+id btnClearSession
+id btnCloseAbout
 id btnDownloadLink
-id btnDownloadPosts
-id btnDownloadStories
 id btnLogin
 id btnLogout
 id buttonPanel
@@ -3297,9 +3295,6 @@ id enterAlways
 id enterAlwaysCollapsed
 id escape
 id etLink
-id etPassword
-id etTarget
-id etUsername
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3346,9 +3341,6 @@ id included
 id indeterminate
 id info
 id inputLink
-id inputPassword
-id inputTarget
-id inputUsername
 id invisible
 id inward
 id italic
@@ -3478,6 +3470,7 @@ id pin
 id position
 id postLayout
 id pressed
+id progress
 id progressBar
 id progress_circular
 id progress_horizontal
@@ -3492,9 +3485,6 @@ id right_icon
 id right_side
 id rounded
 id rowLink
-id rowPassword
-id rowTarget
-id rowUsername
 id row_index_key
 id save_non_transition_alpha
 id save_overlay_view
@@ -3622,6 +3612,7 @@ id view_tree_saved_state_registry_owner
 id view_tree_view_model_store_owner
 id visible
 id visible_removing_fragment_view_tag
+id webView
 id west
 id withText
 id with_icon
@@ -3745,7 +3736,9 @@ layout abc_search_dropdown_item_icons_2line
 layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
+layout activity_about
 layout activity_main
+layout activity_web_login
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog

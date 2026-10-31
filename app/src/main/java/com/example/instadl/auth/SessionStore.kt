@@ -45,6 +45,15 @@ class SessionStore(context: Context) {
             .apply()
     }
 
+    fun clearIfExpired(): Boolean {
+        if (cookies.isNullOrBlank()) return false
+        val savedAt = prefs.getLong(KEY_SAVED_AT, 0L)
+        val expired = savedAt <= 0L ||
+            System.currentTimeMillis() - savedAt > SESSION_MAX_AGE_MS
+        if (expired) clear()
+        return expired
+    }
+
     fun clear() {
         prefs.edit().clear().apply()
         // Defense in depth: make sure no legacy cleartext copy survives.
@@ -73,6 +82,7 @@ class SessionStore(context: Context) {
         private const val KEY_USERNAME = "username"
         private const val KEY_FULL_NAME = "full_name"
         private const val KEY_SAVED_AT = "saved_at"
+        private const val SESSION_MAX_AGE_MS = 30L * 24L * 60L * 60L * 1000L
 
         private fun createEncryptedPrefs(context: Context): SharedPreferences {
             val masterKey = MasterKey.Builder(context)

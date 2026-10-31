@@ -12,12 +12,12 @@
 | # | Severity | Issue                                                                                                                                                                                                     | Location                                                                                                    |
 |---|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | 1 | Critical | ~~Session tokens (cookies) stored in cleartext `SharedPreferences`~~ — **FIXED 2026-09-07: `EncryptedSharedPreferences` (`ig_session_enc`) + Keystore `MasterKey`, legacy `ig_session` migrated + wiped** | `app/src/main/java/com/example/instadl/auth/SessionStore.kt`                                                |
-| 2 | High     | ~~Password lives as immutable `String` in heap, no `FLAG_SECURE`, errors echoed to UI~~ — **FIXED 2026-09-07: `FLAG_SECURE`, `CharArray` + immediate wipe, generic UI errors + `Log`**                    | `app/src/main/java/com/example/instadl/MainActivity.kt:performLogin()`, `network/InstagramClient.kt:login()` |
+| 2 | High     | ~~Password lives as immutable `String` in heap, no `FLAG_SECURE`, errors echoed to UI~~ — **FIXED 2026-10-31: login moved to Instagram WebView (password never enters app), `FLAG_SECURE` on both screens, encrypted cookie storage, safe status messages**                    | `app/src/main/java/com/example/instadl/WebLoginActivity.kt`, `MainActivity.kt` |
 | 3 | High     | ~~Logout is local-only, server session stays valid~~ — **FIXED 2026-09-07: `InstagramClient.logout()` POSTs `/accounts/logout/` best-effort, `MainActivity.performLogout()` always wipes local**          | `app/src/main/java/com/example/instadl/network/InstagramClient.kt`, `MainActivity.kt:performLogout()` |
 | 4 | High     | ~~Release signed with debug keystore + minify disabled~~ — **FIXED 2026-10-31: dedicated release signing config from `local.properties`/Gradle props/env (unsigned if absent), `isMinifyEnabled` + `isShrinkResources` enabled, R8 rules added** | `app/build.gradle.kts`, `app/proguard-rules.pro`                                                                                |
 | 5 | High     | ~~No TLS hardening (no pinning, no `networkSecurityConfig`), redirects enabled, unused logging-interceptor~~ — **FIXED 2026-10-31: cleartext disabled, pins added, auth redirects disabled, cookies domain-scoped via `CookieJar`, logging interceptor removed** | `app/src/main/res/xml/network_security_config.xml`, `AndroidManifest.xml`, `network/InstagramClient.kt`, `network/InstagramCookieJar.kt`, `app/build.gradle.kts` |
 | 6 | Medium   | ~~`allowBackup="true"` allows `adb backup` extraction of session~~ — **FIXED 2026-10-31: `allowBackup="false"`, legacy `fullBackupContent="false"`, Android 12+ `dataExtractionRules` exclude all cloud/D2D data**                                                                                                                    | `app/src/main/AndroidManifest.xml`, `app/src/main/res/xml/data_extraction_rules.xml` |
-| 7 | Medium   | Unencoded URL interpolation + fragile `getJSONObject` parsing (DoS / param injection)                                                                                                                     | `app/src/main/java/com/example/instadl/network/InstagramClient.kt:94-119`                                   |
+| 7 | Medium   | Partial fix: bulk username/feed endpoints removed; remaining media/highlight URLs still interpolate IDs and JSON parsing is fragile                                                                        | `app/src/main/java/com/example/instadl/network/InstagramClient.kt`                                          |
 | 8 | Medium   | ~~Broken `Set-Cookie` parser (first header only, attributes as cookies, empty overwrite)~~ — **FIXED 2026-10-31: OkHttp `CookieJar` parses all `Set-Cookie` headers, merges by name, keeps identity fields intact**                                                                                                                    | `app/src/main/java/com/example/instadl/network/InstagramCookieJar.kt`, `auth/SessionStore.kt`                                  |
 | 9 | Low      | Unbounded in-RAM download (`body.bytes()`) + world-readable shared storage output                                                                                                                         | `app/src/main/java/com/example/instadl/download/DownloadManager.kt:34-46,65-114`                            |
 
@@ -35,21 +35,22 @@ putString("cookies", cookies) // sessionid, csrftoken, ds_user_id, rur
 
 **Now:** `EncryptedSharedPreferences` file `ig_session_enc` (AES256_SIV key / AES256_GCM value encryption) with Keystore-backed `MasterKey` (AES256_GCM). Dependency: `androidx.security:security-crypto:1.1.0-alpha06` in `app/build.gradle.kts`. Legacy `ig_session` is migrated once into the encrypted file and wiped (`migrateLegacyIfNeeded` + `wipeLegacy`; `clear()` wipes both).
 
-**Residual:** still exclude from backup (see #6) and validate expiry (`saved_at`) / re-auth on 401. No build run here (no Gradle toolchain in this env) — run `./gradlew :app:assembleDebug` / `lint` before release and confirm no `ig_session.xml` cleartext remains on device.
+**Update 2026-10-31:** sessions now expire locally after 30 days (`SessionStore.clearIfExpired()`), there is an always-available `Clear session & cookies` action, WebView cookies are cleared after capture/logout, and backup extraction is disabled (#6).
 
-## 2. [High] In-memory password handling + UI exposure — FIXED (2026-09-07)
+## 2. [High] In-memory password handling + UI exposure — FIXED (2026-10-31)
 
-**Files:** `app/src/main/java/com/example/instadl/MainActivity.kt`, `network/InstagramClient.kt`
+**Files:** `app/src/main/java/com/example/instadl/WebLoginActivity.kt`, `MainActivity.kt`
 
-**Was:**
-- `val password = etPassword.text.toString()` immutable `String`, retained until GC.
-- No `FLAG_SECURE` → recents/screenshot leak.
-- `setStatus("Login error: ${e.message}")` echoed internals.
+**Was:** username/password fields existed in the native UI; the password lived as a `String` in the heap, `FLAG_SECURE` was missing, and login exceptions could be echoed to the UI.
 
 **Now:**
-- `onCreate()` sets `FLAG_SECURE` (no recents thumbnail / screenshot / recording).
-- `performLogin()` copies `Editable` → `CharArray`, clears `etPassword` immediately, passes `CharArray` to `login()`, wipes with `fill('\u0000')` in `finally` (both sides). Transient `String` for OkHttp `FormBody` lives only inside `InstagramClient.login()` scope, never logged.
-- UI shows generic `Login failed. Check credentials / connection`; details go to `Log.w(TAG, ...)` redacted (`status/errorType` only). Same sanitizing applied to post/story download errors. `Response.use {}` closes login response.
+- The native username/password fields were removed. `WebLoginActivity` loads Instagram's own login page in a WebView; the app never receives, stores, or logs the password.
+- `FLAG_SECURE` is set on both `MainActivity` and `WebLoginActivity`.
+- Only the resulting `.instagram.com` session cookies are captured, then stored in `EncryptedSharedPreferences`.
+- Login state errors are reduced to safe status text; raw exceptions/server messages go only to redacted logs.
+- Logout wipes both `SessionStore` and WebView cookies.
+
+**Residual:** the WebView login avoids credential handling but authenticated downloads still use Instagram's private API (ToS/ban risk remains).
 
 ## 3. [High] Logout does not invalidate server session — FIXED (2026-09-07)
 
@@ -111,19 +112,15 @@ Debug keystore password is public (`android`). Anyone can decompile (`isMinifyEn
 
 **Residual:** none for backup extraction. `assembleRelease` and `lintRelease` pass.
 
-## 7. [Medium] Unencoded URLs + fragile JSON parsing
+## 7. [Medium] Unencoded URLs + fragile JSON parsing — PARTIAL (2026-10-31)
 
-**File:** `app/src/main/java/com/example/instadl/network/InstagramClient.kt:94-119`
+**File:** `app/src/main/java/com/example/instadl/network/InstagramClient.kt`
 
-```kotlin
-".../web_profile_info/?username=$username&is_sandbox=true"
-".../feed/user/$pk/?count=33$cursor"
-".../reels_media/?reel_ids=$userPk"
-```
+**Was:** `.../web_profile_info/?username=$username`, `.../feed/user/$pk/?count=33$cursor` and `.../reels_media/?reel_ids=$userPk` interpolated user-controlled values without encoding, and `getJSONObject("data").getJSONObject("user")` / `getJSONObject("reels").getJSONObject(userPk)` could throw on API changes.
 
-No `URLEncoder` / `HttpUrl.Builder` — `&`, `#`, `/` in target corrupts query. `getJSONObject("data").getJSONObject("user")` and `getJSONObject("reels").getJSONObject(userPk)` throw `JSONException` on API change → crash/DoS (currently caught only as generic `Exception` in `MainActivity`).
+**Now:** the username/feed bulk endpoints were removed together with the “Download from user” feature, eliminating the main parameter-injection and parsing surface.
 
-**Fix:** build URLs with `HttpUrl.Builder.addQueryParameter()`, validate with `has()`/`optJSONObject()`, map to typed errors.
+**Residual:** `fetchMediaInfo()` / `fetchHighlightItems()` still interpolate media/highlight IDs into URLs and use `getJSONArray`/`getJSONObject` without typed error mapping. IDs normally come from the link parser, but should still be digit-validated and built with `HttpUrl.Builder`; JSON access should use `opt*`/typed errors.
 
 ## 8. [Medium] Broken cookie handling — FIXED (2026-10-31)
 
@@ -159,7 +156,7 @@ No `URLEncoder` / `HttpUrl.Builder` — `&`, `#`, `/` in target corrupts query. 
 - [ ] Server-side logout, session expiry check.
 - [x] `networkSecurityConfig` + cert pinning, no cleartext, no auto-redirect with cookies.
 - [x] Remove `logging-interceptor` from release (R8/minify and private signing key are now done).
-- [ ] `FLAG_SECURE` on login, generic UI errors, no sensitive data in `Toast`/`TextView`.
+- [x] `FLAG_SECURE` on login, safe mapped UI errors, no sensitive data in `Toast`/`TextView`.
 - [ ] URL-encode all params via `HttpUrl.Builder`, robust JSON parsing.
 - [x] `CookieJar` instead of hand-rolled parser; handle multi-`Set-Cookie`.
 - [ ] Stream downloads to disk with size/MIME limits.

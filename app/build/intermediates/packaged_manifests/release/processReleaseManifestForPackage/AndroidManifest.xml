@@ -45,6 +45,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InstaDownloader" >
         <activity
+            android:name="com.example.instadl.WebLoginActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false" />
+        <activity
+            android:name="com.example.instadl.AboutActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.instadl.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
