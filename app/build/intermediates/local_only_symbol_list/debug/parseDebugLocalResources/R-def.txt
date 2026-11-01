@@ -14,6 +14,7 @@ color ig_text_secondary
 color ig_white
 drawable ic_clear
 drawable ic_launcher_foreground
+drawable new_icon_background
 id aboutText
 id btnAbout
 id btnClearLink
@@ -35,6 +36,9 @@ layout activity_main
 layout activity_web_login
 mipmap ic_launcher
 mipmap ic_launcher_round
+mipmap new_icon
+mipmap new_icon_foreground
+mipmap new_icon_round
 string app_name
 string paste_reel_post_story_link
 style Theme.InstaDownloader

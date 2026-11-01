@@ -4,39 +4,111 @@
         "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/drawable/ic_clear.xml"
     },
     {
-        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/xml_data_extraction_rules.xml.flat",
-        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/xml/data_extraction_rules.xml"
-    },
-    {
-        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_activity_main.xml.flat",
-        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/activity_main.xml"
-    },
-    {
-        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/xml_network_security_config.xml.flat",
-        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/xml/network_security_config.xml"
-    },
-    {
-        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_dialog_about.xml.flat",
-        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/dialog_about.xml"
-    },
-    {
-        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.example.instadl.app-debug-35:/mipmap-hdpi_new_icon.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-hdpi/new_icon.webp"
     },
     {
         "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/drawable_ic_launcher_foreground.xml.flat",
         "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.instadl.app-debug-35:/layout_activity_about.xml.flat",
-        "source": "com.example.instadl.app-main-37:/layout/activity_about.xml"
-    },
-    {
         "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_activity_web_login.xml.flat",
         "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/activity_web_login.xml"
     },
     {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-mdpi_new_icon_foreground.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-mdpi/new_icon_foreground.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-hdpi_new_icon_foreground.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-hdpi/new_icon_foreground.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xhdpi_new_icon_round.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xhdpi/new_icon_round.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-anydpi-v26_new_icon.xml.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-anydpi-v26/new_icon.xml"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_dialog_about.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/dialog_about.xml"
+    },
+    {
         "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxhdpi_new_icon_foreground.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxhdpi/new_icon_foreground.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-anydpi-v26_new_icon_round.xml.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-anydpi-v26/new_icon_round.xml"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_activity_main.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxhdpi_new_icon.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxhdpi/new_icon.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xhdpi_new_icon_foreground.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xhdpi/new_icon_foreground.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-mdpi_new_icon.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-mdpi/new_icon.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xhdpi_new_icon.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xhdpi/new_icon.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxhdpi_new_icon_round.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxhdpi/new_icon_round.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-hdpi_new_icon_round.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-hdpi/new_icon_round.webp"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/xml_data_extraction_rules.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxxhdpi_new_icon.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxxhdpi/new_icon.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-mdpi_new_icon_round.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-mdpi/new_icon_round.webp"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxxhdpi_new_icon_round.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxxhdpi/new_icon_round.webp"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/layout_activity_about.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/layout/activity_about.xml"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/xml_network_security_config.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/xml/network_security_config.xml"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/mipmap-xxxhdpi_new_icon_foreground.webp.flat",
+        "source": "com.example.instadl.app-main-37:/mipmap-xxxhdpi/new_icon_foreground.webp"
+    },
+    {
+        "merged": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-debug-35:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/home/damian/.gradle/daemon/8.13/com.example.instadl.app-main-37:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.instadl.app-debug-35:/drawable_new_icon_background.xml.flat",
+        "source": "com.example.instadl.app-main-37:/drawable/new_icon_background.xml"
     }
 ]

@@ -1,5 +1,6 @@
 package com.example.instadl.network
 
+import android.util.Base64
 import com.example.instadl.auth.SessionStore
 import com.example.instadl.model.IgError
 import com.example.instadl.model.LoggedInUser
@@ -53,22 +54,45 @@ class InstagramClient(private val session: SessionStore) {
         .followSslRedirects(true)
         .build()
 
-    // Headers mirroring the official Instagram Android app webview/API client.
+    // Matches Instaloader's iPad client, which is known to accept web sessions.
     private val baseHeaders: Map<String, String> = mapOf(
-        "User-Agent" to "Instagram 269.0.0.18.85 Android (31/12; 420dpi; 1080x2400; Google; Pixel 5; redfin; sm7150; en_US; 355471274)",
-        "X-IG-App-ID" to "567067343352427",
-        "X-IG-Capabilities" to "3brTvw==",
-        "X-IG-Connection-Type" to "WIFI",
+        "User-Agent" to "Instagram 361.0.0.35.82 (iPad13,8; iOS 18_0; en_US; en-US; scale=2.00; 2048x2732; 674117118) AppleWebKit/420+",
+        "X-IG-App-ID" to "124024574287414",
+        "X-IG-Capabilities" to "36r/F/8=",
+        "X-IG-Connection-Type" to "WiFi",
+        "X-IG-App-Locale" to "en-US",
+        "X-IG-Device-Locale" to "en-US",
+        "X-IG-Mapped-Locale" to "en-US",
+        "X-IG-App-Startup-Country" to "US",
+        "X-IG-Timezone-Offset" to "0",
+        "X-IG-WWW-Claim" to "0",
+        "X-Bloks-Version-Id" to "16b7bd25c6c06886d57c4d455265669345a2d96625385b8ee30026ac2dc5ed97",
+        "X-FB-Client-IP" to "True",
+        "X-FB-Server-Cluster" to "True",
+        "X-FB-HTTP-Engine" to "Liger",
+        "X-Pigeon-Session-Id" to UUID.randomUUID().toString(),
         "Accept-Language" to "en-US",
         "Accept" to "*/*",
-        "X-FB-HTTP-Engine" to "Liger",
-        "Connection" to "close"
+        "Connection" to "keep-alive"
+    )
+
+    // Web-session fallback headers (the WebView login produces web cookies).
+    private val webHeaders: Map<String, String> = mapOf(
+        "User-Agent" to "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36",
+        "X-IG-App-ID" to "936619743392459",
+        "Accept" to "*/*",
+        "Accept-Language" to "en-US,en;q=0.9",
+        "X-IG-WWW-Claim" to "0",
+        "X-Instagram-AJAX" to "1",
+        "X-Requested-With" to "XMLHttpRequest",
+        "Referer" to "https://www.instagram.com/",
+        "Origin" to "https://www.instagram.com"
     )
 
     @Throws(IOException::class)
     fun fetchCurrentUser(): LoggedInUser {
-        val req = buildGet("$BASE_URL/accounts/current_user/?edit=true")
-        val body = executeAndCheck(req)
+        val body = executeAuthenticated("accounts/current_user/?edit=true")
         val user = try {
             JSONObject(body).optJSONObject("user")
         } catch (e: Exception) {
@@ -79,8 +103,7 @@ class InstagramClient(private val session: SessionStore) {
 
     @Throws(IOException::class)
     fun fetchMediaInfo(mediaId: String): MediaFeed {
-        val req = buildGet("${BASE_URL}/media/$mediaId/info/")
-        val body = executeAndCheck(req)
+        val body = executeAuthenticated("media/$mediaId/info/")
         // Real shape: {"items": [ {...} ], "status": "ok", ...}
         // (items is an ARRAY, not an object — older code used getJSONObject here.)
         val obj = JSONObject(body)
@@ -117,8 +140,7 @@ class InstagramClient(private val session: SessionStore) {
     fun fetchHighlightItems(highlightId: String): List<com.example.instadl.model.MediaItem> {
         val id = highlightId.removePrefix("highlight:").trim()
         require(id.isNotBlank()) { "empty highlight id" }
-        val req = buildGet("${BASE_URL}/feed/reels_media/?reel_ids=highlight:$id")
-        val body = executeAndCheck(req)
+        val body = executeAuthenticated("feed/reels_media/?reel_ids=highlight:$id")
         val obj = JSONObject(body)
         val reels = obj.getJSONObject("reels")
         // Exact key first, then any highlight:* key (server may normalize).
@@ -220,6 +242,51 @@ class InstagramClient(private val session: SessionStore) {
         }
         if (best.isNotEmpty()) return best
         throw lastError ?: IOException("Public media not found")
+    }
+
+    @Throws(IOException::class)
+    fun fetchAuthenticatedShortcodeMedia(shortcode: String): List<PublicFile> {
+        val code = shortcode.substringBefore('?').substringBefore('#').trim()
+        require(code.isNotEmpty()) { "empty shortcode" }
+
+        var best: List<PublicFile> = emptyList()
+        var lastError: IOException? = null
+        for (kind in listOf("reel", "p")) {
+            for (suffix in listOf("embed/", "embed/captioned/")) {
+                try {
+                    val files = fetchSessionEmbed(
+                        "https://www.instagram.com/$kind/$code/$suffix"
+                    )
+                    if (files.size > best.size) best = files
+                } catch (e: IOException) {
+                    lastError = e
+                }
+            }
+        }
+        if (best.isNotEmpty()) return best
+        throw lastError ?: IOException("Authenticated embed has no media")
+    }
+
+    @Throws(IOException::class)
+    private fun fetchSessionEmbed(url: String): List<PublicFile> {
+        val builder = Request.Builder().url(url).get()
+        webHeaders.forEach { (k, v) -> builder.header(k, v) }
+        builder.header("Accept", "text/html,*/*")
+        builder.header("Sec-Fetch-Dest", "iframe")
+        builder.header("Sec-Fetch-Mode", "navigate")
+        builder.header("Sec-Fetch-Site", "same-origin")
+
+        client.newCall(builder.build()).execute().use { response ->
+            val html = response.body?.string() ?: ""
+            if (!response.isSuccessful || html.isBlank()) {
+                throw IOException("Embed HTTP ${response.code}")
+            }
+            val files = parseEmbedHtml(html)
+            if (files.isEmpty()) {
+                throw IOException("Authenticated embed has no media")
+            }
+            return files
+        }
     }
 
     @Throws(IOException::class)
@@ -408,13 +475,66 @@ class InstagramClient(private val session: SessionStore) {
     private fun unescapeHtmlAttr(s: String): String =
         s.replace("&amp;", "&")
 
-    private fun buildGet(url: String): Request {
+    private fun executeAuthenticated(path: String): String {
+        val csrf = session.cookies?.let(::extractCsrf) ?: "missing"
+        try {
+            return executeAndCheck(buildGet("$BASE_URL/$path", csrf))
+        } catch (mobileError: IOException) {
+            try {
+                return executeAndCheck(buildGet("$BASE_URL/$path", csrf, webHeaders))
+            } catch (webMobileError: IOException) {
+                return executeAndCheck(buildGet("$WEB_BASE_URL/$path", csrf, webHeaders))
+            }
+        }
+    }
+
+    private fun buildGet(
+        url: String,
+        csrf: String,
+        headers: Map<String, String> = baseHeaders
+    ): Request {
         val builder = Request.Builder().url(url).get()
-        baseHeaders.forEach { (k, v) -> builder.header(k, v) }
+        headers.forEach { (k, v) -> builder.header(k, v) }
         builder.header("X-Instagram-AJAX", "1")
-        builder.header(
-            "X-CSRFToken", session.cookies?.let(::extractCsrf) ?: "missing")
+        builder.header("X-CSRFToken", csrf)
+
+        if (headers === baseHeaders) {
+            mobileAuthorization()?.let { builder.header("Authorization", it) }
+            cookieValue("ds_user_id")?.let {
+                builder.header("IG-Intended-User-ID", it)
+                builder.header("IG-U-DS-USER-ID", it)
+            }
+            cookieValue("mid")?.let { builder.header("X-MID", it) }
+            cookieValue("ig_did")?.let {
+                builder.header("X-IG-Device-ID", it)
+                builder.header("X-IG-Family-Device-ID", it)
+            }
+        }
         return builder.build()
+    }
+
+    private fun mobileAuthorization(): String? {
+        val userId = cookieValue("ds_user_id") ?: return null
+        val sessionId = cookieValue("sessionid") ?: return null
+        val payload = gson.toJson(
+            linkedMapOf("ds_user_id" to userId, "sessionid" to sessionId)
+        )
+        val encoded = Base64.encodeToString(
+            payload.toByteArray(Charsets.UTF_8),
+            Base64.NO_WRAP
+        )
+        return "Bearer IGT:2:$encoded"
+    }
+
+    private fun cookieValue(name: String): String? {
+        val raw = session.cookies ?: return null
+        val prefix = "$name="
+        return raw.split(';')
+            .map { it.trim() }
+            .firstOrNull { it.startsWith(prefix) }
+            ?.substring(prefix.length)
+            ?.trim()
+            ?.removeSurrounding("\"")
     }
 
     private fun executeAndCheck(request: Request): String {
@@ -438,5 +558,6 @@ class InstagramClient(private val session: SessionStore) {
 
     companion object {
         const val BASE_URL = "https://i.instagram.com/api/v1"
+        const val WEB_BASE_URL = "https://www.instagram.com/api/v1"
     }
 }

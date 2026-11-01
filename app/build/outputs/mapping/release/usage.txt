@@ -10738,6 +10738,7 @@ com.example.instadl.databinding.ActivityWebLoginBinding:
     public synthetic bridge android.view.View getRoot()
 com.example.instadl.network.InstagramClient:
     public static final java.lang.String BASE_URL
+    public static final java.lang.String WEB_BASE_URL
     public final boolean isSessionValid()
 com.example.instadl.network.InstagramCookieJar:
     public static final java.lang.String API_HOST
@@ -23838,16 +23839,8 @@ com.google.gson.Gson:
     public java.lang.Object fromJson(java.lang.String,java.lang.reflect.Type)
     public boolean htmlSafe()
     public com.google.gson.GsonBuilder newBuilder()
-    public com.google.gson.stream.JsonWriter newJsonWriter(java.io.Writer)
     public boolean serializeNulls()
-    public java.lang.String toJson(com.google.gson.JsonElement)
-    public java.lang.String toJson(java.lang.Object)
-    public java.lang.String toJson(java.lang.Object,java.lang.reflect.Type)
-    public void toJson(com.google.gson.JsonElement,com.google.gson.stream.JsonWriter)
-    public void toJson(com.google.gson.JsonElement,java.lang.Appendable)
     public void toJson(java.lang.Object,java.lang.Appendable)
-    public void toJson(java.lang.Object,java.lang.reflect.Type,com.google.gson.stream.JsonWriter)
-    public void toJson(java.lang.Object,java.lang.reflect.Type,java.lang.Appendable)
     public com.google.gson.JsonElement toJsonTree(java.lang.Object)
     public com.google.gson.JsonElement toJsonTree(java.lang.Object,java.lang.reflect.Type)
 com.google.gson.GsonBuilder
@@ -24007,12 +24000,8 @@ com.google.gson.internal.ReflectionAccessFilterHelper:
     public static boolean isAnyPlatformType(java.lang.Class)
     public static boolean isJavaType(java.lang.Class)
     private static boolean isJavaType(java.lang.String)
-com.google.gson.internal.Streams$1
-com.google.gson.internal.Streams$AppendableWriter$CurrentWrite
-com.google.gson.internal.Streams$AppendableWriter
 com.google.gson.internal.Streams:
     private void <init>()
-    public static java.io.Writer writerForAppendable(java.lang.Appendable)
 com.google.gson.internal.TroubleshootingGuide:
     private void <init>()
 com.google.gson.internal.bind.DefaultDateTypeAdapter$DateType:
@@ -24141,13 +24130,9 @@ com.google.gson.stream.JsonReader:
 com.google.gson.stream.JsonScope
 com.google.gson.stream.JsonWriter:
     public final com.google.gson.FormattingStyle getFormattingStyle()
-    public final com.google.gson.Strictness getStrictness()
-    public final boolean isHtmlSafe()
     public com.google.gson.stream.JsonWriter jsonValue(java.lang.String)
-    public final void setHtmlSafe(boolean)
     public final void setIndent(java.lang.String)
     public final void setLenient(boolean)
-    public final void setSerializeNulls(boolean)
     public com.google.gson.stream.JsonWriter value(float)
 com.google.gson.stream.MalformedJsonException:
     private static final long serialVersionUID
@@ -26793,7 +26778,6 @@ kotlin.collections.MapsKt__MapsKt:
     private static final boolean isNullOrEmpty(java.util.Map)
     private static final java.util.Iterator iterator(java.util.Map)
     private static final java.util.LinkedHashMap linkedMapOf()
-    public static final varargs java.util.LinkedHashMap linkedMapOf(kotlin.Pair[])
     public static final java.util.Map mapKeys(java.util.Map,kotlin.jvm.functions.Function1)
     public static final java.util.Map mapKeysTo(java.util.Map,java.util.Map,kotlin.jvm.functions.Function1)
     private static final java.util.Map mapOf()
@@ -28708,8 +28692,6 @@ kotlin.text.StringsKt__StringsKt:
     public static final java.lang.CharSequence removeSuffix(java.lang.CharSequence,java.lang.CharSequence)
     public static final java.lang.CharSequence removeSurrounding(java.lang.CharSequence,java.lang.CharSequence)
     public static final java.lang.CharSequence removeSurrounding(java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)
-    public static final java.lang.String removeSurrounding(java.lang.String,java.lang.CharSequence)
-    public static final java.lang.String removeSurrounding(java.lang.String,java.lang.CharSequence,java.lang.CharSequence)
     private static final java.lang.String replace(java.lang.CharSequence,kotlin.text.Regex,java.lang.String)
     private static final java.lang.String replace(java.lang.CharSequence,kotlin.text.Regex,kotlin.jvm.functions.Function1)
     public static final java.lang.String replaceAfter(java.lang.String,char,java.lang.String,java.lang.String)
@@ -35005,7 +34987,7 @@ androidx.core.os.LocaleListCompat:
     public final int size()
     public final java.lang.String toLanguageTags()
     public static androidx.core.os.LocaleListCompat wrap(android.os.LocaleList)
-androidx.core.os.LocaleListCompatWrapper$$InternalSyntheticThrowCCEIfNotNull$281$eabde584e09f5dbef5e5c77b987ffae1119ec566c4556bde1e78e256d6ae9d7b$0
+androidx.core.os.LocaleListCompatWrapper$$InternalSyntheticThrowCCEIfNotNull$282$eabde584e09f5dbef5e5c77b987ffae1119ec566c4556bde1e78e256d6ae9d7b$0
 androidx.core.os.LocaleListCompatWrapper
 androidx.core.os.LocaleListInterface:
     public abstract java.util.Locale get()
@@ -37442,6 +37424,12 @@ com.example.instadl.MainActivity$downloadShortcode$saved$1:
 com.example.instadl.MainActivity$downloadShortcode$saved$2:
     public int label
     public final java.lang.Object invoke$1()
+com.example.instadl.MainActivity$downloadShortcode$saved$3:
+    public int label
+    public final java.lang.Object invoke$1()
+com.example.instadl.MainActivity$downloadShortcode$sessionPub$1:
+    public int label
+    public final java.lang.Object invoke$1()
 com.example.instadl.MainActivity$downloadStoryLink$item$1:
     public int label
     public final java.lang.Object invoke$1()
@@ -37517,6 +37505,7 @@ com.example.instadl.network.InstagramCookieJar$saveFromResponse$1:
 com.example.instadl.network.InstagramCookieJar:
     public static final com.example.instadl.network.InstagramCookieJar$Companion Companion
     static void <clinit>()
+    public static boolean isInstagramHost(java.lang.String)
 com.example.instadl.network.InstagramLinks$Resolved$Highlight:
     public static java.lang.String getHighlightId()
 com.example.instadl.network.InstagramLinks$Resolved$ShortcodeMedia:
@@ -41247,29 +41236,22 @@ com.google.gson.Gson$1:
     public final synthetic com.google.gson.Gson this$0
     public static java.lang.Double read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.Gson$2:
     public final synthetic com.google.gson.Gson this$0
     public static java.lang.Float read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.Gson$3
 com.google.gson.Gson$4:
     public static java.util.concurrent.atomic.AtomicLong read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$1()
 com.google.gson.Gson$5:
     public static java.util.concurrent.atomic.AtomicLongArray read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$2()
 com.google.gson.Gson$FutureTypeAdapter:
     public final com.google.gson.TypeAdapter delegate$1()
-    public final com.google.gson.TypeAdapter getSerializationDelegate()
     public static void setDelegate()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.Gson:
     public static final java.lang.String DEFAULT_DATE_PATTERN
-    public static final com.google.gson.FormattingStyle DEFAULT_FORMATTING_STYLE
     public static final int DEFAULT_STRICTNESS
     public final java.util.List builderFactories
     public final java.util.List builderHierarchyFactories
@@ -41278,9 +41260,7 @@ com.google.gson.Gson:
     public final int dateStyle
     public final com.google.gson.internal.Excluder excluder
     public final com.google.gson.FieldNamingStrategy fieldNamingStrategy
-    public final com.google.gson.FormattingStyle formattingStyle
     public final boolean generateNonExecutableJson
-    public final boolean htmlSafe
     public final java.util.Map instanceCreators
     public final int longSerializationPolicy
     public final com.google.gson.ToNumberStrategy numberToNumberStrategy
@@ -41291,13 +41271,19 @@ com.google.gson.Gson:
     public final int strictness
     public final int timeStyle
     public final boolean useJdkUnsafe
-    public static void checkValidFloatingPoint(double)
     public static java.lang.Object fromJson()
     public static java.lang.Object fromJson$1()
     public static java.lang.Object fromJson$2()
     public static com.google.gson.TypeAdapter getAdapter()
     public final com.google.gson.TypeAdapter getDelegateAdapter(com.google.gson.TypeAdapterFactory,com.google.gson.reflect.TypeToken)
     public static com.google.gson.stream.JsonReader newJsonReader()
+    public final com.google.gson.stream.JsonWriter newJsonWriter(java.io.Writer)
+    public static java.lang.String toJson()
+    public static void toJson()
+    public final void toJson(com.google.gson.stream.JsonWriter)
+    public static java.lang.String toJson$1()
+    public static void toJson$1()
+    public static java.lang.String toJson$2()
 com.google.gson.InstanceCreator
 com.google.gson.JsonArray:
     public final void add(com.google.gson.JsonElement)
@@ -41339,12 +41325,9 @@ com.google.gson.ToNumberPolicy$4:
 com.google.gson.ToNumberPolicy:
     public static final enum com.google.gson.ToNumberPolicy$4 BIG_DECIMAL
     public static final enum com.google.gson.ToNumberPolicy$3 LONG_OR_DOUBLE
-com.google.gson.TypeAdapter$1:
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.TypeAdapter:
     public abstract com.google.gson.TypeAdapter nullSafe()
     public abstract com.google.gson.JsonElement toJsonTree()
-    public abstract void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.annotations.Expose
 com.google.gson.annotations.Since
 com.google.gson.annotations.Until
@@ -41370,9 +41353,7 @@ com.google.gson.internal.ConstructorConstructor:
 com.google.gson.internal.Excluder$$InternalSyntheticThrowCCEIfNotNull$20$1b6fce6eb690da8597b6187cdceaebb9c0dbca3c960ee5b224eabcc1b6168191$0
 com.google.gson.internal.Excluder$$InternalSyntheticThrowCCEIfNotNull$22$c5dc8cd1149b543364c2ddfefdc28050c997432c833f2c44348369ce541b8e74$0
 com.google.gson.internal.Excluder$1:
-    public final synthetic boolean val$skipSerialize
     public final com.google.gson.TypeAdapter delegate()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.Excluder:
     public int modifiers
     public boolean requireExpose
@@ -41411,15 +41392,15 @@ com.google.gson.internal.ReflectionAccessFilterHelper$1
 com.google.gson.internal.ReflectionAccessFilterHelper$AccessChecker$1
 com.google.gson.internal.ReflectionAccessFilterHelper$AccessChecker$2
 com.google.gson.internal.ReflectionAccessFilterHelper$AccessChecker
+com.google.gson.internal.Streams$1
+com.google.gson.internal.Streams$AppendableWriter$CurrentWrite
+com.google.gson.internal.Streams$AppendableWriter
 com.google.gson.internal.Streams
 com.google.gson.internal.TroubleshootingGuide
 com.google.gson.internal.UnsafeAllocator:
     public static void access$000(java.lang.Class)
-com.google.gson.internal.bind.ArrayTypeAdapter:
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.CollectionTypeAdapterFactory$Adapter:
     public static java.util.Collection read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$3()
 com.google.gson.internal.bind.DefaultDateTypeAdapter$DateType$1:
     public final java.util.Date deserialize(java.util.Date)
@@ -41428,7 +41409,6 @@ com.google.gson.internal.bind.DefaultDateTypeAdapter$DateType:
     public abstract java.util.Date deserialize(java.util.Date)
 com.google.gson.internal.bind.DefaultDateTypeAdapter:
     public static java.util.Date read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$4()
 com.google.gson.internal.bind.JsonAdapterAnnotationTypeAdapterFactory$$InternalSyntheticThrowCCEIfNotNull$30$c11534c6db034ee2e8a85b620b84b81ce8c2f4a5df64fade57920dff2f9ef3df$0
 com.google.gson.internal.bind.JsonAdapterAnnotationTypeAdapterFactory$$InternalSyntheticThrowCCEIfNotNull$30$c11534c6db034ee2e8a85b620b84b81ce8c2f4a5df64fade57920dff2f9ef3df$1
@@ -41445,7 +41425,6 @@ com.google.gson.internal.bind.JsonTreeWriter
 com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter:
     public final synthetic com.google.gson.internal.bind.MapTypeAdapterFactory this$0
     public static java.util.Map read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$5()
 com.google.gson.internal.bind.MapTypeAdapterFactory:
     public final boolean complexMapKeySerialization
@@ -41454,29 +41433,17 @@ com.google.gson.internal.bind.NumberTypeAdapter:
     public static com.google.gson.internal.bind.NumberTypeAdapter$1 newFactory(com.google.gson.ToNumberStrategy)
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.ObjectTypeAdapter$2
 com.google.gson.internal.bind.ObjectTypeAdapter:
-    public final com.google.gson.Gson gson
     public static java.io.Serializable tryBeginNesting(com.google.gson.stream.JsonReader,int)
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$1:
     public final synthetic com.google.gson.internal.bind.ReflectiveTypeAdapterFactory this$0
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$2:
-    public final java.lang.String serializedName
     public final synthetic com.google.gson.internal.bind.ReflectiveTypeAdapterFactory this$0
-    public final synthetic java.lang.reflect.Method val$accessor
     public final synthetic boolean val$blockInaccessible
-    public final synthetic com.google.gson.TypeAdapter val$writeTypeAdapter
     public static void readIntoArray()
     public static void readIntoField()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
-com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter:
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$BoundField
-com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$FieldsData:
-    public final java.util.List serializedFields
 com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$RecordAdapter:
     public static java.lang.Object[] createAccumulator()
     public static java.lang.Object finalize()
@@ -41484,140 +41451,103 @@ com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$RecordAdapter:
 com.google.gson.internal.bind.ReflectiveTypeAdapterFactory:
     public final java.util.List reflectionFilters
     public static void access$000(java.lang.Object,java.lang.reflect.AccessibleObject)
-com.google.gson.internal.bind.SerializationDelegatingTypeAdapter:
-    public abstract com.google.gson.TypeAdapter getSerializationDelegate()
 com.google.gson.internal.bind.TreeTypeAdapter$1
 com.google.gson.internal.bind.TreeTypeAdapter$GsonContextImpl
 com.google.gson.internal.bind.TreeTypeAdapter
-com.google.gson.internal.bind.TypeAdapterRuntimeTypeWrapper:
-    public final com.google.gson.Gson context
-    public final java.lang.reflect.Type type
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$10:
     public static java.util.concurrent.atomic.AtomicIntegerArray read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$6()
 com.google.gson.internal.bind.TypeAdapters$11:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$12:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$13:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$14:
     public static java.lang.Character read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$7()
 com.google.gson.internal.bind.TypeAdapters$15:
     public static java.lang.String read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$8()
 com.google.gson.internal.bind.TypeAdapters$16:
     public static java.math.BigDecimal read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$9()
 com.google.gson.internal.bind.TypeAdapters$17:
     public static java.math.BigInteger read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$10()
 com.google.gson.internal.bind.TypeAdapters$18:
     public static com.google.gson.internal.LazilyParsedNumber read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$11()
 com.google.gson.internal.bind.TypeAdapters$19:
     public static java.lang.StringBuilder read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$12()
 com.google.gson.internal.bind.TypeAdapters$1:
     public static java.lang.Class read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$13()
 com.google.gson.internal.bind.TypeAdapters$20:
     public static java.lang.StringBuffer read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$14()
 com.google.gson.internal.bind.TypeAdapters$21:
     public static java.net.URL read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$15()
 com.google.gson.internal.bind.TypeAdapters$22:
     public static java.net.URI read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$16()
 com.google.gson.internal.bind.TypeAdapters$23:
     public static java.net.InetAddress read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$17()
 com.google.gson.internal.bind.TypeAdapters$24:
     public static java.util.UUID read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$18()
 com.google.gson.internal.bind.TypeAdapters$25:
     public static java.util.Currency read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$19()
 com.google.gson.internal.bind.TypeAdapters$26:
     public static java.util.Calendar read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$20()
 com.google.gson.internal.bind.TypeAdapters$27:
     public static java.util.Locale read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$21()
 com.google.gson.internal.bind.TypeAdapters$28$$InternalSyntheticThrowCCEIfNotNull$32$0e0a56a3f9f185d89b08ff1e1f4b8c8a7494d0fb71151095a15aa806e89a0fa6$0
 com.google.gson.internal.bind.TypeAdapters$28:
     public static com.google.gson.JsonElement read()
     public static com.google.gson.JsonElement tryBeginNesting(com.google.gson.stream.JsonReader,int)
-    public final synthetic bridge void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$2:
     public static java.util.BitSet read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$22()
 com.google.gson.internal.bind.TypeAdapters$33:
     public final synthetic java.lang.Class val$base
     public final synthetic java.lang.Class val$sub
-com.google.gson.internal.bind.TypeAdapters$34$1:
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$3:
     public final java.lang.Boolean read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public final void write$23()
 com.google.gson.internal.bind.TypeAdapters$42
 com.google.gson.internal.bind.TypeAdapters$4:
     public final java.lang.Boolean read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public final void write$23()
 com.google.gson.internal.bind.TypeAdapters$5:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$6:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$7:
     public final java.lang.Number read()
     public final void write()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
 com.google.gson.internal.bind.TypeAdapters$8:
     public static java.util.concurrent.atomic.AtomicInteger read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$24()
 com.google.gson.internal.bind.TypeAdapters$9:
     public static java.util.concurrent.atomic.AtomicBoolean read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$25()
 com.google.gson.internal.bind.TypeAdapters$EnumTypeAdapter$1:
     public final synthetic com.google.gson.internal.bind.TypeAdapters$EnumTypeAdapter this$0
     public static java.lang.reflect.Field[] run()
 com.google.gson.internal.bind.TypeAdapters$EnumTypeAdapter:
     public static java.lang.Enum read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$26()
 com.google.gson.internal.bind.TypeAdapters:
     public static final com.google.gson.TypeAdapter$1 ATOMIC_BOOLEAN
@@ -41649,15 +41579,12 @@ com.google.gson.internal.reflect.ReflectionHelper:
     public static boolean isAnonymousOrNonStaticLocal(java.lang.Class)
 com.google.gson.internal.sql.SqlDateTypeAdapter:
     public static java.sql.Date read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$27()
 com.google.gson.internal.sql.SqlTimeTypeAdapter:
     public static java.sql.Time read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$28()
 com.google.gson.internal.sql.SqlTimestampTypeAdapter:
     public static java.sql.Timestamp read()
-    public final void write(com.google.gson.stream.JsonWriter,java.lang.Object)
     public static void write$29()
 com.google.gson.internal.sql.SqlTypesSupport$1
 com.google.gson.internal.sql.SqlTypesSupport$2
@@ -41684,18 +41611,15 @@ com.google.gson.stream.JsonToken$EnumUnboxingLocalUtility:
     public static synthetic int valueOf(java.lang.String)
 com.google.gson.stream.JsonToken
 com.google.gson.stream.JsonWriter:
-    public static final java.lang.String[] HTML_SAFE_REPLACEMENT_CHARS
-    public boolean htmlSafe
     public static boolean getSerializeNulls()
+    public static int getStrictness()
+    public static boolean isHtmlSafe()
     public final boolean isLenient()
     public final void openScope(int,char)
     public final void push(int)
     public final void replaceTop(int)
-    public static void setFormattingStyle()
-    public static void setStrictness()
-    public void value(double)
-    public void value(long)
-    public void value(java.lang.Boolean)
+    public static void setHtmlSafe()
+    public static void setSerializeNulls()
 kotlin.ExceptionsKt__ExceptionsKt
 kotlin.KotlinNothingValueException
 kotlin.Lazy
@@ -41785,6 +41709,7 @@ kotlin.collections.IntIterator
 kotlin.collections.MapsKt
 kotlin.collections.MapsKt__MapsKt:
     public static java.util.Map emptyMap()
+    public static varargs java.util.Map mapOf(kotlin.Pair[])
     public static java.util.LinkedHashMap toMutableMap(java.util.Map)
 kotlin.collections.MapsKt___MapsJvmKt
 kotlin.collections.MapsKt___MapsKt
@@ -42017,8 +41942,10 @@ kotlin.text.StringsKt__StringsKt$splitToSequence$1:
     public static java.lang.String invoke$3()
 kotlin.text.StringsKt__StringsKt:
     public static synthetic boolean contains$default(java.lang.CharSequence,java.lang.String)
+    public static boolean endsWith$default$1(java.lang.String,java.lang.String)
     public static synthetic int indexOf$StringsKt__StringsKt$default(java.lang.CharSequence,java.lang.String,int,int,boolean)
     public static final void requireNonNegativeLimit()
+    public static boolean startsWith$default$1(java.lang.String,java.lang.String)
     public static final java.lang.String substring(java.lang.CharSequence,kotlin.ranges.IntRange)
     public static java.lang.String substringAfter$default(java.lang.String,java.lang.String)
 kotlin.text.StringsKt___StringsKt
@@ -42076,7 +42003,7 @@ kotlinx.coroutines.CoroutineExceptionHandler:
     public abstract void handleException(java.lang.Throwable)
 kotlinx.coroutines.CoroutineExceptionHandlerKt:
     public static final java.lang.Throwable handlerException(java.lang.Throwable,java.lang.Throwable)
-kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$281$a7d8b984f14ef6811fc36f0d030a1c8a7f27075d192601697212118d266ca07a$0
+kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$282$a7d8b984f14ef6811fc36f0d030a1c8a7f27075d192601697212118d266ca07a$0
 kotlinx.coroutines.CoroutineId$$InternalSyntheticThrowCCEIfNotNull$49$db4fcf294f73e0414b61d779f72a560fad56831e560e6b71def36fecaf64a8d1$0
 kotlinx.coroutines.CoroutineId$Key
 kotlinx.coroutines.CoroutineId
@@ -42342,10 +42269,10 @@ kotlinx.coroutines.internal.SystemPropsKt:
 kotlinx.coroutines.internal.SystemPropsKt__SystemProps_commonKt
 kotlinx.coroutines.internal.ThreadContextKt$countAll$1:
     public static java.lang.Object invoke$2()
-kotlinx.coroutines.internal.ThreadContextKt$findOne$1$$InternalSyntheticThrowCCEIfNotNull$281$3c0a4e008dae932423b4e733fe279866ddf2366c1895e5117482b23369fcf54f$1
+kotlinx.coroutines.internal.ThreadContextKt$findOne$1$$InternalSyntheticThrowCCEIfNotNull$282$3c0a4e008dae932423b4e733fe279866ddf2366c1895e5117482b23369fcf54f$1
 kotlinx.coroutines.internal.ThreadContextKt$findOne$1:
     public static void invoke$4()
-kotlinx.coroutines.internal.ThreadContextKt$updateState$1$$InternalSyntheticThrowCCEIfNotNull$281$3ff7ef4e574584d34e294bf8ac548819e9de353a79a9bbbdd8ea1b7dd939fd97$0
+kotlinx.coroutines.internal.ThreadContextKt$updateState$1$$InternalSyntheticThrowCCEIfNotNull$282$3ff7ef4e574584d34e294bf8ac548819e9de353a79a9bbbdd8ea1b7dd939fd97$0
 kotlinx.coroutines.internal.ThreadContextKt$updateState$1:
     public static kotlinx.coroutines.internal.ThreadState invoke()
 kotlinx.coroutines.internal.ThreadContextKt:

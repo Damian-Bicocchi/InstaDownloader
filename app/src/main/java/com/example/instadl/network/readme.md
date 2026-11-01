@@ -16,7 +16,7 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
 - **Utility:** All network I/O for the app. Constructed in `MainActivity` as `InstagramClient(session)`; blocking (`@Throws(IOException)`) so callers must use `Dispatchers.IO`.
 - **Configuration:**
   - `BASE_URL = "https://i.instagram.com/api/v1"` (`companion object`).
-  - `baseHeaders` mimics official Android app: `User-Agent: Instagram 269.0.0.18.85 ...`, `X-IG-App-ID`, `X-IG-Capabilities`, `X-FB-HTTP-Engine: Liger`, etc.
+  - `baseHeaders` mirror Instaloader's iPad client (`Instagram 361…`, `X-IG-App-ID: 124024574287414`, `X-IG-Capabilities`, `X-FB-HTTP-Engine: Liger`, …). Requests also carry an `Authorization: Bearer IGT:2:<base64(ds_user_id + sessionid)>` token derived from the captured session.
   - `deviceUuid` random per process; authenticated `OkHttpClient` uses `InstagramCookieJar` and disables redirects (`followRedirects=false`, `followSslRedirects=false`). The public embed client follows redirects but sends no cookies.
 - **Key API:**
   - `fetchCurrentUser(): LoggedInUser` — authenticated `GET /accounts/current_user/?edit=true`; validates the captured WebView session and returns `pk`/`username`/`fullName`.
@@ -32,7 +32,7 @@ Thin OkHttp + Gson wrapper over Instagram private API v1 (`https://i.instagram.c
 - **Utility:** Pure parser, no network. `parse(link): Resolved?` → `ShortcodeMedia(shortcode, mediaId)` for `/p|reel|reels|tv/`, `StoryMedia(storyId, username)` for `/stories/<user>/<id>`, `Highlight(highlightId)` for `/stories/highlights/<id>/` or `/s/<token>` (base64 `highlight:<id>`, else `?story_media_id=` single-story fallback). Highlights checked before stories to avoid `username="highlights"` misparse.
 - `shortcodeToMediaId(shortcode)` — base64url decode (`A-Za-z0-9-_`), offline. `decodeHighlightToken(token)` — URL/base64 decode → numeric id.
 - **Helpers:**
-  - `buildGet(url)` — adds `baseHeaders` + `X-CSRFToken` (extracted or `missing`) + `X-Instagram-AJAX: 1`; cookies are supplied by `InstagramCookieJar`.
+  - `buildGet(url)` — adds `baseHeaders`, `X-CSRFToken`, the derived mobile `Authorization` token and device headers; cookies are supplied by `InstagramCookieJar`.
   - `executeAndCheck(request): String` — throws `IOException` with `IgError.message` or `HTTP <code>` on failure.
   - `extractCsrf(cookieHeader)` — regex `csrftoken=([^;]*)`.
 - **Warning:** As noted in-file, automating these endpoints violates Instagram ToS and risks restrictions/bans; use only on owned accounts for personal/educational use.

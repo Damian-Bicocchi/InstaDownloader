@@ -38,7 +38,7 @@ Files are saved as `link_<shortcode>_<index>.jpg/.mp4` (stories: `story_<id>_<in
 
 **1. Is the app a wrapper around the Instagram UI with download buttons injected?**
 
-No. The only Instagram page shown is the login page inside a WebView; there is no browsable feed or injected download UI. You paste or share a link; public media is read from the public embed page, while private/story/highlight media uses the authenticated API with app-style headers (`Instagram 269.0.0.18.85…`, `X-IG-App-ID`, … in `InstagramClient.kt:baseHeaders`), parses the JSON into `model/` DTOs, and downloads the CDN (`bestImageUrl()` / `bestVideoUrl()`) files.
+No. The only Instagram page shown is the login page inside a WebView; there is no browsable feed or injected download UI. You paste or share a link; public media is read from the public embed page, while private/story/highlight media uses the authenticated API with Instaloader-style iPad headers and an `IGT:2` session-authorization token (`InstagramClient.kt:baseHeaders`), parses the JSON into `model/` DTOs, and downloads the CDN (`bestImageUrl()` / `bestVideoUrl()`) files.
 
 **2. If I send a highlight / story / reel / post link, what gets downloaded?**
 

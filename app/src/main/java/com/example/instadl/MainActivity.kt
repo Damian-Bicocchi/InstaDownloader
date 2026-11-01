@@ -286,6 +286,23 @@ class MainActivity : AppCompatActivity() {
             toast("Log in to download private posts")
             return
         }
+
+        val sessionPub = withContext(Dispatchers.IO) {
+            try {
+                client.fetchAuthenticatedShortcodeMedia(resolved.shortcode)
+            } catch (e: Exception) {
+                Log.w(TAG, "Authenticated embed fetch failed, trying API", e)
+                null
+            }
+        }
+        if (!sessionPub.isNullOrEmpty()) {
+            setStatus("Downloading ${sessionPub.size} file(s)…")
+            val saved = withContext(Dispatchers.IO) { downloadPublicFiles(sessionPub, prefix) }
+            setStatus("Saved $saved of ${sessionPub.size} files to your Photos/Downloads.")
+            toast("Downloaded $saved files")
+            return
+        }
+
         try {
             val item = withContext(Dispatchers.IO) {
                 client.fetchMediaByShortcode(resolved.shortcode)
@@ -302,8 +319,9 @@ class MainActivity : AppCompatActivity() {
             toast("Downloaded $saved files")
         } catch (e: Exception) {
             Log.w(TAG, "Auth link fetch failed", e)
-            setStatus("Download failed. Private/expired media needs a logged-in viewer that can see it.")
-            toast("Download failed. Try again.")
+            val message = downloadFailureMessage(e)
+            setStatus(message)
+            toast(message)
         }
     }
 
@@ -325,8 +343,9 @@ class MainActivity : AppCompatActivity() {
             toast("Downloaded $saved files")
         } catch (e: Exception) {
             Log.w(TAG, "Story link fetch failed", e)
-            setStatus("Download failed. Expired/private stories need a logged-in viewer that can see them.")
-            toast("Download failed. Try again.")
+            val message = downloadFailureMessage(e)
+            setStatus(message)
+            toast(message)
         }
     }
 
@@ -349,8 +368,9 @@ class MainActivity : AppCompatActivity() {
             toast("Downloaded $saved files")
         } catch (e: Exception) {
             Log.w(TAG, "Highlight fetch failed", e)
-            setStatus("Download failed. Private/removed highlights need a logged-in viewer that can see them.")
-            toast("Download failed. Try again.")
+            val message = downloadFailureMessage(e)
+            setStatus(message)
+            toast(message)
         }
     }
 
@@ -385,6 +405,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return counter.get()
+    }
+
+    private fun downloadFailureMessage(e: Exception): String {
+        val detail = e.message.orEmpty().lowercase()
+        return when {
+            "login_required" in detail || "logged out" in detail ||
+                "http 401" in detail || "http 403" in detail || "http 302" in detail ->
+                "Instagram rejected the saved session for this content. Clear session & cookies, log in again, and confirm the account can view it."
+            "http 404" in detail ->
+                "Instagram says this content doesn't exist or this account can't see it."
+            else ->
+                "Download failed. The media may be private, expired, or unavailable to this account."
+        }
     }
 
     private fun toast(msg: String) {

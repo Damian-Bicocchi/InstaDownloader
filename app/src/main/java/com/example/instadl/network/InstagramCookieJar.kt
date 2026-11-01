@@ -8,7 +8,7 @@ import okhttp3.HttpUrl
 class InstagramCookieJar(private val session: SessionStore) : CookieJar {
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        if (url.host != API_HOST || cookies.isEmpty()) return
+        if (!isInstagramHost(url.host) || cookies.isEmpty()) return
 
         val merged = LinkedHashMap<String, String>()
         for ((name, value) in storedPairs()) {
@@ -34,7 +34,7 @@ class InstagramCookieJar(private val session: SessionStore) : CookieJar {
     }
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        if (url.host != API_HOST) return emptyList()
+        if (!isInstagramHost(url.host)) return emptyList()
 
         return storedPairs().mapNotNull { (name, value) ->
             try {
@@ -63,6 +63,9 @@ class InstagramCookieJar(private val session: SessionStore) : CookieJar {
             }
         }
     }
+
+    private fun isInstagramHost(host: String): Boolean =
+        host == "i.instagram.com" || host == "www.instagram.com"
 
     companion object {
         const val API_HOST = "i.instagram.com"

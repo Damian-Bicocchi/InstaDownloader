@@ -3090,6 +3090,7 @@ drawable mtrl_switch_track
 drawable mtrl_switch_track_decoration
 drawable mtrl_tabs_default_indicator
 drawable navigation_empty_icon
+drawable new_icon_background
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low
@@ -3820,6 +3821,9 @@ layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 mipmap ic_launcher
 mipmap ic_launcher_round
+mipmap new_icon
+mipmap new_icon_foreground
+mipmap new_icon_round
 plurals mtrl_badge_content_description
 string abc_action_bar_home_description
 string abc_action_bar_up_description

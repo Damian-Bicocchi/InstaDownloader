@@ -740,6 +740,7 @@ LAZILY_PARSED_NUMBER
 SEALED
 CREATED
 android.text.DynamicLayout$ChangeWatcher
+16b7bd25c6c06886d57c4d455265669345a2d...
 TLSv1.3
 TLS_KRB5_WITH_RC4_128_MD5
 TLSv1.2
@@ -753,6 +754,7 @@ SeekBar
 EXTRA_SKIP_FILE_OPERATION
 rotation
 INTERNAL_ERROR
+Referer
 pair
 BOOL_LIST
 GCM
@@ -814,7 +816,9 @@ ACTION_DRAG_START
 END_DOCUMENT
 peerSettings
 FIXED32_LIST
+www.instagram.com
 .immediate
+media/
 _consensus$volatile
 char
 /index.html
@@ -979,8 +983,8 @@ TOP
 getResId
 getRecordComponents
 connectionName
-arch_disk_io_
 status
+arch_disk_io_
 sun.misc.Unsafe
 server
 ACTION_CLEAR_SELECTION
@@ -1032,8 +1036,8 @@ androidx.fragment.extra.ACTIVITY_OPTI...
 /embed/
 interrupted
 task
-null
 font_italic
+null
 CRC
 background
 true
@@ -1067,9 +1071,11 @@ ACTION_PASTE
 android.graphics.FontFamily
 00
 SINT32_LIST
+Origin
 Vertical
 carousel_media
 CustomMethod
+sessionid
 HORIZONTAL_DIMENSION
 CENTER
 observer
@@ -1100,8 +1106,9 @@ statusCode
 components
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384
 StartIntentSenderForResult
-kotlin.Function
 https://www.instagram.com/
+kotlin.Function
+mid
 long
 HMAC_SHA256_256BITTAG
 ACTION_PAGE_DOWN
@@ -1121,6 +1128,7 @@ STRING
 PropertySet
 selectProtocol
 TLS_DH_anon_WITH_AES_128_GCM_SHA256
+124024574287414
 open
 ratio
 NO_DECISION
@@ -1195,7 +1203,6 @@ isBoringSslFIPSBuild
 result_code
 END_OBJECT
 SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA
-WIFI
 NO_PREFIX
 _delayed$volatile
 DELETE_SKIP_FILE
@@ -1234,6 +1241,7 @@ SINT64
 java.lang.Enum
 MultiAutoCompleteTextView
 TOGGLE_BUTTON_TAG
+login_required
 from
 caCert.subjectX500Principal
 Client
@@ -1286,8 +1294,8 @@ via
 androidx.view.accessibility.Accessibi...
 Ȉ
 getUncaughtExceptionPreHandler
-checkedIconVisible
 navigate
+checkedIconVisible
 androidx.activity.result.contract.act...
 chipIconEnabled
 LEFT
@@ -1318,6 +1326,7 @@ EmojiCompat.EmojiCompatInitializer.run
 AES/ECB/NOPADDING
 RESULT_PARSE_EXCEPTION
 keySize_
+https://i.instagram.com/api/v1/
 TLS_DHE_DSS_WITH_AES_256_CBC_SHA256
 GridLayoutManager
 androidx.lifecycle.BundlableSavedStat...
@@ -1370,6 +1379,7 @@ android.permission.WRITE_EXTERNAL_STO...
 TooltipPopup
 android.graphics.drawable.VectorDrawable
 strokeLineCap
+ig_did
 lines
 :authority
 ACTION_SCROLL_UP
@@ -1429,6 +1439,7 @@ androidx.view.accessibility.Accessibi...
 Completing
 TLS_AES_128_CCM_8_SHA256
 SOURCE_APP
+ds_user_id
 gzip
 FIXED64
 locales
@@ -1442,6 +1453,7 @@ kotlin.collections.Collection
 _decision$volatile
 link_
 getAlpnSelectedProtocol
+True
 ConstraintLayout
 scaleX
 scaleY
@@ -1454,7 +1466,6 @@ HTTP_1_1
 OpenSSLSocketImpl
 newInstance
 MenuItemWrapper
-https://i.instagram.com/api/v1/media/
 unit
 java.util.List
 lastScheduledTask$volatile
@@ -1513,8 +1524,8 @@ TLS_ECDH_RSA_WITH_AES_256_CBC_SHA
 ig_session_enc
 objectFieldOffset
 :status
-SSL_RSA_WITH_RC4_128_SHA
 iframe
+SSL_RSA_WITH_RC4_128_SHA
 TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256
 TLS_ECDH_RSA_WITH_RC4_128_SHA
 ACTION_SELECT
@@ -1610,7 +1621,6 @@ TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5
 org.conscrypt.Conscrypt
 INVISIBLE
 kotlin.Short
-567067343352427
 org.openjsse.net.ssl.OpenJSSE
 BLOCKING
 BOOL_LIST_PACKED
@@ -1623,6 +1633,7 @@ UTF_8
 LAZY
 mContentInsets
 TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_...
+936619743392459
 mToken
 ENUM_LIST
 SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA
@@ -1989,8 +2000,8 @@ android:menu:actionviewstates
 SSL_RSA_EXPORT_WITH_RC4_40_MD5
 TextAppearance
 FontsProvider
-TLS_ECDH_anon_WITH_AES_128_CBC_SHA
 missing
+TLS_ECDH_anon_WITH_AES_128_CBC_SHA
 AES128_GCM_RAW
 TLS_ECDH_ECDSA_WITH_NULL_SHA
 text/plain
@@ -2002,6 +2013,7 @@ MenuPopupWindow
 Dispatchers.Main.immediate
 View
 java.sql.Date
+embed/
 SSL_3_0
 topLeft
 location
@@ -2035,6 +2047,7 @@ range
 highlight:
 out
 get
+embed/captioned/
 power
 video_versions
 java.lang.Number
@@ -2044,6 +2057,7 @@ TLS_PSK_WITH_3DES_EDE_CBC_SHA
 expect
 A11yActionCompat
 elements
+WiFi
 strokeAlpha
 URI_MASKABLE
 ON_CREATE
@@ -2096,6 +2110,7 @@ reels
 intent
 findTrustAnchorByIssuerAndSignature
 fragment
+https://www.instagram.com/api/v1/
 boolean
 FLOAT_LIST_PACKED
 trimPathOffset
@@ -2311,6 +2326,7 @@ Marking color:background_material_dark:2131034143 used because it matches string
 Marking color:background_material_light:2131034144 used because it matches string pool constant background
 Marking id:position:2131231081 used because it matches string pool constant position
 Marking id:position:2131231081 used because it matches string pool constant position
+Marking id:middle:2131230998 used because it matches string pool constant mid
 Marking id:progress:2131231084 used because it matches string pool constant progress
 Marking attr:progressBarPadding:2130903942 used because it matches string pool constant progress
 Marking attr:progressBarStyle:2130903943 used because it matches string pool constant progress
@@ -7913,7 +7929,7 @@ Marking id:fragment_container_view_tag:2131230926 used because it matches string
 @com.example.instadl:id/material_value_index : reachable=true
 @com.example.instadl:id/matrix : reachable=false
 @com.example.instadl:id/message : reachable=true
-@com.example.instadl:id/middle : reachable=false
+@com.example.instadl:id/middle : reachable=true
 @com.example.instadl:id/mini : reachable=false
 @com.example.instadl:id/month_grid : reachable=true
 @com.example.instadl:id/month_navigation_bar : reachable=true
@@ -18506,6 +18522,7 @@ The root reachable resources are:
  id:material_minute_tv:2131230988
  id:material_value_index:2131230995
  id:message:2131230997
+ id:middle:2131230998
  id:month_grid:2131231000
  id:month_navigation_bar:2131231001
  id:month_navigation_fragment_toggle:2131231002
@@ -20276,7 +20293,6 @@ Unused resources are:
  id:material_timepicker_ok_button:2131230993
  id:material_timepicker_view:2131230994
  id:matrix:2131230996
- id:middle:2131230998
  id:mini:2131230999
  id:motion_base:2131231006
  id:mtrl_anchor_parent:2131231007
